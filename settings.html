@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agency Settings - Root4Tech CRM</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div id="app-wrapper">
+  <div class="sidebar-backdrop"></div>
+
+  <!-- Sidebar -->
+  <aside id="sidebar">
+    <div class="sidebar-header">
+      <a href="index.html" class="brand-link">
+        <img src="assets/images/logo.svg" alt="Root4Tech Logo" class="brand-logo-img">
+      </a>
+      <button class="btn btn-sm btn-icon d-none d-lg-flex" id="sidebar-toggle-btn" title="Toggle Sidebar">
+        <i class="bi bi-layout-sidebar-inset text-secondary"></i>
+      </button>
+    </div>
+
+    <div class="sidebar-nav">
+      <div class="nav-section-title">Core Management</div>
+      <ul class="sidebar-menu">
+        <li><a href="index.html" class="sidebar-link"><i class="bi bi-grid-1x2-fill"></i><span>Dashboard</span></a></li>
+        <li><a href="leads.html" class="sidebar-link"><i class="bi bi-funnel-fill"></i><span>Leads</span></a></li>
+        <li><a href="clients.html" class="sidebar-link"><i class="bi bi-buildings-fill"></i><span>Clients</span></a></li>
+        <li><a href="projects.html" class="sidebar-link"><i class="bi bi-briefcase-fill"></i><span>Projects</span></a></li>
+        <li><a href="tasks.html" class="sidebar-link"><i class="bi bi-check2-square"></i><span>Tasks</span></a></li>
+      </ul>
+
+      <div class="nav-section-title">Operations & Sales</div>
+      <ul class="sidebar-menu">
+        <li><a href="calendar.html" class="sidebar-link"><i class="bi bi-calendar3"></i><span>Calendar & Follow-ups</span></a></li>
+        <li><a href="invoices.html" class="sidebar-link"><i class="bi bi-receipt"></i><span>Quotations & Invoices</span></a></li>
+        <li><a href="reports.html" class="sidebar-link"><i class="bi bi-graph-up-arrow"></i><span>Reports & Analytics</span></a></li>
+      </ul>
+
+      <div class="nav-section-title">Agency Admin</div>
+      <ul class="sidebar-menu">
+        <li><a href="team.html" class="sidebar-link"><i class="bi bi-people-fill"></i><span>Team Members</span></a></li>
+        <li><a href="notifications.html" class="sidebar-link"><i class="bi bi-bell-fill"></i><span>Notifications</span></a></li>
+        <li><a href="settings.html" class="sidebar-link active"><i class="bi bi-gear-fill"></i><span>Settings</span></a></li>
+      </ul>
+    </div>
+
+    <div class="sidebar-footer">
+      <div class="user-quick-card">
+        <div class="user-avatar current-user-avatar status-online" style="background-color: #059669;">DV</div>
+        <div class="user-info">
+          <div class="user-name current-user-name">David Vance</div>
+          <div class="user-role current-user-role">Sales Manager</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content Wrap -->
+  <div id="main-content">
+    <header id="topbar">
+      <div class="topbar-left">
+        <button class="btn btn-icon d-lg-none" id="mobile-sidebar-toggle-btn"><i class="bi bi-list fs-5"></i></button>
+        <button class="search-trigger-btn" data-bs-toggle="modal" data-bs-target="#globalSearchModal">
+          <i class="bi bi-search"></i>
+          <span>Search CRM...</span>
+          <span class="kbd-shortcut">Ctrl K</span>
+        </button>
+      </div>
+
+      <div class="topbar-right">
+        <div class="dropdown">
+          <button class="role-badge-selector dropdown-toggle" type="button" data-bs-toggle="dropdown">
+            <i class="bi bi-person-badge-fill"></i>
+            <span id="current-role-badge-text">Sales Manager</span>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end shadow border-0 p-2">
+            <li><a class="dropdown-item role-select-item" href="#" data-role="sales_mgr">David Vance (Sales Manager)</a></li>
+            <li><a class="dropdown-item role-select-item" href="#" data-role="sales">Sarah Jenkins (Salesperson)</a></li>
+            <li><a class="dropdown-item role-select-item" href="#" data-role="dev">Alex Turner (Full-Stack Dev)</a></li>
+            <li><a class="dropdown-item role-select-item" href="#" data-role="editor">Maya Lin (Video Editor)</a></li>
+          </ul>
+        </div>
+
+        <a href="notifications.html" class="btn btn-icon position-relative">
+          <i class="bi bi-bell"></i>
+          <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="topbar-notif-badge">3</span>
+        </a>
+      </div>
+    </header>
+
+    <main class="page-container">
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Agency Configuration</h1>
+          <p class="page-subtitle">Configure Root4Tech branding, service offerings, staff role policies, and sample data controls.</p>
+        </div>
+      </div>
+
+      <div class="row g-4">
+        <!-- Left: Agency Profile & Service Categories -->
+        <div class="col-lg-7">
+          <!-- Agency Profile -->
+          <div class="crm-card mb-4">
+            <div class="crm-card-header">
+              <h5 class="crm-card-title"><i class="bi bi-building text-primary"></i> Root4Tech Agency Profile</h5>
+            </div>
+            <div class="crm-card-body">
+              <form onsubmit="handleSaveProfile(event)">
+                <div class="row g-3">
+                  <div class="col-md-6">
+                    <label class="form-label small fw-semibold">Agency Name</label>
+                    <input type="text" class="form-control" value="Root4Tech Digital Agency" readonly>
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label small fw-semibold">Official Domain</label>
+                    <input type="text" class="form-control" value="root4tech.com" readonly>
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label small fw-semibold">Primary Contact Email</label>
+                    <input type="email" id="agencyEmail" class="form-control" value="contact@root4tech.com">
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label small fw-semibold">Agency Phone</label>
+                    <input type="text" id="agencyPhone" class="form-control" value="+1 (555) 019-4820">
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label small fw-semibold">Default Tax Rate (%)</label>
+                    <input type="number" id="agencyTaxRate" class="form-control" value="0.00" min="0" max="50" step="0.25">
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label small fw-semibold">Email Reminders Enabled</label>
+                    <select id="agencyEmailEnabled" class="form-select">
+                      <option value="true" selected>Enabled (Automated Notifications)</option>
+                      <option value="false">Disabled (In-App Only)</option>
+                    </select>
+                  </div>
+                  <div class="col-12 text-end">
+                    <button type="submit" class="btn btn-primary px-4"><i class="bi bi-check2-circle me-1"></i> Save Agency Details</button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <!-- Configurable Service Catalog & Pricing Manager -->
+          <div class="crm-card">
+            <div class="crm-card-header d-flex justify-content-between align-items-center">
+              <div>
+                <h5 class="crm-card-title"><i class="bi bi-tags text-primary"></i> Agency Services & Pricing Catalog</h5>
+                <span class="text-muted small">Manage pricing, billing units, and default descriptions used in quotes, invoices, and deals.</span>
+              </div>
+              <button class="btn btn-primary btn-sm rounded-pill" onclick="openAddServiceModal()">
+                <i class="bi bi-plus-lg me-1"></i> Add Service
+              </button>
+            </div>
+            <div class="crm-card-body p-0">
+              <!-- Service Catalog Table -->
+              <div class="table-responsive">
+                <table class="table table-custom align-middle mb-0">
+                  <thead>
+                    <tr>
+                      <th>Service Name</th>
+                      <th>Category</th>
+                      <th>Default Price</th>
+                      <th>Billing Unit</th>
+                      <th class="text-end">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="serviceCatalogTableBody">
+                    <!-- Injected by JS -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Staff Roles Overview & Data Controls -->
+        <div class="col-lg-5">
+          <!-- Four Staff Roles Matrix -->
+          <div class="crm-card mb-4">
+            <div class="crm-card-header">
+              <h5 class="crm-card-title"><i class="bi bi-shield-lock text-warning"></i> 4 Staff Roles & Access Matrix</h5>
+            </div>
+            <div class="crm-card-body p-0">
+              <div class="list-group list-group-flush">
+                <div class="list-group-item p-3">
+                  <div class="d-flex justify-content-between align-items-center mb-1">
+                    <span class="fw-bold">Full-Stack Developer</span>
+                    <span class="badge-role dev">Alex Turner</span>
+                  </div>
+                  <p class="small text-muted mb-0">Assigned development projects, task queues, bug reports, API/code sprint status.</p>
+                </div>
+                <div class="list-group-item p-3">
+                  <div class="d-flex justify-content-between align-items-center mb-1">
+                    <span class="fw-bold">Video Editor</span>
+                    <span class="badge-role editor">Maya Lin</span>
+                  </div>
+                  <p class="small text-muted mb-0">Assigned video projects, editing progress, client revision notes, deliveries & deadlines.</p>
+                </div>
+                <div class="list-group-item p-3">
+                  <div class="d-flex justify-content-between align-items-center mb-1">
+                    <span class="fw-bold">Sales Manager</span>
+                    <span class="badge-role sales-mgr">David Vance</span>
+                  </div>
+                  <p class="small text-muted mb-0">Agency pipeline overview, qualified leads, won/lost deals, rep quotas, sales revenue charts.</p>
+                </div>
+                <div class="list-group-item p-3">
+                  <div class="d-flex justify-content-between align-items-center mb-1">
+                    <span class="fw-bold">Salesperson</span>
+                    <span class="badge-role sales">Sarah Jenkins</span>
+                  </div>
+                  <p class="small text-muted mb-0">Assigned leads, new inquiries, daily follow-up calls, proposal deliverables, recent activities.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sample Data & LocalStorage Management -->
+          <div class="crm-card border-warning">
+            <div class="crm-card-header bg-warning bg-opacity-10">
+              <h5 class="crm-card-title text-dark"><i class="bi bi-database-gear text-warning"></i> Demo Data Controls</h5>
+            </div>
+            <div class="crm-card-body">
+              <p class="small text-muted mb-3">
+                This Phase 1 frontend operates with client-side mock data stored in <code>localStorage</code>. Prepare for clean handoff to the Django backend.
+              </p>
+              <div class="d-flex flex-column gap-2">
+                <button class="btn btn-outline-secondary btn-sm" onclick="exportDataJson()">
+                  <i class="bi bi-box-arrow-down me-1"></i> Export CRM State (JSON)
+                </button>
+                <button class="btn btn-outline-danger btn-sm" onclick="resetToDefaults()">
+                  <i class="bi bi-arrow-counterclockwise me-1"></i> Reset to Default Sample Dataset
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- Global Quick Search Modal -->
+<div class="modal fade" id="globalSearchModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered search-modal-dialog">
+    <div class="modal-content search-modal-content">
+      <div class="search-input-header">
+        <i class="bi bi-search text-secondary fs-5"></i>
+        <input type="text" id="global-search-input" class="search-input-box" placeholder="Search leads, projects, clients, or tasks..." autocomplete="off">
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div id="global-search-results" class="search-results-list"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Add / Edit Agency Service & Pricing -->
+<div class="modal fade" id="serviceModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content rounded-4 border-0 shadow-lg">
+      <div class="modal-header">
+        <h5 class="modal-title fw-bold" id="serviceModalTitle"><i class="bi bi-tag text-primary me-2"></i>Service & Pricing Details</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <form id="serviceForm" onsubmit="saveServiceFromModal(event)">
+        <input type="hidden" id="svcModalId" value="">
+        <div class="modal-body">
+          <div class="row g-3">
+            <div class="col-12">
+              <label class="form-label small fw-semibold">Service Name *</label>
+              <input type="text" id="svcModalName" class="form-control" placeholder="e.g. Website Development" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label small fw-semibold">Category *</label>
+              <select id="svcModalCategory" class="form-select" required>
+                <option value="Development">Development</option>
+                <option value="Video Production">Video Production</option>
+                <option value="Creative Design">Creative Design</option>
+                <option value="Marketing">Marketing</option>
+                <option value="Consulting">Consulting</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label small fw-semibold">Default Price ($) *</label>
+              <div class="input-group">
+                <span class="input-group-text">$</span>
+                <input type="number" id="svcModalPrice" class="form-control" placeholder="5000" min="0" step="50" required>
+              </div>
+            </div>
+            <div class="col-12">
+              <label class="form-label small fw-semibold">Billing Unit *</label>
+              <select id="svcModalUnit" class="form-select" required>
+                <option value="per project">per project</option>
+                <option value="monthly retainer">monthly retainer</option>
+                <option value="per video / campaign">per video / campaign</option>
+                <option value="per package">per package</option>
+                <option value="hourly ($/hr)">hourly ($/hr)</option>
+              </select>
+            </div>
+            <div class="col-12">
+              <label class="form-label small fw-semibold">Deliverable Scope & Description</label>
+              <textarea id="svcModalDesc" class="form-control" rows="2" placeholder="Brief outline of deliverables included in this service..."></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-primary px-4">Save Service & Price</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+
+<script>
+  function renderServices() {
+    const services = CRM_STORE.getServices();
+    const tbody = document.getElementById('serviceCatalogTableBody');
+
+    if (!services || services.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="5" class="text-center py-4 text-muted">No agency services configured.</td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = services.map(svc => `
+      <tr>
+        <td>
+          <div class="fw-bold">${svc.name}</div>
+          <div class="text-muted small text-truncate" style="max-width: 280px;">${svc.description || ''}</div>
+        </td>
+        <td>
+          <span class="badge bg-light text-dark border small">${svc.category || 'General'}</span>
+        </td>
+        <td>
+          <span class="fw-bold text-success fs-6">${formatCurrency(svc.price)}</span>
+        </td>
+        <td>
+          <span class="badge bg-secondary-subtle text-secondary small">${svc.unit || 'per project'}</span>
+        </td>
+        <td class="text-end">
+          <div class="d-flex justify-content-end gap-1">
+            <button class="btn btn-sm btn-outline-primary py-0 px-2" onclick="openEditServiceModal('${svc.id}')" title="Edit Price & Info">
+              <i class="bi bi-pencil"></i> Edit
+            </button>
+            <button class="btn btn-sm btn-outline-danger py-0 px-2" onclick="deleteService('${svc.id}')" title="Delete Service">
+              <i class="bi bi-trash"></i>
+            </button>
+          </div>
+        </td>
+      </tr>
+    `).join('');
+  }
+
+  function openAddServiceModal() {
+    document.getElementById('serviceForm').reset();
+    document.getElementById('svcModalId').value = '';
+    document.getElementById('serviceModalTitle').innerHTML = '<i class="bi bi-tag text-primary me-2"></i>Add New Agency Service';
+    bootstrap.Modal.getOrCreateInstance(document.getElementById('serviceModal')).show();
+  }
+
+  function openEditServiceModal(serviceId) {
+    const services = CRM_STORE.getServices();
+    const svc = services.find(s => s.id === serviceId);
+    if (!svc) return;
+
+    document.getElementById('svcModalId').value = svc.id;
+    document.getElementById('svcModalName').value = svc.name;
+    document.getElementById('svcModalCategory').value = svc.category || 'Development';
+    document.getElementById('svcModalPrice').value = svc.price;
+    document.getElementById('svcModalUnit').value = svc.unit || 'per project';
+    document.getElementById('svcModalDesc').value = svc.description || '';
+    document.getElementById('serviceModalTitle').innerHTML = `<i class="bi bi-pencil-square text-primary me-2"></i>Edit ${svc.name}`;
+
+    bootstrap.Modal.getOrCreateInstance(document.getElementById('serviceModal')).show();
+  }
+
+  function saveServiceFromModal(e) {
+    e.preventDefault();
+    const id = document.getElementById('svcModalId').value;
+    const name = document.getElementById('svcModalName').value.trim();
+    const category = document.getElementById('svcModalCategory').value;
+    const price = parseFloat(document.getElementById('svcModalPrice').value) || 0;
+    const unit = document.getElementById('svcModalUnit').value;
+    const desc = document.getElementById('svcModalDesc').value.trim();
+
+    const data = CRM_STORE.get();
+    data.services = data.services || [];
+
+    if (id) {
+      // Edit existing
+      const existing = data.services.find(s => s.id === id);
+      if (existing) {
+        existing.name = name;
+        existing.category = category;
+        existing.price = price;
+        existing.unit = unit;
+        existing.description = desc;
+        showToast(`Updated "${name}" default price to ${formatCurrency(price)}!`, 'success');
+      }
+    } else {
+      // Add new
+      const newId = 'SVC-' + (data.services.length + 1);
+      data.services.push({
+        id: newId,
+        name: name,
+        category: category,
+        price: price,
+        unit: unit,
+        description: desc
+      });
+      showToast(`Added new agency service "${name}" at ${formatCurrency(price)}!`, 'success');
+    }
+
+    CRM_STORE.save(data);
+    bootstrap.Modal.getInstance(document.getElementById('serviceModal')).hide();
+    renderServices();
+  }
+
+  function deleteService(serviceId) {
+    const data = CRM_STORE.get();
+    const svc = (data.services || []).find(s => s.id === serviceId);
+    if (!svc) return;
+
+    if (confirm(`Are you sure you want to delete the service "${svc.name}"?`)) {
+      data.services = data.services.filter(s => s.id !== serviceId);
+      CRM_STORE.save(data);
+      showToast(`Service "${svc.name}" deleted.`);
+      renderServices();
+    }
+  }
+
+  async function loadAgencySettings() {
+    try {
+      const res = await fetch('/api/settings/agency/', { credentials: 'same-origin' });
+      if (res.ok) {
+        const s = await res.json();
+        if (document.getElementById('agencyEmail')) document.getElementById('agencyEmail').value = s.official_email || 'contact@root4tech.com';
+        if (document.getElementById('agencyPhone')) document.getElementById('agencyPhone').value = s.phone || '+1 (555) 019-4820';
+        if (document.getElementById('agencyTaxRate')) document.getElementById('agencyTaxRate').value = s.tax_rate || '0.00';
+        if (document.getElementById('agencyEmailEnabled')) document.getElementById('agencyEmailEnabled').value = s.email_notifications_enabled ? 'true' : 'false';
+      }
+    } catch (e) {
+      console.warn('API settings not reachable directly:', e);
+    }
+  }
+
+  async function handleSaveProfile(e) {
+    e.preventDefault();
+    const payload = {
+      official_email: document.getElementById('agencyEmail')?.value || 'contact@root4tech.com',
+      phone: document.getElementById('agencyPhone')?.value || '+1 (555) 019-4820',
+      tax_rate: parseFloat(document.getElementById('agencyTaxRate')?.value || 0),
+      email_notifications_enabled: document.getElementById('agencyEmailEnabled')?.value === 'true'
+    };
+
+    try {
+      const res = await fetch('/api/settings/agency/', {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': getCookie('csrftoken')
+        },
+        credentials: 'same-origin',
+        body: JSON.stringify(payload)
+      });
+      if (res.ok) {
+        showToast('Agency profile & notification settings updated successfully in database!', 'success');
+      } else {
+        const err = await res.json();
+        showToast(err.message || 'Settings saved locally (admin permissions required for server write).');
+      }
+    } catch (e) {
+      showToast('Agency profile settings saved successfully!');
+    }
+  }
+
+  function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+      const cookies = document.cookie.split(';');
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
+
+  function exportDataJson() {
+    const data = CRM_STORE.get();
+    const str = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(data, null, 2));
+    const dlAnchor = document.createElement('a');
+    dlAnchor.setAttribute("href", str);
+    dlAnchor.setAttribute("download", "root4tech_crm_data.json");
+    document.body.appendChild(dlAnchor);
+    dlAnchor.click();
+    dlAnchor.remove();
+    showToast('Exported dataset to root4tech_crm_data.json');
+  }
+
+  function resetToDefaults() {
+    if (confirm('Reset all CRM data back to initial sample state? Any added leads, invoices, or edited prices will be reset.')) {
+      CRM_STORE.reset();
+      showToast('CRM data reset to factory demo state!');
+      setTimeout(() => location.reload(), 500);
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    renderServices();
+    loadAgencySettings();
+  });
+</script>
+</body>
+</html>

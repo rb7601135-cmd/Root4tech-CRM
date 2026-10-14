@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Project Details - Root4Tech CRM</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div id="app-wrapper">
+  <div class="sidebar-backdrop"></div>
+
+  <!-- Sidebar -->
+  <aside id="sidebar">
+    <div class="sidebar-header">
+      <a href="index.html" class="brand-link">
+        <img src="assets/images/logo.svg" alt="Root4Tech Logo" class="brand-logo-img">
+      </a>
+      <button class="btn btn-sm btn-icon d-none d-lg-flex" id="sidebar-toggle-btn" title="Toggle Sidebar">
+        <i class="bi bi-layout-sidebar-inset text-secondary"></i>
+      </button>
+    </div>
+
+    <div class="sidebar-nav">
+      <div class="nav-section-title">Core Management</div>
+      <ul class="sidebar-menu">
+        <li><a href="index.html" class="sidebar-link"><i class="bi bi-grid-1x2-fill"></i><span>Dashboard</span></a></li>
+        <li><a href="leads.html" class="sidebar-link"><i class="bi bi-funnel-fill"></i><span>Leads</span></a></li>
+        <li><a href="clients.html" class="sidebar-link"><i class="bi bi-buildings-fill"></i><span>Clients</span></a></li>
+        <li><a href="projects.html" class="sidebar-link active"><i class="bi bi-briefcase-fill"></i><span>Projects</span></a></li>
+        <li><a href="tasks.html" class="sidebar-link"><i class="bi bi-check2-square"></i><span>Tasks</span></a></li>
+      </ul>
+
+      <div class="nav-section-title">Operations & Sales</div>
+      <ul class="sidebar-menu">
+        <li><a href="calendar.html" class="sidebar-link"><i class="bi bi-calendar3"></i><span>Calendar & Follow-ups</span></a></li>
+        <li><a href="invoices.html" class="sidebar-link"><i class="bi bi-receipt"></i><span>Quotations & Invoices</span></a></li>
+        <li><a href="reports.html" class="sidebar-link"><i class="bi bi-graph-up-arrow"></i><span>Reports & Analytics</span></a></li>
+      </ul>
+
+      <div class="nav-section-title">Agency Admin</div>
+      <ul class="sidebar-menu">
+        <li><a href="team.html" class="sidebar-link"><i class="bi bi-people-fill"></i><span>Team Members</span></a></li>
+        <li><a href="notifications.html" class="sidebar-link"><i class="bi bi-bell-fill"></i><span>Notifications</span></a></li>
+        <li><a href="settings.html" class="sidebar-link"><i class="bi bi-gear-fill"></i><span>Settings</span></a></li>
+      </ul>
+    </div>
+
+    <div class="sidebar-footer">
+      <div class="user-quick-card">
+        <div class="user-avatar current-user-avatar status-online" style="background-color: #059669;">DV</div>
+        <div class="user-info">
+          <div class="user-name current-user-name">David Vance</div>
+          <div class="user-role current-user-role">Sales Manager</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content Wrap -->
+  <div id="main-content">
+    <header id="topbar">
+      <div class="topbar-left">
+        <button class="btn btn-icon d-lg-none" id="mobile-sidebar-toggle-btn"><i class="bi bi-list fs-5"></i></button>
+        <button class="search-trigger-btn" data-bs-toggle="modal" data-bs-target="#globalSearchModal">
+          <i class="bi bi-search"></i>
+          <span>Search CRM...</span>
+          <span class="kbd-shortcut">Ctrl K</span>
+        </button>
+      </div>
+
+      <div class="topbar-right">
+        <div class="dropdown">
+          <button class="role-badge-selector dropdown-toggle" type="button" data-bs-toggle="dropdown">
+            <i class="bi bi-person-badge-fill"></i>
+            <span id="current-role-badge-text">Sales Manager</span>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end shadow border-0 p-2">
+            <li><a class="dropdown-item role-select-item" href="#" data-role="sales_mgr">David Vance (Sales Manager)</a></li>
+            <li><a class="dropdown-item role-select-item" href="#" data-role="sales">Sarah Jenkins (Salesperson)</a></li>
+            <li><a class="dropdown-item role-select-item" href="#" data-role="dev">Alex Turner (Full-Stack Dev)</a></li>
+            <li><a class="dropdown-item role-select-item" href="#" data-role="editor">Maya Lin (Video Editor)</a></li>
+          </ul>
+        </div>
+
+        <a href="notifications.html" class="btn btn-icon position-relative">
+          <i class="bi bi-bell"></i>
+          <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="topbar-notif-badge">3</span>
+        </a>
+      </div>
+    </header>
+
+    <main class="page-container">
+      <div class="mb-3">
+        <a href="projects.html" class="text-decoration-none text-muted small"><i class="bi bi-arrow-left me-1"></i> Back to Projects Directory</a>
+      </div>
+
+      <!-- Project Header Banner -->
+      <div class="crm-card mb-4 p-4">
+        <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+          <div>
+            <div class="d-flex align-items-center gap-2 mb-1">
+              <span class="badge bg-secondary-subtle text-secondary" id="projIdBadge">PRJ-201</span>
+              <span class="badge bg-primary-subtle text-primary" id="projServiceBadge">Website Development</span>
+              <span class="badge-priority high" id="projPriorityBadge">High</span>
+              <span class="badge bg-light text-dark border" id="projStatusBadge">In Progress</span>
+            </div>
+            <h2 class="fw-bold mb-1" id="projName">OmniTrade Web Trading Terminal</h2>
+            <div class="text-muted" id="projClient"><i class="bi bi-buildings me-1"></i>Client: OmniTrade FinTech</div>
+          </div>
+          <div class="d-flex align-items-center gap-2 flex-wrap">
+            <button class="btn btn-outline-secondary btn-sm" onclick="updateProjectProgressPrompt()"><i class="bi bi-sliders me-1"></i> Progress</button>
+            <button class="btn btn-outline-info btn-sm" onclick="markReadyForReview()"><i class="bi bi-send-check me-1"></i> Ready for Review</button>
+            <button class="btn btn-outline-warning btn-sm" onclick="requestProjectRevisionPrompt()"><i class="bi bi-arrow-repeat me-1"></i> Revision</button>
+            <button class="btn btn-success btn-sm" onclick="markProjectComplete()"><i class="bi bi-check2-circle me-1"></i> Complete</button>
+            <a href="invoices.html" class="btn btn-primary btn-sm"><i class="bi bi-receipt me-1"></i> Invoices</a>
+          </div>
+        </div>
+
+        <div class="mt-4 pt-3 border-top">
+          <div class="d-flex justify-content-between small text-muted mb-1">
+            <span>Overall Completion Progress</span>
+            <span class="fw-bold text-dark" id="projProgressText">68%</span>
+          </div>
+          <div class="progress" style="height: 10px; border-radius: 5px;">
+            <div class="progress-bar bg-primary" id="projProgressBar" style="width: 68%;"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row g-4">
+        <!-- Project Sidebar Metadata -->
+        <div class="col-lg-4">
+          <div class="crm-card mb-4">
+            <div class="crm-card-header">
+              <h5 class="crm-card-title"><i class="bi bi-info-circle text-primary"></i> Project Specs</h5>
+            </div>
+            <div class="crm-card-body">
+              <div class="mb-3">
+                <span class="text-muted small d-block">Lead Team Member</span>
+                <div class="d-flex align-items-center gap-2 mt-1">
+                  <div class="user-avatar" id="assigneeAvatar" style="width: 32px; height: 32px; background: #2563eb; font-size: 0.8rem;">AT</div>
+                  <div>
+                    <div class="fw-semibold" id="projAssignee">Alex Turner</div>
+                    <div class="text-muted small">Full-Stack Developer</div>
+                  </div>
+                </div>
+              </div>
+              <div class="mb-3">
+                <span class="text-muted small d-block">Total Approved Budget</span>
+                <h4 class="fw-bold text-success mb-0" id="projBudget">$24,000</h4>
+              </div>
+              <div class="mb-3">
+                <span class="text-muted small d-block">Start Date</span>
+                <span class="fw-semibold" id="projStartDate">Sep 15, 2026</span>
+              </div>
+              <div class="mb-3">
+                <span class="text-muted small d-block">Target Deadline</span>
+                <span class="fw-bold text-danger" id="projDeadline">Nov 20, 2026</span>
+              </div>
+              <div>
+                <span class="text-muted small d-block">Deliverable Description</span>
+                <p class="small text-muted mt-1 mb-0" id="projDesc">
+                  High-performance real-time data web interface built with modern frontend & Django APIs.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Milestones Card -->
+          <div class="crm-card">
+            <div class="crm-card-header">
+              <h5 class="crm-card-title"><i class="bi bi-flag-fill text-warning"></i> Key Milestones</h5>
+            </div>
+            <div class="crm-card-body">
+              <div class="list-group list-group-flush">
+                <div class="list-group-item px-0 py-2 d-flex align-items-center justify-content-between">
+                  <span class="small text-decoration-line-through text-muted"><i class="bi bi-check-circle-fill text-success me-2"></i>Discovery & Tech Specs</span>
+                  <span class="badge bg-success-subtle text-success small">Done</span>
+                </div>
+                <div class="list-group-item px-0 py-2 d-flex align-items-center justify-content-between">
+                  <span class="small text-decoration-line-through text-muted"><i class="bi bi-check-circle-fill text-success me-2"></i>UI Architecture & Mockups</span>
+                  <span class="badge bg-success-subtle text-success small">Done</span>
+                </div>
+                <div class="list-group-item px-0 py-2 d-flex align-items-center justify-content-between">
+                  <span class="small fw-semibold"><i class="bi bi-hourglass-split text-primary me-2"></i>Frontend Engine & Data Feeds</span>
+                  <span class="badge bg-primary-subtle text-primary small">Active</span>
+                </div>
+                <div class="list-group-item px-0 py-2 d-flex align-items-center justify-content-between">
+                  <span class="small text-muted"><i class="bi bi-circle text-secondary me-2"></i>QA, Staging & Client Signoff</span>
+                  <span class="badge bg-light text-muted border small">Pending</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Project Tasks & Bug/Revision Logs -->
+        <div class="col-lg-8">
+          <!-- Tasks for this Project -->
+          <div class="crm-card mb-4">
+            <div class="crm-card-header">
+              <h5 class="crm-card-title"><i class="bi bi-check2-square text-primary"></i> Project Tasks</h5>
+              <a href="tasks.html" class="btn btn-sm btn-outline-primary"><i class="bi bi-plus"></i> Task Board</a>
+            </div>
+            <div class="crm-card-body p-0">
+              <div class="list-group list-group-flush" id="projectTasksList">
+                <!-- Injected by JS -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Dynamic Quality Assurance Section (Bugs or Revisions) -->
+          <div class="crm-card" id="qaSectionCard">
+            <div class="crm-card-header">
+              <h5 class="crm-card-title" id="qaSectionTitle"><i class="bi bi-bug text-danger"></i> Quality Assurance & Issue Reports</h5>
+            </div>
+            <div class="crm-card-body p-0">
+              <div class="list-group list-group-flush" id="qaItemsList">
+                <!-- Injected by JS -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- Global Quick Search Modal -->
+<div class="modal fade" id="globalSearchModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered search-modal-dialog">
+    <div class="modal-content search-modal-content">
+      <div class="search-input-header">
+        <i class="bi bi-search text-secondary fs-5"></i>
+        <input type="text" id="global-search-input" class="search-input-box" placeholder="Search leads, projects, clients, or tasks..." autocomplete="off">
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div id="global-search-results" class="search-results-list"></div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+
+<script>
+  let activeProj = null;
+
+  function loadProjectDetails() {
+    const params = new URLSearchParams(window.location.search);
+    const projId = params.get('id') || 'PRJ-201';
+    const data = CRM_STORE.get();
+    activeProj = data.projects.find(p => p.id === projId) || data.projects[0];
+
+    if (!activeProj) return;
+
+    document.getElementById('projIdBadge').textContent = activeProj.id;
+    document.getElementById('projServiceBadge').textContent = activeProj.serviceType;
+    document.getElementById('projPriorityBadge').textContent = activeProj.priority;
+    document.getElementById('projPriorityBadge').className = `badge-priority ${activeProj.priority.toLowerCase()}`;
+    document.getElementById('projStatusBadge').textContent = activeProj.status;
+    document.getElementById('projName').textContent = activeProj.projectName;
+    document.getElementById('projClient').innerHTML = `<i class="bi bi-buildings me-1"></i>Client: ${activeProj.client}`;
+    document.getElementById('projProgressText').textContent = `${activeProj.progress}%`;
+    document.getElementById('projProgressBar').style.width = `${activeProj.progress}%`;
+
+    document.getElementById('projAssignee').textContent = activeProj.assignedTeamMember;
+    document.getElementById('projBudget').textContent = formatCurrency(activeProj.budget);
+    document.getElementById('projStartDate').textContent = formatDate(activeProj.startDate);
+    document.getElementById('projDeadline').textContent = formatDate(activeProj.deadline);
+    document.getElementById('projDesc').textContent = activeProj.description;
+
+    // Avatar styling
+    const avatar = document.getElementById('assigneeAvatar');
+    if (activeProj.assignedTeamMember.includes('Alex')) {
+      avatar.textContent = 'AT';
+      avatar.style.backgroundColor = '#2563eb';
+    } else if (activeProj.assignedTeamMember.includes('Maya')) {
+      avatar.textContent = 'ML';
+      avatar.style.backgroundColor = '#7e22ce';
+    } else {
+      avatar.textContent = 'DV';
+      avatar.style.backgroundColor = '#059669';
+    }
+
+    // Associated tasks
+    const matchedTasks = (data.tasks || []).filter(t => t.project.toLowerCase().includes(activeProj.projectName.toLowerCase()));
+    const tList = document.getElementById('projectTasksList');
+    if (matchedTasks.length === 0) {
+      tList.innerHTML = `<div class="p-3 text-center text-muted">No specific tasks logged for this project yet.</div>`;
+    } else {
+      tList.innerHTML = matchedTasks.map(t => `
+        <div class="list-group-item p-3 d-flex align-items-center justify-content-between">
+          <div class="d-flex align-items-center gap-3">
+            <input type="checkbox" class="form-check-input" ${t.status === 'Done' ? 'checked' : ''} onchange="toggleTaskDone('${t.id}', this.checked)">
+            <div>
+              <div class="fw-semibold ${t.status === 'Done' ? 'text-decoration-line-through text-muted' : ''}">${t.title}</div>
+              <div class="text-muted small"><i class="bi bi-clock me-1"></i> Due ${formatDate(t.dueDate)} &bull; ${t.assignedTo}</div>
+            </div>
+          </div>
+          <span class="badge bg-light text-dark border">${t.status}</span>
+        </div>
+      `).join('');
+    }
+
+    // QA Section (Bugs if Website Dev, Revisions if Video Editing)
+    const qaTitle = document.getElementById('qaSectionTitle');
+    const qaList = document.getElementById('qaItemsList');
+
+    if (activeProj.serviceType === 'Video Editing') {
+      qaTitle.innerHTML = `<i class="bi bi-chat-square-quote-fill text-warning"></i> Client Video Revision Feedback`;
+      const revs = data.revisions || [];
+      qaList.innerHTML = revs.map(r => `
+        <div class="list-group-item p-3">
+          <div class="d-flex justify-content-between align-items-center mb-1">
+            <span class="fw-bold">${r.version} &bull; ${r.requestedBy}</span>
+            <span class="badge ${r.status === 'Approved' ? 'bg-success' : 'bg-warning text-dark'}">${r.status}</span>
+          </div>
+          <p class="small text-muted mb-0 fst-italic">"${r.feedback}"</p>
+        </div>
+      `).join('');
+    } else {
+      qaTitle.innerHTML = `<i class="bi bi-bug-fill text-danger"></i> Bug Reports & Regression Tracker`;
+      const bugs = data.bugs || [];
+      qaList.innerHTML = bugs.map(b => `
+        <div class="list-group-item p-3 d-flex justify-content-between align-items-center">
+          <div>
+            <div class="fw-semibold">${b.title}</div>
+            <div class="text-muted small">${b.id} &bull; Reported by ${b.reportedBy}</div>
+          </div>
+          <span class="badge ${b.severity === 'Critical' ? 'bg-danger' : 'bg-warning text-dark'}">${b.severity}</span>
+        </div>
+      `).join('');
+    }
+  }
+
+  function updateProjectProgressPrompt() {
+    const newProgress = prompt('Enter new project completion percentage (0-100):', activeProj.progress);
+    if (newProgress !== null && !isNaN(newProgress)) {
+      const pVal = Math.min(100, Math.max(0, parseInt(newProgress)));
+      const data = CRM_STORE.get();
+      const p = data.projects.find(x => x.id === activeProj.id);
+      if (p) {
+        p.progress = pVal;
+        if (pVal === 100) p.status = 'Completed';
+        CRM_STORE.save(data);
+        activeProj = p;
+        loadProjectDetails();
+        showToast(`Progress updated to ${pVal}%!`);
+      }
+    }
+  }
+
+  function toggleTaskDone(taskId, isChecked) {
+    const data = CRM_STORE.get();
+    const task = data.tasks.find(t => t.id === taskId);
+    if (task) {
+      task.status = isChecked ? 'Done' : 'In Progress';
+      CRM_STORE.save(data);
+      showToast(`Task marked as ${task.status}`);
+      loadProjectDetails();
+    }
+  }
+
+  async function markReadyForReview() {
+    let pk = activeProj.id;
+    if (typeof pk === 'string' && pk.startsWith('PRJ-')) {
+      pk = parseInt(pk.replace('PRJ-', ''));
+    }
+    try {
+      const res = await fetch(`/api/projects/${pk}/ready-for-review/`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken') },
+        credentials: 'same-origin'
+      });
+      if (res.ok) {
+        showToast('Project marked as Ready for Review! Managers notified.', 'success');
+      } else {
+        showToast('Project status updated to Ready for Review!');
+      }
+    } catch (e) {
+      showToast('Project marked as Ready for Review!');
+    }
+    activeProj.status = 'Ready for Review';
+    activeProj.progress = Math.max(activeProj.progress || 0, 90);
+    const data = CRM_STORE.get();
+    const p = data.projects.find(x => x.id === activeProj.id);
+    if (p) { p.status = 'Ready for Review'; p.progress = activeProj.progress; CRM_STORE.save(data); }
+    loadProjectDetails();
+  }
+
+  async function markProjectComplete() {
+    if (!confirm('Mark this project as Completed and delivered to client?')) return;
+    let pk = activeProj.id;
+    if (typeof pk === 'string' && pk.startsWith('PRJ-')) {
+      pk = parseInt(pk.replace('PRJ-', ''));
+    }
+    try {
+      const res = await fetch(`/api/projects/${pk}/mark-completed/`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken') },
+        credentials: 'same-origin'
+      });
+      if (res.ok) {
+        showToast('Project signed off as Completed!', 'success');
+      } else {
+        const err = await res.json();
+        showToast(err.message || 'Only Sales Managers or Administrators can sign off project completion.');
+        if (res.status === 403) return;
+      }
+    } catch (e) {
+      showToast('Project marked as Completed!', 'success');
+    }
+    activeProj.status = 'Completed';
+    activeProj.progress = 100;
+    const data = CRM_STORE.get();
+    const p = data.projects.find(x => x.id === activeProj.id);
+    if (p) { p.status = 'Completed'; p.progress = 100; CRM_STORE.save(data); }
+    loadProjectDetails();
+  }
+
+  async function requestProjectRevisionPrompt() {
+    const feedback = prompt('Enter client or internal revision request details:');
+    if (!feedback) return;
+    let pk = activeProj.id;
+    if (typeof pk === 'string' && pk.startsWith('PRJ-')) {
+      pk = parseInt(pk.replace('PRJ-', ''));
+    }
+    try {
+      await fetch(`/api/projects/${pk}/request-revision/`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken') },
+        credentials: 'same-origin',
+        body: JSON.stringify({ notes: feedback })
+      });
+    } catch (e) {}
+    showToast('Revision request logged and team notified!', 'warning');
+    activeProj.status = 'In Review';
+    const data = CRM_STORE.get();
+    const p = data.projects.find(x => x.id === activeProj.id);
+    if (p) { p.status = 'In Review'; CRM_STORE.save(data); }
+    loadProjectDetails();
+  }
+
+  function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+      const cookies = document.cookie.split(';');
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
+
+  document.addEventListener('DOMContentLoaded', loadProjectDetails);
+</script>
+</body>
+</html>

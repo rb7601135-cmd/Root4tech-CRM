@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Team Members - Root4Tech CRM</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div id="app-wrapper">
+  <div class="sidebar-backdrop"></div>
+
+  <!-- Sidebar -->
+  <aside id="sidebar">
+    <div class="sidebar-header">
+      <a href="index.html" class="brand-link">
+        <img src="assets/images/logo.svg" alt="Root4Tech Logo" class="brand-logo-img">
+      </a>
+      <button class="btn btn-sm btn-icon d-none d-lg-flex" id="sidebar-toggle-btn" title="Toggle Sidebar">
+        <i class="bi bi-layout-sidebar-inset text-secondary"></i>
+      </button>
+    </div>
+
+    <div class="sidebar-nav">
+      <div class="nav-section-title">Core Management</div>
+      <ul class="sidebar-menu">
+        <li><a href="index.html" class="sidebar-link"><i class="bi bi-grid-1x2-fill"></i><span>Dashboard</span></a></li>
+        <li><a href="leads.html" class="sidebar-link"><i class="bi bi-funnel-fill"></i><span>Leads</span></a></li>
+        <li><a href="clients.html" class="sidebar-link"><i class="bi bi-buildings-fill"></i><span>Clients</span></a></li>
+        <li><a href="projects.html" class="sidebar-link"><i class="bi bi-briefcase-fill"></i><span>Projects</span></a></li>
+        <li><a href="tasks.html" class="sidebar-link"><i class="bi bi-check2-square"></i><span>Tasks</span></a></li>
+      </ul>
+
+      <div class="nav-section-title">Operations & Sales</div>
+      <ul class="sidebar-menu">
+        <li><a href="calendar.html" class="sidebar-link"><i class="bi bi-calendar3"></i><span>Calendar & Follow-ups</span></a></li>
+        <li><a href="invoices.html" class="sidebar-link"><i class="bi bi-receipt"></i><span>Quotations & Invoices</span></a></li>
+        <li><a href="reports.html" class="sidebar-link"><i class="bi bi-graph-up-arrow"></i><span>Reports & Analytics</span></a></li>
+      </ul>
+
+      <div class="nav-section-title">Agency Admin</div>
+      <ul class="sidebar-menu">
+        <li><a href="team.html" class="sidebar-link active"><i class="bi bi-people-fill"></i><span>Team Members</span></a></li>
+        <li><a href="notifications.html" class="sidebar-link"><i class="bi bi-bell-fill"></i><span>Notifications</span></a></li>
+        <li><a href="settings.html" class="sidebar-link"><i class="bi bi-gear-fill"></i><span>Settings</span></a></li>
+      </ul>
+    </div>
+
+    <div class="sidebar-footer">
+      <div class="user-quick-card">
+        <div class="user-avatar current-user-avatar status-online" style="background-color: #059669;">DV</div>
+        <div class="user-info">
+          <div class="user-name current-user-name">David Vance</div>
+          <div class="user-role current-user-role">Sales Manager</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content Wrap -->
+  <div id="main-content">
+    <header id="topbar">
+      <div class="topbar-left">
+        <button class="btn btn-icon d-lg-none" id="mobile-sidebar-toggle-btn"><i class="bi bi-list fs-5"></i></button>
+        <button class="search-trigger-btn" data-bs-toggle="modal" data-bs-target="#globalSearchModal">
+          <i class="bi bi-search"></i>
+          <span>Search CRM...</span>
+          <span class="kbd-shortcut">Ctrl K</span>
+        </button>
+      </div>
+
+      <div class="topbar-right">
+        <div class="dropdown">
+          <button class="role-badge-selector dropdown-toggle" type="button" data-bs-toggle="dropdown">
+            <i class="bi bi-person-badge-fill"></i>
+            <span id="current-role-badge-text">Sales Manager</span>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end shadow border-0 p-2">
+            <li><a class="dropdown-item role-select-item" href="#" data-role="sales_mgr">David Vance (Sales Manager)</a></li>
+            <li><a class="dropdown-item role-select-item" href="#" data-role="sales">Sarah Jenkins (Salesperson)</a></li>
+            <li><a class="dropdown-item role-select-item" href="#" data-role="dev">Alex Turner (Full-Stack Dev)</a></li>
+            <li><a class="dropdown-item role-select-item" href="#" data-role="editor">Maya Lin (Video Editor)</a></li>
+          </ul>
+        </div>
+
+        <a href="notifications.html" class="btn btn-icon position-relative">
+          <i class="bi bi-bell"></i>
+          <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="topbar-notif-badge">3</span>
+        </a>
+      </div>
+    </header>
+
+    <main class="page-container">
+      <div class="page-header d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
+        <div>
+          <h1 class="page-title">Agency Staff Directory</h1>
+          <p class="page-subtitle">Manage agency staff members, edit roles, contact info, expertise, and add new team members.</p>
+        </div>
+        <button class="btn btn-primary" onclick="openAddMemberModal()">
+          <i class="bi bi-person-plus-fill me-1"></i> Add Team Member
+        </button>
+      </div>
+
+      <!-- Staff Cards Grid -->
+      <div class="row g-4" id="teamCardsGrid">
+        <!-- Injected by JS -->
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- Modal: Add / Edit Team Member -->
+<div class="modal fade" id="teamMemberModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content rounded-4 border-0 shadow-lg">
+      <div class="modal-header">
+        <h5 class="modal-title fw-bold" id="teamMemberModalTitle">
+          <i class="bi bi-person-gear text-primary me-2"></i>Add Team Member
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <form id="teamMemberForm" onsubmit="handleSaveTeamMember(event)">
+        <input type="hidden" id="tmId">
+        <div class="modal-body p-4">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label small fw-semibold">Full Name *</label>
+              <input type="text" id="tmName" class="form-control" placeholder="e.g. Liam Parker" required oninput="autoGenerateInitials()">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label small fw-semibold">Role / Job Title *</label>
+              <input type="text" id="tmRole" class="form-control" placeholder="e.g. Lead UI/UX Designer" required>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label small fw-semibold">Role Persona Category *</label>
+              <select id="tmRoleKey" class="form-select" required>
+                <option value="dev">Developer (dev)</option>
+                <option value="editor">Video Editor (editor)</option>
+                <option value="sales_mgr">Sales Manager (sales_mgr)</option>
+                <option value="sales">Salesperson (sales)</option>
+                <option value="custom">Agency Specialist (custom)</option>
+              </select>
+              <div class="form-text small">Determines badge color styling & topbar persona.</div>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label small fw-semibold">Work Email Address *</label>
+              <input type="email" id="tmEmail" class="form-control" placeholder="e.g. liam@root4tech.com" required>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label small fw-semibold">Phone Number *</label>
+              <input type="text" id="tmPhone" class="form-control" placeholder="e.g. +1 (555) 789-0123" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label small fw-semibold">Login Password</label>
+              <input type="password" id="tmPassword" class="form-control" placeholder="Leave blank to keep existing password">
+              <div class="form-text small">Sets or updates staff login password.</div>
+            </div>
+            <div class="col-md-3">
+              <label class="form-label small fw-semibold">Avatar Initials *</label>
+              <input type="text" id="tmAvatar" class="form-control text-uppercase text-center fw-bold" maxlength="3" placeholder="LP" required>
+            </div>
+            <div class="col-md-3">
+              <label class="form-label small fw-semibold">Avatar Color *</label>
+              <div class="d-flex align-items-center gap-2">
+                <input type="color" id="tmColor" class="form-control form-control-color" value="#2563eb" title="Choose avatar color">
+                <span class="small text-muted font-monospace" id="tmColorHex">#2563eb</span>
+              </div>
+            </div>
+
+            <div class="col-12">
+              <label class="form-label small fw-semibold">Skills & Expertise (comma-separated)</label>
+              <input type="text" id="tmSkills" class="form-control" placeholder="e.g. Figma, Design Systems, Mobile Apps, Prototyping">
+              <div class="form-text small">Separate skills with commas (e.g. React, Node.js, Next.js).</div>
+            </div>
+
+            <div class="col-md-4">
+              <label class="form-label small fw-semibold">Active Projects Count</label>
+              <input type="number" id="tmProjects" class="form-control" min="0" value="0">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label small fw-semibold">Pending Tasks Count</label>
+              <input type="number" id="tmTasks" class="form-control" min="0" value="0">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label small fw-semibold">Status</label>
+              <select id="tmStatus" class="form-select">
+                <option value="Active">Active</option>
+                <option value="Online">Online</option>
+                <option value="On Leave">On Leave</option>
+                <option value="Remote">Remote</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-primary">
+            <i class="bi bi-check2-circle me-1"></i> Save Team Member
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Global Quick Search Modal -->
+<div class="modal fade" id="globalSearchModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered search-modal-dialog">
+    <div class="modal-content search-modal-content">
+      <div class="search-input-header">
+        <i class="bi bi-search text-secondary fs-5"></i>
+        <input type="text" id="global-search-input" class="search-input-box" placeholder="Search leads, projects, clients, or tasks..." autocomplete="off">
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div id="global-search-results" class="search-results-list"></div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+
+<script>
+  function renderTeam() {
+    const data = CRM_STORE.get();
+    const currentRole = CRM_STORE.getCurrentRole();
+    const grid = document.getElementById('teamCardsGrid');
+    const members = CRM_STORE.getTeamMembers();
+
+    grid.innerHTML = members.map(member => {
+      const isCurrent = (member.roleKey === currentRole || member.id === currentRole);
+      let roleBadgeClass = 'dev';
+      if (member.roleKey === 'editor') roleBadgeClass = 'editor';
+      if (member.roleKey === 'sales_mgr') roleBadgeClass = 'sales-mgr';
+      if (member.roleKey === 'sales') roleBadgeClass = 'sales';
+
+      return `
+        <div class="col-md-6 col-xl-3">
+          <div class="crm-card h-100 p-4 d-flex flex-column justify-content-between ${isCurrent ? 'border-primary border-2 shadow' : ''}">
+            <div>
+              <div class="d-flex justify-content-between align-items-start mb-3">
+                <span class="badge-role ${roleBadgeClass}">${member.role}</span>
+                <div class="d-flex align-items-center gap-1">
+                  ${isCurrent ? '<span class="badge bg-primary">Active Persona</span>' : '<span class="badge bg-success-subtle text-success">Online</span>'}
+                  <div class="dropdown">
+                    <button class="btn btn-sm btn-icon text-muted" type="button" data-bs-toggle="dropdown" title="Member Actions">
+                      <i class="bi bi-three-dots-vertical"></i>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 small">
+                      <li>
+                        <a class="dropdown-item" href="#" onclick="openEditMemberModal('${member.id}'); return false;">
+                          <i class="bi bi-pencil-square me-2 text-primary"></i> Edit Member
+                        </a>
+                      </li>
+                      ${members.length > 1 ? `
+                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                          <a class="dropdown-item text-danger" href="#" onclick="deleteTeamMember('${member.id}'); return false;">
+                            <i class="bi bi-trash me-2"></i> Remove Member
+                          </a>
+                        </li>
+                      ` : ''}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Avatar & Name -->
+              <div class="text-center my-3">
+                <div class="user-avatar mx-auto mb-2" style="width: 64px; height: 64px; font-size: 1.4rem; background-color: ${member.color || '#2563eb'};">
+                  ${member.avatar || 'TM'}
+                </div>
+                <h5 class="fw-bold mb-0">${member.name}</h5>
+                <div class="text-muted small">${member.role}</div>
+              </div>
+
+              <!-- Contact Info -->
+              <div class="p-3 bg-light rounded-3 mb-3 border small">
+                <div class="d-flex align-items-center gap-2 mb-1 text-truncate">
+                  <i class="bi bi-envelope text-primary"></i>
+                  <span>${member.email}</span>
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                  <i class="bi bi-telephone text-primary"></i>
+                  <span>${member.phone}</span>
+                </div>
+              </div>
+
+              <!-- Skills Tags -->
+              <div class="mb-3">
+                <span class="text-muted small d-block mb-1 fw-bold text-uppercase" style="font-size: 0.68rem;">Expertise & Skills</span>
+                <div class="d-flex flex-wrap gap-1">
+                  ${(member.skills || []).map(s => `<span class="badge bg-light text-dark border small">${s}</span>`).join('')}
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <div class="pt-3 border-top mb-3">
+                <div class="row g-2 text-center">
+                  <div class="col-6">
+                    <span class="text-muted small d-block">Projects</span>
+                    <span class="fw-bold fs-6 text-dark">${member.activeProjectsCount || 0}</span>
+                  </div>
+                  <div class="col-6">
+                    <span class="text-muted small d-block">Tasks</span>
+                    <span class="fw-bold fs-6 text-dark">${member.pendingTasksCount || 0}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="d-flex gap-2">
+                <button class="btn btn-outline-secondary btn-sm" onclick="openEditMemberModal('${member.id}')" title="Edit Member">
+                  <i class="bi bi-pencil me-1"></i> Edit
+                </button>
+                <button class="btn ${isCurrent ? 'btn-primary' : 'btn-outline-primary'} btn-sm flex-grow-1" onclick="switchPersona('${member.roleKey || member.id}')">
+                  <i class="bi bi-person-badge me-1"></i> ${isCurrent ? 'Active Persona' : 'Switch Role'}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function autoGenerateInitials() {
+    const name = document.getElementById('tmName').value.trim();
+    const avatarInput = document.getElementById('tmAvatar');
+    if (!avatarInput.value || avatarInput.dataset.autoGenerated === 'true') {
+      if (name) {
+        const parts = name.split(/\s+/);
+        let initials = parts[0][0];
+        if (parts.length > 1) {
+          initials += parts[parts.length - 1][0];
+        }
+        avatarInput.value = initials.toUpperCase();
+        avatarInput.dataset.autoGenerated = 'true';
+      }
+    }
+  }
+
+  function openAddMemberModal() {
+    document.getElementById('teamMemberForm').reset();
+    document.getElementById('tmId').value = '';
+    document.getElementById('teamMemberModalTitle').innerHTML = '<i class="bi bi-person-plus text-primary me-2"></i>Add New Team Member';
+    document.getElementById('tmColor').value = '#2563eb';
+    document.getElementById('tmColorHex').textContent = '#2563eb';
+    document.getElementById('tmProjects').value = 0;
+    document.getElementById('tmTasks').value = 0;
+    document.getElementById('tmStatus').value = 'Active';
+    document.getElementById('tmAvatar').dataset.autoGenerated = 'true';
+
+    bootstrap.Modal.getOrCreateInstance(document.getElementById('teamMemberModal')).show();
+  }
+
+  function openEditMemberModal(memberId) {
+    const member = CRM_STORE.getTeamMemberById(memberId);
+    if (!member) {
+      showToast('Team member not found.', 'danger');
+      return;
+    }
+
+    document.getElementById('tmId').value = member.id;
+    document.getElementById('tmName').value = member.name || '';
+    document.getElementById('tmRole').value = member.role || '';
+    document.getElementById('tmRoleKey').value = member.roleKey || 'custom';
+    document.getElementById('tmEmail').value = member.email || '';
+    document.getElementById('tmPhone').value = member.phone || '';
+    document.getElementById('tmAvatar').value = member.avatar || '';
+    document.getElementById('tmAvatar').dataset.autoGenerated = 'false';
+    document.getElementById('tmColor').value = member.color || '#2563eb';
+    document.getElementById('tmColorHex').textContent = member.color || '#2563eb';
+    document.getElementById('tmSkills').value = (member.skills || []).join(', ');
+    document.getElementById('tmProjects').value = member.activeProjectsCount || 0;
+    document.getElementById('tmTasks').value = member.pendingTasksCount || 0;
+    document.getElementById('tmStatus').value = member.status || 'Active';
+
+    document.getElementById('teamMemberModalTitle').innerHTML = `<i class="bi bi-pencil-square text-primary me-2"></i>Edit Member: ${member.name}`;
+    bootstrap.Modal.getOrCreateInstance(document.getElementById('teamMemberModal')).show();
+  }
+
+  async function handleSaveTeamMember(e) {
+    e.preventDefault();
+    const id = document.getElementById('tmId').value;
+    const name = document.getElementById('tmName').value.trim();
+    const role = document.getElementById('tmRole').value.trim();
+    const roleKey = document.getElementById('tmRoleKey').value;
+    const email = document.getElementById('tmEmail').value.trim();
+    const phone = document.getElementById('tmPhone').value.trim();
+    const password = document.getElementById('tmPassword')?.value.trim();
+    let avatar = document.getElementById('tmAvatar').value.trim().toUpperCase();
+    const color = document.getElementById('tmColor').value;
+    const skillsRaw = document.getElementById('tmSkills').value;
+    const projects = parseInt(document.getElementById('tmProjects').value) || 0;
+    const tasks = parseInt(document.getElementById('tmTasks').value) || 0;
+    const status = document.getElementById('tmStatus').value;
+
+    if (!avatar && name) {
+      avatar = name.split(/\s+/).map(p => p[0]).join('').substring(0, 2).toUpperCase();
+    }
+
+    const skills = skillsRaw ? skillsRaw.split(',').map(s => s.trim()).filter(Boolean) : [];
+
+    const memberData = {
+      name,
+      role,
+      role_title: role,
+      roleKey,
+      role_key: roleKey,
+      email,
+      phone,
+      avatar,
+      color,
+      skills,
+      activeProjectsCount: projects,
+      pendingTasksCount: tasks,
+      status
+    };
+
+    if (password) {
+      memberData.password = password;
+    }
+
+    // Direct synchronization with Django backend API
+    if (window.CRM_API) {
+      try {
+        let numericId = null;
+        if (id && id.includes('staff_')) {
+          numericId = id.replace('staff_', '');
+        } else if (id && !isNaN(parseInt(id))) {
+          numericId = parseInt(id);
+        }
+
+        if (numericId) {
+          await CRM_API.request(`/api/staff/${numericId}/`, {
+            method: 'PATCH',
+            body: JSON.stringify(memberData)
+          });
+        } else {
+          await CRM_API.request('/api/staff/', {
+            method: 'POST',
+            body: JSON.stringify(memberData)
+          });
+        }
+        await CRM_API.syncStateWithBackend();
+      } catch (err) {
+        console.warn('API staff sync fallback:', err.message);
+      }
+    }
+
+    if (id) {
+      memberData.id = id;
+    }
+
+    CRM_STORE.saveTeamMember(memberData);
+    bootstrap.Modal.getInstance(document.getElementById('teamMemberModal')).hide();
+    
+    // Refresh Topbar Role Switcher and UI
+    if (typeof setupRoleSwitcher === 'function') setupRoleSwitcher();
+    updateTopNavUserData();
+    renderTeam();
+
+    showToast(id ? `Team member ${name} updated successfully!` : `New team member ${name} added successfully!`, 'success');
+  }
+
+  function deleteTeamMember(memberId) {
+    const member = CRM_STORE.getTeamMemberById(memberId);
+    if (!member) return;
+
+    if (confirm(`Are you sure you want to remove ${member.name} (${member.role}) from the agency directory?`)) {
+      const ok = CRM_STORE.deleteTeamMember(memberId);
+      if (ok) {
+        if (typeof setupRoleSwitcher === 'function') setupRoleSwitcher();
+        updateTopNavUserData();
+        renderTeam();
+        showToast(`${member.name} removed from agency staff.`, 'info');
+      } else {
+        showToast('Cannot remove the only remaining team member.', 'danger');
+      }
+    }
+  }
+
+  function switchPersona(roleKey) {
+    CRM_STORE.setCurrentRole(roleKey);
+    updateTopNavUserData();
+    showToast(`Switched active view to ${CRM_STORE.getCurrentUser().name}`);
+    renderTeam();
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    // Sync color picker hex label
+    const colorInput = document.getElementById('tmColor');
+    const colorHex = document.getElementById('tmColorHex');
+    if (colorInput && colorHex) {
+      colorInput.addEventListener('input', (e) => {
+        colorHex.textContent = e.target.value;
+      });
+    }
+
+    renderTeam();
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notifications - Root4Tech CRM</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div id="app-wrapper">
+  <div class="sidebar-backdrop"></div>
+
+  <!-- Sidebar -->
+  <aside id="sidebar">
+    <div class="sidebar-header">
+      <a href="index.html" class="brand-link">
+        <img src="assets/images/logo.svg" alt="Root4Tech Logo" class="brand-logo-img">
+      </a>
+      <button class="btn btn-sm btn-icon d-none d-lg-flex" id="sidebar-toggle-btn" title="Toggle Sidebar">
+        <i class="bi bi-layout-sidebar-inset text-secondary"></i>
+      </button>
+    </div>
+
+    <div class="sidebar-nav">
+      <div class="nav-section-title">Core Management</div>
+      <ul class="sidebar-menu">
+        <li><a href="index.html" class="sidebar-link"><i class="bi bi-grid-1x2-fill"></i><span>Dashboard</span></a></li>
+        <li><a href="leads.html" class="sidebar-link"><i class="bi bi-funnel-fill"></i><span>Leads</span></a></li>
+        <li><a href="clients.html" class="sidebar-link"><i class="bi bi-buildings-fill"></i><span>Clients</span></a></li>
+        <li><a href="projects.html" class="sidebar-link"><i class="bi bi-briefcase-fill"></i><span>Projects</span></a></li>
+        <li><a href="tasks.html" class="sidebar-link"><i class="bi bi-check2-square"></i><span>Tasks</span></a></li>
+      </ul>
+
+      <div class="nav-section-title">Operations & Sales</div>
+      <ul class="sidebar-menu">
+        <li><a href="calendar.html" class="sidebar-link"><i class="bi bi-calendar3"></i><span>Calendar & Follow-ups</span></a></li>
+        <li><a href="invoices.html" class="sidebar-link"><i class="bi bi-receipt"></i><span>Quotations & Invoices</span></a></li>
+        <li><a href="reports.html" class="sidebar-link"><i class="bi bi-graph-up-arrow"></i><span>Reports & Analytics</span></a></li>
+      </ul>
+
+      <div class="nav-section-title">Agency Admin</div>
+      <ul class="sidebar-menu">
+        <li><a href="team.html" class="sidebar-link"><i class="bi bi-people-fill"></i><span>Team Members</span></a></li>
+        <li><a href="notifications.html" class="sidebar-link active"><i class="bi bi-bell-fill"></i><span>Notifications</span></a></li>
+        <li><a href="settings.html" class="sidebar-link"><i class="bi bi-gear-fill"></i><span>Settings</span></a></li>
+      </ul>
+    </div>
+
+    <div class="sidebar-footer">
+      <div class="user-quick-card">
+        <div class="user-avatar current-user-avatar status-online" style="background-color: #059669;">DV</div>
+        <div class="user-info">
+          <div class="user-name current-user-name">David Vance</div>
+          <div class="user-role current-user-role">Sales Manager</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content Wrap -->
+  <div id="main-content">
+    <header id="topbar">
+      <div class="topbar-left">
+        <button class="btn btn-icon d-lg-none" id="mobile-sidebar-toggle-btn"><i class="bi bi-list fs-5"></i></button>
+        <button class="search-trigger-btn" data-bs-toggle="modal" data-bs-target="#globalSearchModal">
+          <i class="bi bi-search"></i>
+          <span>Search CRM...</span>
+          <span class="kbd-shortcut">Ctrl K</span>
+        </button>
+      </div>
+
+      <div class="topbar-right">
+        <div class="dropdown">
+          <button class="role-badge-selector dropdown-toggle" type="button" data-bs-toggle="dropdown">
+            <i class="bi bi-person-badge-fill"></i>
+            <span id="current-role-badge-text">Sales Manager</span>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end shadow border-0 p-2">
+            <li><a class="dropdown-item role-select-item" href="#" data-role="sales_mgr">David Vance (Sales Manager)</a></li>
+            <li><a class="dropdown-item role-select-item" href="#" data-role="sales">Sarah Jenkins (Salesperson)</a></li>
+            <li><a class="dropdown-item role-select-item" href="#" data-role="dev">Alex Turner (Full-Stack Dev)</a></li>
+            <li><a class="dropdown-item role-select-item" href="#" data-role="editor">Maya Lin (Video Editor)</a></li>
+          </ul>
+        </div>
+
+        <a href="notifications.html" class="btn btn-icon position-relative">
+          <i class="bi bi-bell"></i>
+          <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="topbar-notif-badge">3</span>
+        </a>
+      </div>
+    </header>
+
+    <main class="page-container">
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Notification Center</h1>
+          <p class="page-subtitle">Real-time alerts, lead submissions, bug notifications, revision requests, and pipeline events.</p>
+        </div>
+        <div class="d-flex gap-2">
+          <button class="btn btn-outline-secondary btn-sm" onclick="markAllNotificationsRead()">
+            <i class="bi bi-check2-all me-1"></i> Mark All as Read
+          </button>
+        </div>
+      </div>
+
+      <!-- Filters & Notification List -->
+      <div class="row">
+        <div class="col-lg-8 mx-auto">
+          <div class="crm-card">
+            <div class="crm-card-header">
+              <div class="d-flex gap-2">
+                <button class="btn btn-sm btn-outline-primary active notif-filter-btn" data-filter="all" onclick="filterNotifs('all')">All</button>
+                <button class="btn btn-sm btn-outline-primary notif-filter-btn" data-filter="unread" onclick="filterNotifs('unread')">Unread</button>
+                <button class="btn btn-sm btn-outline-primary notif-filter-btn" data-filter="lead" onclick="filterNotifs('lead')">Leads</button>
+                <button class="btn btn-sm btn-outline-primary notif-filter-btn" data-filter="dev" onclick="filterNotifs('dev')">Dev & Bugs</button>
+                <button class="btn btn-sm btn-outline-primary notif-filter-btn" data-filter="editor" onclick="filterNotifs('editor')">Video Revisions</button>
+              </div>
+            </div>
+            <div class="crm-card-body p-0">
+              <div class="list-group list-group-flush" id="notificationsList">
+                <!-- Injected by JS -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- Global Quick Search Modal -->
+<div class="modal fade" id="globalSearchModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered search-modal-dialog">
+    <div class="modal-content search-modal-content">
+      <div class="search-input-header">
+        <i class="bi bi-search text-secondary fs-5"></i>
+        <input type="text" id="global-search-input" class="search-input-box" placeholder="Search leads, projects, clients, or tasks..." autocomplete="off">
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div id="global-search-results" class="search-results-list"></div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+
+<script>
+  let activeFilter = 'all';
+
+  function filterNotifs(filter) {
+    activeFilter = filter;
+    document.querySelectorAll('.notif-filter-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.getAttribute('data-filter') === filter);
+    });
+    renderNotifications();
+  }
+
+  function renderNotifications() {
+    const data = CRM_STORE.get();
+    let notifs = data.notifications || [];
+
+    if (activeFilter === 'unread') {
+      notifs = notifs.filter(n => !n.read);
+    } else if (activeFilter !== 'all') {
+      notifs = notifs.filter(n => n.category === activeFilter);
+    }
+
+    const list = document.getElementById('notificationsList');
+    if (notifs.length === 0) {
+      list.innerHTML = `
+        <div class="text-center py-5 text-muted">
+          <i class="bi bi-bell-slash fs-1 d-block opacity-50 mb-2"></i>
+          <div>No notifications found in this view.</div>
+        </div>
+      `;
+      return;
+    }
+
+    list.innerHTML = notifs.map(n => `
+      <div class="list-group-item p-3 ${!n.read ? 'bg-light bg-opacity-75' : ''}">
+        <div class="d-flex align-items-start justify-content-between gap-3">
+          <div class="d-flex align-items-start gap-3">
+            <div class="user-avatar" style="width: 36px; height: 36px; background: ${n.category === 'lead' ? '#06b6d4' : n.category === 'dev' ? '#ef4444' : n.category === 'editor' ? '#7e22ce' : '#10b981'}; font-size: 0.85rem;">
+              <i class="bi ${n.category === 'lead' ? 'bi-funnel' : n.category === 'dev' ? 'bi-bug' : n.category === 'editor' ? 'bi-camera-reels' : 'bi-bell'}"></i>
+            </div>
+            <div>
+              <div class="d-flex align-items-center gap-2 mb-1">
+                <span class="fw-bold">${n.title}</span>
+                ${!n.read ? '<span class="badge bg-primary" style="font-size: 0.65rem;">New</span>' : ''}
+              </div>
+              <p class="text-muted small mb-1">${n.message}</p>
+              <span class="text-secondary small" style="font-size: 0.75rem;"><i class="bi bi-clock me-1"></i>${n.time}</span>
+            </div>
+          </div>
+          <div>
+            ${!n.read ? `
+              <button class="btn btn-sm btn-link text-primary p-0 text-decoration-none small" onclick="toggleRead('${n.id}')">
+                Mark Read
+              </button>
+            ` : `
+              <span class="text-muted small"><i class="bi bi-check-all"></i> Read</span>
+            `}
+          </div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function toggleRead(notifId) {
+    const data = CRM_STORE.get();
+    const target = (data.notifications || []).find(n => n.id === notifId);
+    if (target) {
+      target.read = true;
+      CRM_STORE.save(data);
+      updateTopNavUserData();
+      renderNotifications();
+    }
+  }
+
+  function markAllNotificationsRead() {
+    const data = CRM_STORE.get();
+    (data.notifications || []).forEach(n => n.read = true);
+    CRM_STORE.save(data);
+    updateTopNavUserData();
+    showToast('All notifications marked as read.');
+    renderNotifications();
+  }
+
+  document.addEventListener('DOMContentLoaded', renderNotifications);
+</script>
+</body>
+</html>

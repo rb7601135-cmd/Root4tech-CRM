@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reports & Analytics - Root4Tech CRM</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div id="app-wrapper">
+  <div class="sidebar-backdrop"></div>
+
+  <!-- Sidebar -->
+  <aside id="sidebar">
+    <div class="sidebar-header">
+      <a href="index.html" class="brand-link">
+        <img src="assets/images/logo.svg" alt="Root4Tech Logo" class="brand-logo-img">
+      </a>
+      <button class="btn btn-sm btn-icon d-none d-lg-flex" id="sidebar-toggle-btn" title="Toggle Sidebar">
+        <i class="bi bi-layout-sidebar-inset text-secondary"></i>
+      </button>
+    </div>
+
+    <div class="sidebar-nav">
+      <div class="nav-section-title">Core Management</div>
+      <ul class="sidebar-menu">
+        <li><a href="index.html" class="sidebar-link"><i class="bi bi-grid-1x2-fill"></i><span>Dashboard</span></a></li>
+        <li><a href="leads.html" class="sidebar-link"><i class="bi bi-funnel-fill"></i><span>Leads</span></a></li>
+        <li><a href="clients.html" class="sidebar-link"><i class="bi bi-buildings-fill"></i><span>Clients</span></a></li>
+        <li><a href="projects.html" class="sidebar-link"><i class="bi bi-briefcase-fill"></i><span>Projects</span></a></li>
+        <li><a href="tasks.html" class="sidebar-link"><i class="bi bi-check2-square"></i><span>Tasks</span></a></li>
+      </ul>
+
+      <div class="nav-section-title">Operations & Sales</div>
+      <ul class="sidebar-menu">
+        <li><a href="calendar.html" class="sidebar-link"><i class="bi bi-calendar3"></i><span>Calendar & Follow-ups</span></a></li>
+        <li><a href="invoices.html" class="sidebar-link"><i class="bi bi-receipt"></i><span>Quotations & Invoices</span></a></li>
+        <li><a href="reports.html" class="sidebar-link active"><i class="bi bi-graph-up-arrow"></i><span>Reports & Analytics</span></a></li>
+      </ul>
+
+      <div class="nav-section-title">Agency Admin</div>
+      <ul class="sidebar-menu">
+        <li><a href="team.html" class="sidebar-link"><i class="bi bi-people-fill"></i><span>Team Members</span></a></li>
+        <li><a href="notifications.html" class="sidebar-link"><i class="bi bi-bell-fill"></i><span>Notifications</span></a></li>
+        <li><a href="settings.html" class="sidebar-link"><i class="bi bi-gear-fill"></i><span>Settings</span></a></li>
+      </ul>
+    </div>
+
+    <div class="sidebar-footer">
+      <div class="user-quick-card">
+        <div class="user-avatar current-user-avatar status-online" style="background-color: #059669;">DV</div>
+        <div class="user-info">
+          <div class="user-name current-user-name">David Vance</div>
+          <div class="user-role current-user-role">Sales Manager</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content Wrap -->
+  <div id="main-content">
+    <header id="topbar">
+      <div class="topbar-left">
+        <button class="btn btn-icon d-lg-none" id="mobile-sidebar-toggle-btn"><i class="bi bi-list fs-5"></i></button>
+        <button class="search-trigger-btn" data-bs-toggle="modal" data-bs-target="#globalSearchModal">
+          <i class="bi bi-search"></i>
+          <span>Search CRM...</span>
+          <span class="kbd-shortcut">Ctrl K</span>
+        </button>
+      </div>
+
+      <div class="topbar-right">
+        <div class="dropdown">
+          <button class="role-badge-selector dropdown-toggle" type="button" data-bs-toggle="dropdown">
+            <i class="bi bi-person-badge-fill"></i>
+            <span id="current-role-badge-text">Sales Manager</span>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end shadow border-0 p-2">
+            <li><a class="dropdown-item role-select-item" href="#" data-role="sales_mgr">David Vance (Sales Manager)</a></li>
+            <li><a class="dropdown-item role-select-item" href="#" data-role="sales">Sarah Jenkins (Salesperson)</a></li>
+            <li><a class="dropdown-item role-select-item" href="#" data-role="dev">Alex Turner (Full-Stack Dev)</a></li>
+            <li><a class="dropdown-item role-select-item" href="#" data-role="editor">Maya Lin (Video Editor)</a></li>
+          </ul>
+        </div>
+
+        <button class="btn btn-outline-secondary btn-sm rounded-pill px-3" onclick="exportReport()">
+          <i class="bi bi-download me-1"></i> Export Data
+        </button>
+
+        <a href="notifications.html" class="btn btn-icon position-relative">
+          <i class="bi bi-bell"></i>
+          <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="topbar-notif-badge">3</span>
+        </a>
+      </div>
+    </header>
+
+    <main class="page-container">
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Executive Reports & Performance</h1>
+          <p class="page-subtitle">Agency business metrics, sales conversion rates, service revenue, and staff capacity.</p>
+        </div>
+        <div class="d-flex align-items-center gap-2 flex-wrap">
+          <div class="input-group input-group-sm" style="width: auto;">
+            <span class="input-group-text bg-light"><i class="bi bi-calendar3"></i></span>
+            <input type="date" id="reportStartDate" class="form-control" title="Start Date">
+            <input type="date" id="reportEndDate" class="form-control" title="End Date">
+            <button class="btn btn-outline-primary" onclick="fetchDynamicReports()" title="Apply Date Filter">Filter</button>
+          </div>
+          <div class="dropdown">
+            <button class="btn btn-outline-secondary btn-sm dropdown-toggle rounded-pill px-3" data-bs-toggle="dropdown">
+              <i class="bi bi-download me-1"></i> Export CSV
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end shadow border-0 p-2">
+              <li><a class="dropdown-item py-2" href="/api/reports/export-csv/?report_type=leads"><i class="bi bi-funnel-fill text-primary me-2"></i>Leads & Conversion CSV</a></li>
+              <li><a class="dropdown-item py-2" href="/api/reports/export-csv/?report_type=projects"><i class="bi bi-briefcase-fill text-info me-2"></i>Projects & Workload CSV</a></li>
+              <li><a class="dropdown-item py-2" href="/api/reports/export-csv/?report_type=financial"><i class="bi bi-receipt text-success me-2"></i>Invoices & Balances CSV</a></li>
+            </ul>
+          </div>
+          <button class="btn btn-primary btn-sm rounded-pill px-3" onclick="exportReport()">
+            <i class="bi bi-printer me-1"></i> Print / PDF
+          </button>
+        </div>
+      </div>
+
+      <!-- KPI Metrics Overview -->
+      <div class="row g-3 mb-4">
+        <div class="col-sm-6 col-xl-3">
+          <div class="stat-card">
+            <div class="stat-header">
+              <span class="stat-title">Conversion Win Rate</span>
+              <div class="stat-icon bg-success bg-opacity-10 text-success"><i class="bi bi-pie-chart"></i></div>
+            </div>
+            <div class="stat-value text-success" id="repWinRate">66.7%</div>
+            <div class="stat-trend positive" id="repWinSubtitle"><i class="bi bi-trophy"></i> Leads closed won</div>
+          </div>
+        </div>
+        <div class="col-sm-6 col-xl-3">
+          <div class="stat-card">
+            <div class="stat-header">
+              <span class="stat-title">Invoices Issued</span>
+              <div class="stat-icon bg-primary bg-opacity-10 text-primary"><i class="bi bi-receipt"></i></div>
+            </div>
+            <div class="stat-value" id="repInvoiced">$42,500</div>
+            <div class="stat-trend positive" id="repInvoicedSub"><i class="bi bi-arrow-up"></i> Total gross billing</div>
+          </div>
+        </div>
+        <div class="col-sm-6 col-xl-3">
+          <div class="stat-card">
+            <div class="stat-header">
+              <span class="stat-title">Payments Received</span>
+              <div class="stat-icon bg-success bg-opacity-10 text-success"><i class="bi bi-cash-stack"></i></div>
+            </div>
+            <div class="stat-value text-success" id="repPaid">$34,000</div>
+            <div class="stat-trend positive"><i class="bi bi-check-circle"></i> Settled cash flow</div>
+          </div>
+        </div>
+        <div class="col-sm-6 col-xl-3">
+          <div class="stat-card">
+            <div class="stat-header">
+              <span class="stat-title">Outstanding Balance</span>
+              <div class="stat-icon bg-danger bg-opacity-10 text-danger"><i class="bi bi-exclamation-circle"></i></div>
+            </div>
+            <div class="stat-value text-danger" id="repOutstanding">$8,500</div>
+            <div class="stat-trend negative" id="repOverdueTasksSub"><i class="bi bi-clock"></i> Pending collections</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Charts Row 1: Revenue & Service Breakdown -->
+      <div class="row g-4 mb-4">
+        <div class="col-lg-8">
+          <div class="crm-card h-100">
+            <div class="crm-card-header">
+              <h5 class="crm-card-title"><i class="bi bi-graph-up text-primary"></i> 2026 Agency Revenue Trajectory</h5>
+              <span class="badge bg-light text-dark border">USD ($)</span>
+            </div>
+            <div class="crm-card-body" style="height: 320px;">
+              <canvas id="agencyRevenueReportCanvas"></canvas>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4">
+          <div class="crm-card h-100">
+            <div class="crm-card-header">
+              <h5 class="crm-card-title"><i class="bi bi-pie-chart text-info"></i> Revenue by Service</h5>
+            </div>
+            <div class="crm-card-body" style="height: 320px;">
+              <canvas id="serviceBreakdownCanvas"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Staff Productivity Table & Lead Funnel Breakdown -->
+      <div class="row g-4">
+        <!-- Staff Performance Table -->
+        <div class="col-lg-7">
+          <div class="crm-card">
+            <div class="crm-card-header">
+              <h5 class="crm-card-title"><i class="bi bi-person-check text-success"></i> Staff Workload & Output Report</h5>
+            </div>
+            <div class="crm-card-body p-0">
+              <div class="table-responsive">
+                <table class="table table-custom mb-0">
+                  <thead>
+                    <tr>
+                      <th>Staff Member</th>
+                      <th>Role</th>
+                      <th>Active Projects</th>
+                      <th>Pending Tasks</th>
+                      <th>Capacity Status</th>
+                    </tr>
+                  </thead>
+                  <tbody id="workloadTableBody">
+                    <tr>
+                      <td>
+                        <div class="fw-bold">Alex Turner</div>
+                        <div class="text-muted small">alex@root4tech.com</div>
+                      </td>
+                      <td><span class="badge-role dev">Full-Stack Dev</span></td>
+                      <td>4 Projects</td>
+                      <td>
+                        <div class="d-flex align-items-center gap-2">
+                          <span class="small fw-bold">2 Tasks</span>
+                          <div class="progress progress-thin flex-grow-1"><div class="progress-bar bg-primary" style="width: 75%;"></div></div>
+                        </div>
+                      </td>
+                      <td><span class="badge bg-success-subtle text-success">Optimal</span></td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <div class="fw-bold">Maya Lin</div>
+                        <div class="text-muted small">maya@root4tech.com</div>
+                      </td>
+                      <td><span class="badge-role editor">Video Editor</span></td>
+                      <td>3 Projects</td>
+                      <td>
+                        <div class="d-flex align-items-center gap-2">
+                          <span class="small fw-bold">1 Task</span>
+                          <div class="progress progress-thin flex-grow-1"><div class="progress-bar bg-purple" style="background:#7e22ce; width: 60%;"></div></div>
+                        </div>
+                      </td>
+                      <td><span class="badge bg-warning-subtle text-warning">Heavy Render Load</span></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Conversion Funnel Summary -->
+        <div class="col-lg-5">
+          <div class="crm-card">
+            <div class="crm-card-header">
+              <h5 class="crm-card-title"><i class="bi bi-funnel text-primary"></i> Pipeline Conversion Funnel</h5>
+            </div>
+            <div class="crm-card-body">
+              <div class="mb-3">
+                <div class="d-flex justify-content-between small fw-bold mb-1">
+                  <span>1. New Inquiries</span>
+                  <span>100% (8 Leads)</span>
+                </div>
+                <div class="progress" style="height: 12px; border-radius: 6px;">
+                  <div class="progress-bar bg-info" style="width: 100%;"></div>
+                </div>
+              </div>
+              <div class="mb-3">
+                <div class="d-flex justify-content-between small fw-bold mb-1">
+                  <span>2. Contacted & Discovery</span>
+                  <span>87.5% (7 Leads)</span>
+                </div>
+                <div class="progress" style="height: 12px; border-radius: 6px;">
+                  <div class="progress-bar bg-primary" style="width: 87.5%;"></div>
+                </div>
+              </div>
+              <div class="mb-3">
+                <div class="d-flex justify-content-between small fw-bold mb-1">
+                  <span>3. Budget Qualified</span>
+                  <span>75.0% (6 Leads)</span>
+                </div>
+                <div class="progress" style="height: 12px; border-radius: 6px;">
+                  <div class="progress-bar" style="background:#8b5cf6; width: 75%;"></div>
+                </div>
+              </div>
+              <div class="mb-3">
+                <div class="d-flex justify-content-between small fw-bold mb-1">
+                  <span>4. Proposals Delivered</span>
+                  <span>62.5% (5 Leads)</span>
+                </div>
+                <div class="progress" style="height: 12px; border-radius: 6px;">
+                  <div class="progress-bar bg-warning" style="width: 62.5%;"></div>
+                </div>
+              </div>
+              <div>
+                <div class="d-flex justify-content-between small fw-bold mb-1">
+                  <span>5. Deals Closed Won</span>
+                  <span class="text-success">25.0% Won ($31,500)</span>
+                </div>
+                <div class="progress" style="height: 12px; border-radius: 6px;">
+                  <div class="progress-bar bg-success" style="width: 25%;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- Global Quick Search Modal -->
+<div class="modal fade" id="globalSearchModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered search-modal-dialog">
+    <div class="modal-content search-modal-content">
+      <div class="search-input-header">
+        <i class="bi bi-search text-secondary fs-5"></i>
+        <input type="text" id="global-search-input" class="search-input-box" placeholder="Search leads, projects, clients, or tasks..." autocomplete="off">
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div id="global-search-results" class="search-results-list"></div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+<script src="js/charts.js"></script>
+
+<script>
+  function exportReport() {
+    showToast('Exporting executive report summary to PDF...');
+    setTimeout(() => {
+      window.print();
+    }, 600);
+  }
+
+  async function fetchDynamicReports() {
+    const start = document.getElementById('reportStartDate')?.value || '';
+    const end = document.getElementById('reportEndDate')?.value || '';
+    const url = `/api/reports/?start_date=${encodeURIComponent(start)}&end_date=${encodeURIComponent(end)}`;
+
+    try {
+      const res = await fetch(url, { credentials: 'same-origin' });
+      if (res.ok) {
+        const data = await res.json();
+        
+        // Update KPIs
+        if (data.lead_metrics) {
+          const winRateEl = document.getElementById('repWinRate');
+          if (winRateEl) winRateEl.textContent = `${data.lead_metrics.conversion_rate}%`;
+          const winSub = document.getElementById('repWinSubtitle');
+          if (winSub) winSub.innerHTML = `<i class="bi bi-trophy"></i> ${data.lead_metrics.won_leads} of ${data.lead_metrics.total_leads} won ($${data.lead_metrics.won_deal_value.toLocaleString()})`;
+        }
+
+        if (data.financial_metrics) {
+          const invEl = document.getElementById('repInvoiced');
+          if (invEl) invEl.textContent = `$${data.financial_metrics.total_invoiced.toLocaleString()}`;
+          const paidEl = document.getElementById('repPaid');
+          if (paidEl) paidEl.textContent = `$${data.financial_metrics.total_payments_received.toLocaleString()}`;
+          const outEl = document.getElementById('repOutstanding');
+          if (outEl) outEl.textContent = `$${data.financial_metrics.outstanding_balance.toLocaleString()}`;
+        }
+
+        // Update Workload Table
+        if (data.team_workload && data.team_workload.length > 0) {
+          const tbody = document.getElementById('workloadTableBody');
+          if (tbody) {
+            tbody.innerHTML = data.team_workload.map(st => `
+              <tr>
+                <td>
+                  <div class="fw-bold">${st.name}</div>
+                  <div class="text-muted small">${st.role_title}</div>
+                </td>
+                <td><span class="badge-role ${st.role_key}">${st.role_title}</span></td>
+                <td><span class="fw-bold">${st.active_projects}</span> Active Project${st.active_projects === 1 ? '' : 's'}</td>
+                <td>
+                  <div class="d-flex align-items-center gap-2">
+                    <span class="small fw-bold">${st.pending_tasks} Task${st.pending_tasks === 1 ? '' : 's'}</span>
+                    <div class="progress progress-thin flex-grow-1">
+                      <div class="progress-bar ${st.active_projects > 3 ? 'bg-warning' : 'bg-primary'}" style="width: ${Math.min(100, (st.active_projects + st.pending_tasks) * 20)}%;"></div>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <span class="badge ${st.active_projects > 3 ? 'bg-warning-subtle text-warning' : 'bg-success-subtle text-success'}">
+                    ${st.active_projects > 3 ? 'Heavy Load' : 'Optimal'}
+                  </span>
+                </td>
+              </tr>
+            `).join('');
+          }
+        }
+        showToast('Reports and analytics updated for selected date range!', 'success');
+      }
+    } catch (e) {
+      console.warn('Backend API reports not available, utilizing store cache:', e);
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    fetchDynamicReports();
+
+    // Render Revenue chart
+    const revEl = document.getElementById('agencyRevenueReportCanvas');
+    if (revEl) {
+      new Chart(revEl.getContext('2d'), {
+        type: 'line',
+        data: {
+          labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct (MTD)'],
+          datasets: [
+            {
+              label: 'Gross Billed Revenue ($)',
+              data: [18000, 22000, 29000, 31000, 38000, 44000, 48000, 52000, 64000, 48000],
+              borderColor: '#2563eb',
+              backgroundColor: 'rgba(37, 99, 235, 0.08)',
+              fill: true,
+              tension: 0.35
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: { ticks: { callback: val => `$${val / 1000}k` } }
+          }
+        }
+      });
+    }
+
+    CRM_CHARTS.initServiceBreakdownChart('serviceBreakdownCanvas');
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quotations & Invoices - Root4Tech CRM</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div id="app-wrapper">
+  <div class="sidebar-backdrop"></div>
+
+  <!-- Sidebar -->
+  <aside id="sidebar">
+    <div class="sidebar-header">
+      <a href="index.html" class="brand-link">
+        <img src="assets/images/logo.svg" alt="Root4Tech Logo" class="brand-logo-img">
+      </a>
+      <button class="btn btn-sm btn-icon d-none d-lg-flex" id="sidebar-toggle-btn" title="Toggle Sidebar">
+        <i class="bi bi-layout-sidebar-inset text-secondary"></i>
+      </button>
+    </div>
+
+    <div class="sidebar-nav">
+      <div class="nav-section-title">Core Management</div>
+      <ul class="sidebar-menu">
+        <li><a href="index.html" class="sidebar-link"><i class="bi bi-grid-1x2-fill"></i><span>Dashboard</span></a></li>
+        <li><a href="leads.html" class="sidebar-link"><i class="bi bi-funnel-fill"></i><span>Leads</span></a></li>
+        <li><a href="clients.html" class="sidebar-link"><i class="bi bi-buildings-fill"></i><span>Clients</span></a></li>
+        <li><a href="projects.html" class="sidebar-link"><i class="bi bi-briefcase-fill"></i><span>Projects</span></a></li>
+        <li><a href="tasks.html" class="sidebar-link"><i class="bi bi-check2-square"></i><span>Tasks</span></a></li>
+      </ul>
+
+      <div class="nav-section-title">Operations & Sales</div>
+      <ul class="sidebar-menu">
+        <li><a href="calendar.html" class="sidebar-link"><i class="bi bi-calendar3"></i><span>Calendar & Follow-ups</span></a></li>
+        <li><a href="invoices.html" class="sidebar-link active"><i class="bi bi-receipt"></i><span>Quotations & Invoices</span></a></li>
+        <li><a href="reports.html" class="sidebar-link"><i class="bi bi-graph-up-arrow"></i><span>Reports & Analytics</span></a></li>
+      </ul>
+
+      <div class="nav-section-title">Agency Admin</div>
+      <ul class="sidebar-menu">
+        <li><a href="team.html" class="sidebar-link"><i class="bi bi-people-fill"></i><span>Team Members</span></a></li>
+        <li><a href="notifications.html" class="sidebar-link"><i class="bi bi-bell-fill"></i><span>Notifications</span></a></li>
+        <li><a href="settings.html" class="sidebar-link"><i class="bi bi-gear-fill"></i><span>Settings</span></a></li>
+      </ul>
+    </div>
+
+    <div class="sidebar-footer">
+      <div class="user-quick-card">
+        <div class="user-avatar current-user-avatar status-online" style="background-color: #059669;">DV</div>
+        <div class="user-info">
+          <div class="user-name current-user-name">David Vance</div>
+          <div class="user-role current-user-role">Sales Manager</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content Wrap -->
+  <div id="main-content">
+    <header id="topbar">
+      <div class="topbar-left">
+        <button class="btn btn-icon d-lg-none" id="mobile-sidebar-toggle-btn"><i class="bi bi-list fs-5"></i></button>
+        <button class="search-trigger-btn" data-bs-toggle="modal" data-bs-target="#globalSearchModal">
+          <i class="bi bi-search"></i>
+          <span>Search CRM...</span>
+          <span class="kbd-shortcut">Ctrl K</span>
+        </button>
+      </div>
+
+      <div class="topbar-right">
+        <div class="dropdown">
+          <button class="role-badge-selector dropdown-toggle" type="button" data-bs-toggle="dropdown">
+            <i class="bi bi-person-badge-fill"></i>
+            <span id="current-role-badge-text">Sales Manager</span>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end shadow border-0 p-2">
+            <li><a class="dropdown-item role-select-item" href="#" data-role="sales_mgr">David Vance (Sales Manager)</a></li>
+            <li><a class="dropdown-item role-select-item" href="#" data-role="sales">Sarah Jenkins (Salesperson)</a></li>
+            <li><a class="dropdown-item role-select-item" href="#" data-role="dev">Alex Turner (Full-Stack Dev)</a></li>
+            <li><a class="dropdown-item role-select-item" href="#" data-role="editor">Maya Lin (Video Editor)</a></li>
+          </ul>
+        </div>
+
+        <button class="btn btn-primary btn-sm rounded-pill px-3 shadow-sm" data-bs-toggle="modal" data-bs-target="#newInvoiceModal">
+          <i class="bi bi-plus-lg me-1"></i> New Invoice
+        </button>
+
+        <a href="notifications.html" class="btn btn-icon position-relative">
+          <i class="bi bi-bell"></i>
+          <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="topbar-notif-badge">3</span>
+        </a>
+      </div>
+    </header>
+
+    <main class="page-container">
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Quotations & Invoices</h1>
+          <p class="page-subtitle">Track agency billing statements, client retainers, quotations, and collection statuses.</p>
+        </div>
+        <div>
+          <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#newInvoiceModal">
+            <i class="bi bi-file-earmark-plus me-1"></i> Create Statement
+          </button>
+        </div>
+      </div>
+
+      <!-- Financial Metric Cards -->
+      <div class="row g-3 mb-4">
+        <div class="col-sm-6 col-xl-3">
+          <div class="stat-card">
+            <div class="stat-header">
+              <span class="stat-title">Total Invoiced</span>
+              <div class="stat-icon bg-primary bg-opacity-10 text-primary"><i class="bi bi-receipt"></i></div>
+            </div>
+            <div class="stat-value" id="totalInvoicedVal">$36,500</div>
+            <div class="stat-trend positive"><i class="bi bi-arrow-up-short"></i> Q3-Q4 billing active</div>
+          </div>
+        </div>
+        <div class="col-sm-6 col-xl-3">
+          <div class="stat-card">
+            <div class="stat-header">
+              <span class="stat-title">Paid & Collected</span>
+              <div class="stat-icon bg-success bg-opacity-10 text-success"><i class="bi bi-cash-stack"></i></div>
+            </div>
+            <div class="stat-value text-success" id="totalPaidVal">$12,000</div>
+            <div class="stat-trend positive"><i class="bi bi-check2"></i> Deposited</div>
+          </div>
+        </div>
+        <div class="col-sm-6 col-xl-3">
+          <div class="stat-card">
+            <div class="stat-header">
+              <span class="stat-title">Pending & Sent</span>
+              <div class="stat-icon bg-info bg-opacity-10 text-info"><i class="bi bi-hourglass-split"></i></div>
+            </div>
+            <div class="stat-value text-primary" id="totalPendingVal">$20,000</div>
+            <div class="stat-trend neutral"><i class="bi bi-clock"></i> Awaiting payment</div>
+          </div>
+        </div>
+        <div class="col-sm-6 col-xl-3">
+          <div class="stat-card">
+            <div class="stat-header">
+              <span class="stat-title">Overdue</span>
+              <div class="stat-icon bg-danger bg-opacity-10 text-danger"><i class="bi bi-exclamation-octagon"></i></div>
+            </div>
+            <div class="stat-value text-danger" id="totalOverdueVal">$4,500</div>
+            <div class="stat-trend negative"><i class="bi bi-bell"></i> 1 client reminder sent</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Filter Controls -->
+      <div class="crm-card mb-4 p-3">
+        <div class="row g-2 align-items-center">
+          <div class="col-md-5">
+            <div class="input-group input-group-sm">
+              <span class="input-group-text bg-white text-muted"><i class="bi bi-search"></i></span>
+              <input type="text" id="invoiceSearch" class="form-control" placeholder="Search by invoice #, client, or project..." oninput="renderInvoices()">
+            </div>
+          </div>
+          <div class="col-md-3">
+            <select id="invoiceTypeFilter" class="form-select form-select-sm" onchange="renderInvoices()">
+              <option value="">All Document Types</option>
+              <option value="Invoice">Invoice</option>
+              <option value="Quotation">Quotation</option>
+            </select>
+          </div>
+          <div class="col-md-2">
+            <select id="invoiceStatusFilter" class="form-select form-select-sm" onchange="renderInvoices()">
+              <option value="">All Statuses</option>
+              <option value="Paid">Paid</option>
+              <option value="Sent">Sent</option>
+              <option value="Overdue">Overdue</option>
+              <option value="Draft">Draft</option>
+            </select>
+          </div>
+          <div class="col-md-2 text-md-end">
+            <button class="btn btn-outline-secondary btn-sm w-100" onclick="resetInvoiceFilters()">
+              <i class="bi bi-arrow-counterclockwise"></i> Reset
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Invoices Table -->
+      <div class="table-custom-wrapper">
+        <table class="table table-custom mb-0">
+          <thead>
+            <tr>
+              <th>Invoice #</th>
+              <th>Type</th>
+              <th>Client & Created By</th>
+              <th>Project Scope</th>
+              <th>Issue Date</th>
+              <th>Due Date</th>
+              <th>Amount</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="invoicesTableBody">
+            <!-- Injected by JS -->
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- Modal: Invoice Preview & Print -->
+<div class="modal fade" id="invoicePreviewModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content rounded-4 border-0 shadow-lg">
+      <div class="modal-header">
+        <h5 class="modal-title fw-bold"><i class="bi bi-file-earmark-text text-primary me-2"></i>Statement Preview</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body p-4" id="printableInvoiceContent">
+        <!-- Branded Header -->
+        <div class="d-flex justify-content-between align-items-start mb-4 pb-3 border-bottom">
+          <div>
+            <img src="assets/images/logo.svg" alt="Root4Tech Logo" style="height: 40px; margin-bottom: 8px;">
+            <div class="text-muted small">Root4Tech Digital Agency &bull; info@root4tech.com</div>
+            <div class="text-muted small">+1 (555) 019-4820 &bull; www.root4tech.com</div>
+          </div>
+          <div class="text-end">
+            <h4 class="fw-bold mb-0 text-uppercase" id="prevType">INVOICE</h4>
+            <div class="fw-semibold text-secondary" id="prevNumber">INV-2026-081</div>
+            <div class="small text-muted" id="prevIssueDate">Date: Sep 18, 2026</div>
+            <div class="small text-muted" id="prevDueDate">Due: Oct 18, 2026</div>
+          </div>
+        </div>
+
+        <!-- Bill To -->
+        <div class="row mb-4">
+          <div class="col-6">
+            <div class="text-muted small fw-bold text-uppercase">Billed To:</div>
+            <h6 class="fw-bold mb-1" id="prevClient">OmniTrade FinTech</h6>
+            <div class="small text-muted" id="prevClientAddr">Attn: Kenneth Wright</div>
+            <div class="small text-muted">100 Wall Street, Suite 1400, New York, NY</div>
+          </div>
+          <div class="col-6 text-end">
+            <div class="text-muted small fw-bold text-uppercase">Project Reference:</div>
+            <h6 class="fw-bold mb-1" id="prevProject">OmniTrade Web Trading Terminal</h6>
+            <span class="badge bg-success-subtle text-success" id="prevStatusBadge">Paid</span>
+          </div>
+        </div>
+
+        <!-- Line Items Table -->
+        <div class="table-responsive mb-4">
+          <table class="table table-bordered">
+            <thead class="table-light">
+              <tr>
+                <th>Description</th>
+                <th class="text-center" width="80">Qty</th>
+                <th class="text-end" width="140">Rate</th>
+                <th class="text-end" width="140">Amount</th>
+              </tr>
+            </thead>
+            <tbody id="prevItemsBody">
+              <tr>
+                <td>Phase 1 Architecture & Frontend Engine</td>
+                <td class="text-center">1</td>
+                <td class="text-end">$12,000</td>
+                <td class="text-end fw-bold">$12,000</td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="3" class="text-end fw-bold">Subtotal:</td>
+                <td class="text-end fw-bold" id="prevSubtotal">$12,000</td>
+              </tr>
+              <tr>
+                <td colspan="3" class="text-end text-muted">Tax (0% Export Service):</td>
+                <td class="text-end text-muted">$0.00</td>
+              </tr>
+              <tr class="table-light">
+                <td colspan="3" class="text-end fw-bold fs-6">Total Due:</td>
+                <td class="text-end fw-bold fs-6 text-primary" id="prevTotal">$12,000</td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+
+        <div class="p-3 bg-light rounded text-muted small">
+          <strong>Payment Terms:</strong> Wire Transfer to Root4Tech Agency Trust Account. Swift: ROOT4US33. Thank you for your partnership!
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-outline-secondary" onclick="window.print()"><i class="bi bi-printer me-1"></i> Print</button>
+        <a id="btnDownloadServerPdf" href="#" target="_blank" class="btn btn-primary"><i class="bi bi-file-earmark-pdf me-1"></i> Download PDF</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: New Invoice / Quotation with Multi-Service Builder -->
+<div class="modal fade" id="newInvoiceModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content rounded-4 border-0 shadow-lg">
+      <div class="modal-header d-flex justify-content-between align-items-center">
+        <div>
+          <h5 class="modal-title fw-bold mb-0"><i class="bi bi-receipt text-primary me-2"></i>Create Quotation / Invoice</h5>
+          <span class="small text-muted"><i class="bi bi-person-circle text-primary"></i> Logged in as: <strong class="text-dark" id="modalCreatorAuthorBadge">David Vance (Sales Manager)</strong></span>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <form id="addInvoiceForm">
+        <div class="modal-body">
+          <div class="row g-3 mb-4">
+            <div class="col-md-4">
+              <label class="form-label small fw-semibold">Document Type *</label>
+              <select id="invFormType" class="form-select" required>
+                <option value="Invoice">Invoice (Bill)</option>
+                <option value="Quotation">Quotation (Estimate)</option>
+              </select>
+            </div>
+            <div class="col-md-8">
+              <label class="form-label small fw-semibold">Client Account *</label>
+              <div class="input-group">
+                <input type="text" id="invFormClient" class="form-control" placeholder="Select or type client name (e.g. OmniTrade FinTech)" required list="clientsDatalist">
+                <datalist id="clientsDatalist">
+                  <!-- Populated by JS -->
+                </datalist>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="d-flex justify-content-between align-items-center mb-1">
+                <label class="form-label small fw-semibold mb-0">Project Scope Title *</label>
+                <span class="badge bg-primary-subtle text-primary border border-primary-subtle" style="font-size: 0.72rem;">
+                  <i class="bi bi-stars me-1"></i> Multi-Service Selector
+                </span>
+              </div>
+              <input type="text" id="invFormProject" class="form-control mb-2" placeholder="e.g. Website Development & Video Editing Retainer" required>
+
+              <!-- Overall Services Multi-Select Checklist / Pills -->
+              <div class="p-3 bg-light rounded-3 border">
+                <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-2">
+                  <span class="small fw-bold text-secondary text-uppercase" style="font-size: 0.74rem;">
+                    <i class="bi bi-collection-fill me-1 text-primary"></i> Overall Services (Select Multiple):
+                  </span>
+                  <div class="d-flex gap-2 align-items-center">
+                    <button type="button" class="btn btn-link btn-sm p-0 text-decoration-none small text-primary fw-semibold" onclick="selectAllScopeServices()" style="font-size: 0.75rem;">
+                      Select All
+                    </button>
+                    <span class="text-muted" style="font-size: 0.75rem;">|</span>
+                    <button type="button" class="btn btn-link btn-sm p-0 text-decoration-none small text-muted" onclick="clearSelectedScopeServices()" style="font-size: 0.75rem;">
+                      Clear
+                    </button>
+                  </div>
+                </div>
+
+                <div class="d-flex flex-wrap gap-2" id="scopeServicesSelectorList">
+                  <!-- Populated from CRM_STORE.getServices() -->
+                </div>
+
+                <div class="mt-2 pt-2 border-top d-flex flex-wrap justify-content-between align-items-center gap-2 small text-muted">
+                  <span style="font-size: 0.75rem;">
+                    <i class="bi bi-info-circle me-1"></i> Checking services auto-compiles the scope title and syncs line items with preset rates.
+                  </span>
+                  <button type="button" class="btn btn-outline-primary btn-sm py-0 px-2" onclick="syncSelectedServicesToLineItems()" style="font-size: 0.75rem;">
+                    <i class="bi bi-arrow-repeat me-1"></i> Sync to Line Items
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label small fw-semibold">Issue Date *</label>
+              <input type="date" id="invFormIssueDate" class="form-control" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label small fw-semibold">Payment / Validity Due Date *</label>
+              <input type="date" id="invFormDueDate" class="form-control" required>
+            </div>
+          </div>
+
+          <!-- Multi-Service Line Items Table -->
+          <div class="mb-3">
+            <div class="d-flex align-items-center justify-content-between mb-2">
+              <label class="form-label small fw-bold text-uppercase text-secondary mb-0">
+                <i class="bi bi-list-stars me-1 text-primary"></i> Services & Line Items
+              </label>
+              <button type="button" class="btn btn-outline-primary btn-sm rounded-pill py-0 px-3" onclick="addInvoiceItemRow()">
+                <i class="bi bi-plus-lg me-1"></i> Add Another Service
+              </button>
+            </div>
+
+            <div class="table-responsive border rounded-3 bg-light p-2">
+              <table class="table table-sm table-borderless align-middle mb-0">
+                <thead>
+                  <tr class="text-secondary small">
+                    <th style="min-width: 250px;">Service / Item Description</th>
+                    <th width="90">Qty / Unit</th>
+                    <th width="140">Unit Rate ($)</th>
+                    <th width="120" class="text-end">Total ($)</th>
+                    <th width="40"></th>
+                  </tr>
+                </thead>
+                <tbody id="invoiceItemsTableBody">
+                  <!-- Dynamic Item Rows injected by JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Totals Breakdown -->
+          <div class="row justify-content-end">
+            <div class="col-md-5">
+              <div class="p-3 bg-light rounded-3 border">
+                <div class="d-flex justify-content-between small text-muted mb-1">
+                  <span>Subtotal:</span>
+                  <span class="fw-semibold text-dark" id="modalSubtotal">$0.00</span>
+                </div>
+                <div class="d-flex justify-content-between small text-muted mb-2">
+                  <span>Export Tax (0%):</span>
+                  <span>$0.00</span>
+                </div>
+                <div class="d-flex justify-content-between fw-bold fs-6 pt-2 border-top">
+                  <span>Grand Total:</span>
+                  <span class="text-primary" id="modalGrandTotal">$0.00</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Notice on non-automatic sending -->
+          <div class="alert alert-info py-2 px-3 small mt-3 mb-0 d-flex align-items-center gap-2">
+            <i class="bi bi-shield-check fs-5"></i>
+            <div>
+              <strong>No auto-send:</strong> This document is created in Draft state unless you explicitly click "Save & Send".
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer d-flex justify-content-between">
+          <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+          <div class="d-flex flex-wrap gap-2">
+            <button type="button" class="btn btn-outline-secondary" onclick="saveInvoiceWithAction('Draft')">
+              <i class="bi bi-file-earmark me-1"></i> Save as Draft
+            </button>
+            <button type="button" class="btn btn-primary" onclick="saveInvoiceWithAction('SaveAndDownload')">
+              <i class="bi bi-download me-1"></i> Save & Download PDF
+            </button>
+            <button type="button" class="btn btn-success" onclick="saveInvoiceWithAction('Sent')">
+              <i class="bi bi-send me-1"></i> Save & Send to Client
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Global Quick Search Modal -->
+<div class="modal fade" id="globalSearchModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered search-modal-dialog">
+    <div class="modal-content search-modal-content">
+      <div class="search-input-header">
+        <i class="bi bi-search text-secondary fs-5"></i>
+        <input type="text" id="global-search-input" class="search-input-box" placeholder="Search leads, projects, clients, or tasks..." autocomplete="off">
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div id="global-search-results" class="search-results-list"></div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+
+<script>
+  function renderInvoices() {
+    const data = CRM_STORE.get();
+    let invoices = data.invoices || [];
+
+    const search = (document.getElementById('invoiceSearch').value || '').toLowerCase().trim();
+    const typeFilter = document.getElementById('invoiceTypeFilter').value;
+    const statusFilter = document.getElementById('invoiceStatusFilter').value;
+
+    if (search) {
+      invoices = invoices.filter(inv => 
+        inv.id.toLowerCase().includes(search) ||
+        inv.client.toLowerCase().includes(search) ||
+        inv.project.toLowerCase().includes(search)
+      );
+    }
+    if (typeFilter) invoices = invoices.filter(inv => inv.type === typeFilter);
+    if (statusFilter) invoices = invoices.filter(inv => inv.status === statusFilter);
+
+    // Calculate Summary Stats
+    const total = (data.invoices || []).reduce((s, i) => s + i.amount, 0);
+    const paid = (data.invoices || []).filter(i => i.status === 'Paid').reduce((s, i) => s + i.amount, 0);
+    const pending = (data.invoices || []).filter(i => i.status === 'Sent' || i.status === 'Draft').reduce((s, i) => s + i.amount, 0);
+    const overdue = (data.invoices || []).filter(i => i.status === 'Overdue').reduce((s, i) => s + i.amount, 0);
+
+    document.getElementById('totalInvoicedVal').textContent = formatCurrency(total);
+    document.getElementById('totalPaidVal').textContent = formatCurrency(paid);
+    document.getElementById('totalPendingVal').textContent = formatCurrency(pending);
+    document.getElementById('totalOverdueVal').textContent = formatCurrency(overdue);
+
+    const tbody = document.getElementById('invoicesTableBody');
+    if (invoices.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="9" class="text-center py-4 text-muted">No invoices found.</td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = invoices.map(inv => `
+      <tr>
+        <td class="fw-bold">${inv.id}</td>
+        <td><span class="badge ${inv.type === 'Quotation' ? 'bg-secondary-subtle text-secondary' : 'bg-primary-subtle text-primary'}">${inv.type}</span></td>
+        <td>
+          <div class="fw-bold text-dark">${inv.client}</div>
+          <div class="d-flex align-items-center gap-1 mt-1">
+            <span class="badge bg-light text-secondary border d-inline-flex align-items-center gap-1 py-1 px-2" style="font-size: 0.73rem;">
+              <i class="bi bi-person-fill text-primary"></i> Created by: <strong class="text-dark">${inv.createdBy || 'David Vance'}</strong>
+            </span>
+          </div>
+        </td>
+        <td class="text-truncate" style="max-width: 200px;">
+          <div class="fw-semibold">${inv.project}</div>
+          <div class="small text-muted">${(inv.items || []).length} line service item(s)</div>
+        </td>
+        <td class="small">${formatDate(inv.issueDate)}</td>
+        <td class="small">${formatDate(inv.dueDate)}</td>
+        <td class="fw-bold">${formatCurrency(inv.amount)}</td>
+        <td>
+          <span class="badge ${inv.status === 'Paid' ? 'bg-success' : inv.status === 'Sent' ? 'bg-primary' : inv.status === 'Overdue' ? 'bg-danger' : 'bg-secondary'}">
+            ${inv.status}
+          </span>
+        </td>
+        <td>
+          <div class="d-flex align-items-center gap-1">
+            <button class="btn btn-sm btn-outline-primary py-0 px-2" title="View Details" onclick="previewInvoice('${inv.id}')">
+              <i class="bi bi-eye"></i> View
+            </button>
+            <a href="${(inv.type === 'Quotation' || (inv.id && inv.id.startsWith('QTN'))) ? `/api/quotations/${inv.id}/pdf/` : `/api/invoices/${inv.id}/pdf/`}" target="_blank" class="btn btn-sm btn-outline-secondary py-0 px-2" title="Download PDF Statement">
+              <i class="bi bi-file-earmark-pdf"></i> PDF
+            </a>
+            ${inv.status === 'Draft' ? `
+              <button class="btn btn-sm btn-outline-success py-0 px-2" title="Send to Client" onclick="sendInvoice('${inv.id}')">
+                <i class="bi bi-send"></i> Send
+              </button>
+            ` : ''}
+            ${inv.status === 'Sent' || inv.status === 'Partially Paid' ? `
+              <button class="btn btn-sm btn-outline-success py-0 px-2" title="Mark as Paid" onclick="markInvoicePaid('${inv.id}')">
+                <i class="bi bi-check2"></i> Paid
+              </button>
+            ` : ''}
+          </div>
+        </td>
+      </tr>
+    `).join('');
+  }
+
+  function previewInvoice(invId) {
+    const data = CRM_STORE.get();
+    const inv = data.invoices.find(i => i.id === invId);
+    if (!inv) return;
+
+    document.getElementById('prevType').textContent = inv.type.toUpperCase();
+    document.getElementById('prevNumber').textContent = inv.id;
+    document.getElementById('prevIssueDate').textContent = `Date: ${formatDate(inv.issueDate)}`;
+    document.getElementById('prevDueDate').textContent = `Due: ${formatDate(inv.dueDate)}`;
+    document.getElementById('prevClient').textContent = inv.client;
+    document.getElementById('prevProject').textContent = inv.project;
+
+    const pdfBtn = document.getElementById('btnDownloadServerPdf');
+    if (pdfBtn) {
+      const isQuotation = inv.type === 'Quotation' || (inv.id && inv.id.startsWith('QTN'));
+      pdfBtn.href = isQuotation ? `/api/quotations/${inv.id}/pdf/` : `/api/invoices/${inv.id}/pdf/`;
+    }
+
+    const badge = document.getElementById('prevStatusBadge');
+    badge.textContent = inv.status;
+    badge.className = `badge ${inv.status === 'Paid' ? 'bg-success-subtle text-success' : inv.status === 'Sent' ? 'bg-primary-subtle text-primary' : inv.status === 'Partially Paid' ? 'bg-info-subtle text-info' : 'bg-secondary-subtle text-secondary'}`;
+
+
+    const items = inv.items && inv.items.length > 0 ? inv.items : [{ desc: inv.project, qty: 1, rate: inv.amount }];
+    document.getElementById('prevItemsBody').innerHTML = items.map(it => `
+      <tr>
+        <td>
+          <div class="fw-semibold">${it.desc}</div>
+        </td>
+        <td class="text-center">${it.qty || 1}</td>
+        <td class="text-end">${formatCurrency(it.rate || it.amount || 0)}</td>
+        <td class="text-end fw-bold">${formatCurrency((it.qty || 1) * (it.rate || 0))}</td>
+      </tr>
+    `).join('');
+
+    document.getElementById('prevSubtotal').textContent = formatCurrency(inv.amount);
+    document.getElementById('prevTotal').textContent = formatCurrency(inv.amount);
+
+    bootstrap.Modal.getOrCreateInstance(document.getElementById('invoicePreviewModal')).show();
+  }
+
+  function sendInvoice(invId) {
+    const data = CRM_STORE.get();
+    const inv = data.invoices.find(i => i.id === invId);
+    if (inv) {
+      inv.status = 'Sent';
+      CRM_STORE.save(data);
+      showToast(`${inv.type} ${inv.id} marked as Sent to client!`);
+      renderInvoices();
+    }
+  }
+
+  function markInvoicePaid(invId) {
+    const data = CRM_STORE.get();
+    const inv = data.invoices.find(i => i.id === invId);
+    if (inv) {
+      inv.status = 'Paid';
+      CRM_STORE.save(data);
+      showToast(`${inv.type} ${inv.id} marked as Paid!`, 'success');
+      renderInvoices();
+    }
+  }
+
+  function resetInvoiceFilters() {
+    document.getElementById('invoiceSearch').value = '';
+    document.getElementById('invoiceTypeFilter').value = '';
+    document.getElementById('invoiceStatusFilter').value = '';
+    renderInvoices();
+  }
+
+  // Multi-Service Items Builder Engine
+  let invoiceItemRowCount = 0;
+
+  function addInvoiceItemRow(defaultDesc = '', defaultQty = 1, defaultRate = 2500) {
+    const tbody = document.getElementById('invoiceItemsTableBody');
+    if (!tbody) return;
+
+    invoiceItemRowCount++;
+    const rowId = 'inv-item-row-' + invoiceItemRowCount;
+    const services = CRM_STORE.getServices();
+
+    const tr = document.createElement('tr');
+    tr.id = rowId;
+    tr.innerHTML = `
+      <td>
+        <div class="d-flex flex-column gap-1">
+          <select class="form-select form-select-sm inv-item-service-select" onchange="onServicePresetSelected('${rowId}', this)">
+            <option value="">-- Choose Agency Service or Type Custom Below --</option>
+            ${services.map(s => `
+              <option value="${s.name}" data-price="${s.price}">${s.name} (${formatCurrency(s.price)} - ${s.category})</option>
+            `).join('')}
+          </select>
+          <input type="text" class="form-control form-control-sm inv-item-desc" placeholder="Deliverable details / description..." value="${defaultDesc}" required>
+        </div>
+      </td>
+      <td>
+        <input type="number" class="form-control form-control-sm inv-item-qty text-center" value="${defaultQty}" min="1" step="1" oninput="recalcInvoiceModalTotals()" required>
+      </td>
+      <td>
+        <div class="input-group input-group-sm">
+          <span class="input-group-text">$</span>
+          <input type="number" class="form-control form-control-sm inv-item-rate" value="${defaultRate}" min="0" step="50" oninput="recalcInvoiceModalTotals()" required>
+        </div>
+      </td>
+      <td class="text-end fw-bold align-middle inv-item-total">
+        ${formatCurrency(defaultQty * defaultRate)}
+      </td>
+      <td class="text-center align-middle">
+        <button type="button" class="btn btn-sm btn-link text-danger p-0" onclick="removeInvoiceItemRow('${rowId}')" title="Remove Item">
+          <i class="bi bi-trash fs-6"></i>
+        </button>
+      </td>
+    `;
+
+    tbody.appendChild(tr);
+    recalcInvoiceModalTotals();
+  }
+
+  function onServicePresetSelected(rowId, selectEl) {
+    const row = document.getElementById(rowId);
+    if (!row) return;
+
+    const selectedOption = selectEl.options[selectEl.selectedIndex];
+    const serviceName = selectedOption.value;
+    const servicePrice = parseFloat(selectedOption.getAttribute('data-price')) || 0;
+
+    if (serviceName) {
+      row.querySelector('.inv-item-desc').value = serviceName;
+      row.querySelector('.inv-item-rate').value = servicePrice;
+      recalcInvoiceModalTotals();
+    }
+  }
+
+  function removeInvoiceItemRow(rowId) {
+    const tbody = document.getElementById('invoiceItemsTableBody');
+    if (tbody.children.length <= 1) {
+      showToast('A quotation or invoice must have at least one service item.', 'danger');
+      return;
+    }
+    const row = document.getElementById(rowId);
+    if (row) row.remove();
+    recalcInvoiceModalTotals();
+  }
+
+  function recalcInvoiceModalTotals() {
+    let subtotal = 0;
+    const rows = document.querySelectorAll('#invoiceItemsTableBody tr');
+
+    rows.forEach(r => {
+      const qty = parseFloat(r.querySelector('.inv-item-qty')?.value) || 0;
+      const rate = parseFloat(r.querySelector('.inv-item-rate')?.value) || 0;
+      const lineTotal = qty * rate;
+      subtotal += lineTotal;
+      const totalCell = r.querySelector('.inv-item-total');
+      if (totalCell) totalCell.textContent = formatCurrency(lineTotal);
+    });
+
+    const subEl = document.getElementById('modalSubtotal');
+    const grandEl = document.getElementById('modalGrandTotal');
+    if (subEl) subEl.textContent = formatCurrency(subtotal);
+    if (grandEl) grandEl.textContent = formatCurrency(subtotal);
+    return subtotal;
+  }
+
+  // Save Invoice with user-selected Action (Never auto-sent!)
+  function saveInvoiceWithAction(action) {
+    const clientName = document.getElementById('invFormClient').value.trim();
+    const projectTitle = document.getElementById('invFormProject').value.trim();
+    const docType = document.getElementById('invFormType').value;
+    const issueDate = document.getElementById('invFormIssueDate').value;
+    const dueDate = document.getElementById('invFormDueDate').value;
+
+    if (!clientName) {
+      showToast('Please enter or select a client account.', 'danger');
+      document.getElementById('invFormClient').focus();
+      return;
+    }
+    if (!projectTitle) {
+      showToast('Please specify the project scope title.', 'danger');
+      document.getElementById('invFormProject').focus();
+      return;
+    }
+
+    // Collect all multiple service items
+    const rows = document.querySelectorAll('#invoiceItemsTableBody tr');
+    const items = [];
+    let calculatedAmount = 0;
+
+    rows.forEach(r => {
+      const desc = r.querySelector('.inv-item-desc')?.value.trim();
+      const qty = parseFloat(r.querySelector('.inv-item-qty')?.value) || 1;
+      const rate = parseFloat(r.querySelector('.inv-item-rate')?.value) || 0;
+      if (desc) {
+        items.push({ desc: desc, qty: qty, rate: rate });
+        calculatedAmount += (qty * rate);
+      }
+    });
+
+    if (items.length === 0) {
+      showToast('Please add at least one service item with a description.', 'danger');
+      return;
+    }
+
+    // Set status based on explicit button choice
+    let status = 'Draft';
+    if (action === 'Sent') {
+      status = 'Sent';
+    } else {
+      status = 'Draft'; // "Draft" or "SaveAndDownload" both keep status Draft!
+    }
+
+    const data = CRM_STORE.get();
+    const newId = (docType === 'Quotation' ? 'QTN-2026-0' : 'INV-2026-0') + (80 + data.invoices.length + 1);
+
+    // Capture currently logged-in team member
+    const currentUser = CRM_STORE.getCurrentUser();
+    const creatorName = currentUser ? currentUser.name : 'David Vance';
+    const creatorRole = currentUser ? currentUser.role : 'Sales Manager';
+
+    const newDoc = {
+      id: newId,
+      type: docType,
+      client: clientName,
+      project: projectTitle,
+      createdBy: creatorName,
+      createdRole: creatorRole,
+      issueDate: issueDate || new Date().toISOString().split('T')[0],
+      dueDate: dueDate || new Date(Date.now() + 86400000 * 30).toISOString().split('T')[0],
+      amount: calculatedAmount,
+      status: status,
+      items: items
+    };
+
+    data.invoices.unshift(newDoc);
+    CRM_STORE.save(data);
+
+    // Close modal
+    bootstrap.Modal.getInstance(document.getElementById('newInvoiceModal')).hide();
+    renderInvoices();
+
+    // Feedback according to user action
+    if (action === 'Sent') {
+      showToast(`✅ ${docType} ${newId} created by ${creatorName} & marked as Sent to ${clientName}!`, 'success');
+    } else if (action === 'SaveAndDownload') {
+      showToast(`📄 ${docType} ${newId} created by ${creatorName} saved as Draft. Opening preview...`, 'info');
+      setTimeout(() => {
+        previewInvoice(newId);
+        setTimeout(() => window.print(), 500);
+      }, 400);
+    } else {
+      showToast(`💾 ${docType} ${newId} created by ${creatorName} saved as Draft.`, 'success');
+    }
+  }
+
+  // Multi-Service Scope Selector Engine
+  function renderScopeServicesSelector() {
+    const container = document.getElementById('scopeServicesSelectorList');
+    if (!container) return;
+
+    const services = CRM_STORE.getServices();
+    container.innerHTML = services.map(s => `
+      <label class="btn btn-sm btn-outline-secondary rounded-pill py-1 px-3 d-inline-flex align-items-center gap-1 scope-svc-chip" style="cursor: pointer; font-size: 0.8rem; user-select: none;">
+        <input type="checkbox" class="form-check-input me-1 scope-svc-checkbox" value="${s.name}" data-price="${s.price}" data-category="${s.category}" onchange="onScopeServiceSelectionChanged(true)">
+        <span>${s.name}</span>
+        <span class="badge bg-white text-dark border ms-1">${formatCurrency(s.price)}</span>
+      </label>
+    `).join('');
+  }
+
+  function onScopeServiceSelectionChanged(autoSyncItems = true) {
+    const checkboxes = document.querySelectorAll('.scope-svc-checkbox');
+    const selected = [];
+
+    checkboxes.forEach(cb => {
+      const chip = cb.closest('.scope-svc-chip');
+      if (cb.checked) {
+        if (chip) {
+          chip.classList.remove('btn-outline-secondary');
+          chip.classList.add('btn-primary', 'text-white', 'shadow-sm');
+        }
+        selected.push({
+          name: cb.value,
+          price: parseFloat(cb.getAttribute('data-price')) || 0,
+          category: cb.getAttribute('data-category') || ''
+        });
+      } else {
+        if (chip) {
+          chip.classList.remove('btn-primary', 'text-white', 'shadow-sm');
+          chip.classList.add('btn-outline-secondary');
+        }
+      }
+    });
+
+    const projectInput = document.getElementById('invFormProject');
+    if (projectInput && selected.length > 0) {
+      projectInput.value = selected.map(s => s.name).join(' & ');
+    }
+
+    if (autoSyncItems && selected.length > 0) {
+      syncSelectedServicesToLineItems(selected, false);
+    }
+  }
+
+  function syncSelectedServicesToLineItems(selected = null, notify = true) {
+    if (!selected) {
+      const checkboxes = document.querySelectorAll('.scope-svc-checkbox:checked');
+      selected = Array.from(checkboxes).map(cb => ({
+        name: cb.value,
+        price: parseFloat(cb.getAttribute('data-price')) || 0,
+        category: cb.getAttribute('data-category') || ''
+      }));
+    }
+
+    if (selected.length === 0) {
+      showToast('Please select at least one service from the list above first.', 'warning');
+      return;
+    }
+
+    const tbody = document.getElementById('invoiceItemsTableBody');
+    if (!tbody) return;
+
+    tbody.innerHTML = '';
+    invoiceItemRowCount = 0;
+    selected.forEach(s => {
+      addInvoiceItemRow(s.name, 1, s.price);
+    });
+
+    recalcInvoiceModalTotals();
+    if (notify) {
+      showToast(`Synchronized ${selected.length} service item(s) to quotation/invoice!`, 'info');
+    }
+  }
+
+  function selectAllScopeServices() {
+    const checkboxes = document.querySelectorAll('.scope-svc-checkbox');
+    checkboxes.forEach(cb => cb.checked = true);
+    onScopeServiceSelectionChanged(true);
+  }
+
+  function clearSelectedScopeServices() {
+    const checkboxes = document.querySelectorAll('.scope-svc-checkbox');
+    checkboxes.forEach(cb => cb.checked = false);
+    onScopeServiceSelectionChanged(false);
+    const projectInput = document.getElementById('invFormProject');
+    if (projectInput) projectInput.value = '';
+  }
+
+  // Populate client datalist & initialize multi-item row
+  function initInvoiceModalDefaults() {
+    const data = CRM_STORE.get();
+    const currentUser = CRM_STORE.getCurrentUser();
+    const authorBadge = document.getElementById('modalCreatorAuthorBadge');
+    if (authorBadge && currentUser) {
+      authorBadge.textContent = `${currentUser.name} (${currentUser.role})`;
+    }
+
+    const datalist = document.getElementById('clientsDatalist');
+    if (datalist && data.clients) {
+      datalist.innerHTML = data.clients.map(c => `<option value="${c.company}">${c.contactPerson} &bull; ${c.company}</option>`).join('');
+    }
+
+    renderScopeServicesSelector();
+
+    // Reset lines
+    const tbody = document.getElementById('invoiceItemsTableBody');
+    if (tbody) {
+      tbody.innerHTML = '';
+      addInvoiceItemRow('Website Architecture & Frontend UI Engine', 1, 5500);
+      addInvoiceItemRow('Brand Motion & 4K Video Commercial', 1, 2500);
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const today = new Date().toISOString().split('T')[0];
+    const due = new Date(Date.now() + 86400000 * 30).toISOString().split('T')[0];
+    const issInp = document.getElementById('invFormIssueDate');
+    const dueInp = document.getElementById('invFormDueDate');
+    if (issInp) issInp.value = today;
+    if (dueInp) dueInp.value = due;
+
+    const modalEl = document.getElementById('newInvoiceModal');
+    if (modalEl) {
+      modalEl.addEventListener('show.bs.modal', () => {
+        initInvoiceModalDefaults();
+      });
+    }
+
+    initInvoiceModalDefaults();
+    renderInvoices();
+  });
+</script>
+</body>
+</html>
