@@ -19,7 +19,21 @@ function getCookie(name) {
 }
 
 const CRM_API = {
-  baseUrl: window.location.origin.includes('http') ? window.location.origin : 'http://127.0.0.1:8000',
+  baseUrl: (() => {
+    if (typeof window !== 'undefined' && window.location) {
+      const port = window.location.port;
+      const hostname = window.location.hostname;
+      // If running on a static dev server like VS Code Live Server (port 5500) or other frontend dev ports,
+      // route backend API requests to Django on port 8000
+      if ((hostname === '127.0.0.1' || hostname === 'localhost') && port && port !== '8000') {
+        return 'http://127.0.0.1:8000';
+      }
+      if (window.location.origin && window.location.origin.startsWith('http')) {
+        return window.location.origin;
+      }
+    }
+    return 'http://127.0.0.1:8000';
+  })(),
 
   async request(endpoint, options = {}) {
     const url = endpoint.startsWith('http') ? endpoint : `${this.baseUrl}${endpoint}`;
@@ -40,12 +54,18 @@ const CRM_API = {
         headers,
       };
       if (window.location.protocol.startsWith('http')) {
-        fetchOpts.credentials = 'same-origin';
+        fetchOpts.credentials = 'include';
       }
       const response = await fetch(url, fetchOpts);
 
       if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
+        let errorData = {};
+        try {
+          errorData = await response.json();
+        } catch (_) {
+          // If response was not JSON (e.g. static server 500/404 HTML page)
+          errorData = {};
+        }
         throw new Error(errorData.message || errorData.detail || `Server error (${response.status})`);
       }
 

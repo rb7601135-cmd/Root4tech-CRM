@@ -51,50 +51,61 @@ def api_login(request):
     """
     Authenticate staff user using email or username.
     """
-    username_or_email = request.data.get('email', '') or request.data.get('username', '')
-    password = request.data.get('password', '')
+    try:
+        username_or_email = request.data.get('email', '') or request.data.get('username', '')
+        password = request.data.get('password', '')
 
-    if not username_or_email or not password:
-        return Response({'success': False, 'message': 'Username/email and password required.'}, status=400)
+        if not username_or_email or not password:
+            return Response({'success': False, 'message': 'Username/email and password required.'}, status=400)
 
-    # Allow login by email or username
-    user = None
-    if '@' in username_or_email:
-        matched = User.objects.filter(email__iexact=username_or_email.strip()).first()
-        if matched:
-            user = authenticate(request, username=matched.username, password=password)
-    else:
-        user = authenticate(request, username=username_or_email.strip(), password=password)
+        clean_input = str(username_or_email).strip()
+        user = None
 
-    if user is not None and user.is_active:
-        login(request, user)
-        profile = getattr(user, 'staff_profile', None)
-        role_key = profile.role_key if profile else ('admin' if user.is_superuser else 'sales_mgr')
+        # Allow login by email or username
+        if '@' in clean_input:
+            matched = User.objects.filter(email__iexact=clean_input).first()
+            if matched:
+                user = authenticate(request, username=matched.username, password=password)
+            if not user:
+                user = authenticate(request, username=clean_input, password=password)
+        else:
+            user = authenticate(request, username=clean_input, password=password)
 
-        ActivityLog.objects.create(
-            user=user,
-            action='Staff Login',
-            entity_type='Auth',
-            entity_id=str(user.id),
-            details=f"User {user.get_full_name() or user.username} logged into CRM."
-        )
+        if user is not None and user.is_active:
+            login(request, user)
+            profile = getattr(user, 'staff_profile', None)
+            role_key = profile.role_key if profile else ('admin' if user.is_superuser else 'sales_mgr')
 
-        return Response({
-            'success': True,
-            'message': f'Welcome back, {user.first_name or user.username}!',
-            'user': {
-                'id': user.id,
-                'username': user.username,
-                'name': user.get_full_name() or user.username,
-                'email': user.email,
-                'role': profile.role_title if profile else 'Administrator',
-                'role_key': role_key,
-                'avatar': profile.avatar if profile else 'AD',
-                'color': profile.color if profile else '#2563eb',
-            }
-        })
-    else:
-        return Response({'success': False, 'message': 'Invalid credentials. Please verify your email and password.'}, status=401)
+            try:
+                ActivityLog.objects.create(
+                    user=user,
+                    action='Staff Login',
+                    entity_type='Auth',
+                    entity_id=str(user.id),
+                    details=f"User {user.get_full_name() or user.username} logged into CRM."
+                )
+            except Exception:
+                pass
+
+            return Response({
+                'success': True,
+                'message': f'Welcome back, {user.first_name or user.username}!',
+                'user': {
+                    'id': user.id,
+                    'username': user.username,
+                    'name': user.get_full_name() or user.username,
+                    'email': user.email,
+                    'role': profile.role_title if profile else 'Administrator',
+                    'role_key': role_key,
+                    'avatar': profile.avatar if profile else 'AD',
+                    'color': profile.color if profile else '#2563eb',
+                }
+            })
+        else:
+            return Response({'success': False, 'message': 'Invalid credentials. Please verify your email and password.'}, status=401)
+    except Exception as exc:
+        return Response({'success': False, 'message': f'Login server error: {str(exc)}'}, status=500)
+
 
 
 @api_view(['POST', 'GET'])
@@ -163,28 +174,31 @@ def api_switch_persona(request):
     """
     Switch active session persona between staff roles.
     """
-    target_role = request.data.get('role_key') or request.data.get('role')
-    if not target_role:
-        return Response({'success': False, 'message': 'Target role required.'}, status=400)
+    try:
+        target_role = request.data.get('role_key') or request.data.get('role')
+        if not target_role:
+            return Response({'success': False, 'message': 'Target role required.'}, status=400)
 
-    matched_profile = StaffProfile.objects.filter(Q(role_key=target_role) | Q(user__username=target_role)).first()
-    if matched_profile:
-        user = matched_profile.user
-        user.backend = 'django.contrib.auth.backends.ModelBackend'
-        login(request, user)
-        return Response({
-            'success': True,
-            'message': f'Switched active view to {user.get_full_name()} ({matched_profile.role_title})',
-            'user': {
-                'id': user.id,
-                'name': user.get_full_name(),
-                'role': matched_profile.role_title,
-                'role_key': matched_profile.role_key,
-                'avatar': matched_profile.avatar,
-                'color': matched_profile.color,
-            }
-        })
-    return Response({'success': False, 'message': 'Staff role profile not found.'}, status=404)
+        matched_profile = StaffProfile.objects.filter(Q(role_key=target_role) | Q(user__username=target_role)).first()
+        if matched_profile:
+            user = matched_profile.user
+            user.backend = 'django.contrib.auth.backends.ModelBackend'
+            login(request, user)
+            return Response({
+                'success': True,
+                'message': f'Switched active view to {user.get_full_name()} ({matched_profile.role_title})',
+                'user': {
+                    'id': user.id,
+                    'name': user.get_full_name(),
+                    'role': matched_profile.role_title,
+                    'role_key': matched_profile.role_key,
+                    'avatar': matched_profile.avatar,
+                    'color': matched_profile.color,
+                }
+            })
+        return Response({'success': False, 'message': 'Staff role profile not found.'}, status=404)
+    except Exception as exc:
+        return Response({'success': False, 'message': f'Switch persona error: {str(exc)}'}, status=500)
 
 
 # =============================================================================
