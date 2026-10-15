@@ -352,7 +352,7 @@ function handleAddNewLead(formData) {
     serviceRequired: formData.serviceRequired,
     leadSource: formData.leadSource || 'Website Form',
     assignedSalesperson: formData.assignedSalesperson || 'Sir Sharjeel',
-    estimatedDealValue: parseFloat(formData.estimatedDealValue) || 5000,
+    estimatedDealValue: parseFloat(formData.estimatedDealValue) || 0,
     nextFollowUp: formData.nextFollowUp || new Date(Date.now() + 86400000 * 3).toISOString().split('T')[0],
     status: formData.status || 'New',
     createdDate: new Date().toISOString().split('T')[0],

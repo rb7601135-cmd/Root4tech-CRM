@@ -102,9 +102,10 @@
             <h2 class="fw-bold mb-1" id="clientCompany">OmniTrade FinTech</h2>
             <div class="text-muted" id="clientAddress"><i class="bi bi-geo-alt me-1"></i>100 Wall Street, Suite 1400, New York, NY</div>
           </div>
-          <div class="d-flex gap-2">
-            <a href="projects.html" class="btn btn-outline-primary"><i class="bi bi-briefcase me-1"></i> New Project</a>
-            <a href="invoices.html" class="btn btn-primary"><i class="bi bi-receipt me-1"></i> Issue Invoice</a>
+          <div class="d-flex flex-wrap gap-2">
+            <a href="projects.html" id="btnClientNewProject" class="btn btn-outline-secondary"><i class="bi bi-briefcase me-1"></i> New Project</a>
+            <a href="invoices.html" id="btnClientNewQuote" class="btn btn-outline-primary"><i class="bi bi-file-earmark-text me-1"></i> Create Quotation</a>
+            <a href="invoices.html" id="btnClientNewInvoice" class="btn btn-primary"><i class="bi bi-receipt me-1"></i> Create Invoice</a>
           </div>
         </div>
       </div>
@@ -242,6 +243,13 @@
     document.getElementById('clientPhone').textContent = client.phone;
     document.getElementById('clientLifetime').textContent = formatCurrency(client.totalSpent);
     document.getElementById('clientActiveCount').textContent = `${client.projectsCount} Projects`;
+
+    const quoteBtn = document.getElementById('btnClientNewQuote');
+    if (quoteBtn) quoteBtn.href = `invoices.html?client=${encodeURIComponent(client.company)}&type=Quotation`;
+    const invBtn = document.getElementById('btnClientNewInvoice');
+    if (invBtn) invBtn.href = `invoices.html?client=${encodeURIComponent(client.company)}&type=Invoice`;
+    const projBtn = document.getElementById('btnClientNewProject');
+    if (projBtn) projBtn.href = `projects.html?client=${encodeURIComponent(client.company)}`;
 
     // Render client's projects
     const matchedProjects = (data.projects || []).filter(p => p.client.toLowerCase() === client.company.toLowerCase());

@@ -317,10 +317,23 @@
             <div class="col-md-8">
               <label class="form-label small fw-semibold">Client Account *</label>
               <div class="input-group">
-                <input type="text" id="invFormClient" class="form-control" placeholder="Select or type client name (e.g. OmniTrade FinTech)" required list="clientsDatalist">
+                <input type="text" id="invFormClient" class="form-control" placeholder="Select or type client name (e.g. OmniTrade FinTech)" required list="clientsDatalist" oninput="handleClientSelected(this.value)" onchange="handleClientSelected(this.value)">
                 <datalist id="clientsDatalist">
                   <!-- Populated by JS -->
                 </datalist>
+              </div>
+              <!-- Auto-populated Client Details Preview Box -->
+              <div id="invFormClientDetailsBox" class="mt-2 p-2 bg-light border rounded-3 small" style="display: none;">
+                <div class="d-flex align-items-center gap-2 text-dark fw-semibold mb-1">
+                  <i class="bi bi-person-check-fill text-success"></i>
+                  <span id="invClientContactPreview">Client Contact</span>
+                  <span class="badge bg-success-subtle text-success ms-auto" id="invClientStatusBadge">Active Account</span>
+                </div>
+                <div class="d-flex flex-wrap gap-3 text-muted" style="font-size: 0.8rem;">
+                  <span><i class="bi bi-envelope me-1"></i><span id="invClientEmailPreview"></span></span>
+                  <span><i class="bi bi-telephone me-1"></i><span id="invClientPhonePreview"></span></span>
+                  <span><i class="bi bi-geo-alt me-1"></i><span id="invClientAddressPreview"></span></span>
+                </div>
               </div>
             </div>
             <div class="col-12">
@@ -771,10 +784,17 @@
     const creatorName = currentUser ? currentUser.name : 'Sir Sharjeel';
     const creatorRole = currentUser ? currentUser.role : 'Sales Manager';
 
+    // Capture client details automatically from store
+    const clientRecord = (data.clients || []).find(c => c.company.toLowerCase() === clientName.toLowerCase()) || {};
+
     const newDoc = {
       id: newId,
       type: docType,
       client: clientName,
+      clientContact: clientRecord.contactPerson || '',
+      clientEmail: clientRecord.email || '',
+      clientPhone: clientRecord.phone || '',
+      clientAddress: clientRecord.address || '',
       project: projectTitle,
       createdBy: creatorName,
       createdRole: creatorRole,
@@ -924,6 +944,46 @@
     }
   }
 
+    // Handle client details selection and auto-filling
+  function handleClientSelected(clientName) {
+    const data = CRM_STORE.get();
+    const clean = (clientName || '').trim().toLowerCase();
+    const detailsBox = document.getElementById('invFormClientDetailsBox');
+    if (!clean) {
+      if (detailsBox) detailsBox.style.display = 'none';
+      return null;
+    }
+
+    const client = (data.clients || []).find(c => 
+      c.company.toLowerCase() === clean ||
+      (c.id && c.id.toLowerCase() === clean) ||
+      (c.contactPerson && c.contactPerson.toLowerCase() === clean)
+    );
+
+    if (client && detailsBox) {
+      detailsBox.style.display = 'block';
+      const contactEl = document.getElementById('invClientContactPreview');
+      const emailEl = document.getElementById('invClientEmailPreview');
+      const phoneEl = document.getElementById('invClientPhonePreview');
+      const addrEl = document.getElementById('invClientAddressPreview');
+
+      if (contactEl) contactEl.textContent = `${client.contactPerson} (${client.company})`;
+      if (emailEl) emailEl.textContent = client.email || 'No email';
+      if (phoneEl) phoneEl.textContent = client.phone || 'No phone';
+      if (addrEl) addrEl.textContent = client.address || 'Direct Account';
+
+      // Auto-populate Project Scope title if empty
+      const projInput = document.getElementById('invFormProject');
+      if (projInput && !projInput.value) {
+        projInput.value = `${client.company} - ${client.industry || 'Digital Retainer & Growth Scope'}`;
+      }
+      return client;
+    } else {
+      if (detailsBox) detailsBox.style.display = 'none';
+      return null;
+    }
+  }
+
   document.addEventListener('DOMContentLoaded', () => {
     const today = new Date().toISOString().split('T')[0];
     const due = new Date(Date.now() + 86400000 * 30).toISOString().split('T')[0];
@@ -941,6 +1001,33 @@
 
     initInvoiceModalDefaults();
     renderInvoices();
+
+    // Auto-prefill client and document type from URL parameters if present
+    const urlParams = new URLSearchParams(window.location.search);
+    const clientParam = urlParams.get('client') || urlParams.get('clientId');
+    const typeParam = urlParams.get('type');
+
+    if (typeParam) {
+      const typeSelect = document.getElementById('invFormType');
+      if (typeSelect) {
+        typeSelect.value = (typeParam.toLowerCase().includes('quote') || typeParam.toLowerCase().includes('quotation')) ? 'Quotation' : 'Invoice';
+      }
+    }
+
+    if (clientParam) {
+      const clientInput = document.getElementById('invFormClient');
+      if (clientInput) {
+        clientInput.value = clientParam;
+        handleClientSelected(clientParam);
+      }
+      // Automatically show modal with all details populated!
+      setTimeout(() => {
+        if (modalEl) {
+          const bsModal = bootstrap.Modal.getOrCreateInstance(modalEl);
+          bsModal.show();
+        }
+      }, 200);
+    }
   });
 </script>
 </body>

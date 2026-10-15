@@ -131,10 +131,14 @@
             </select>
           </div>
           <div class="col-md-3">
-            <select id="leadFilterSalesperson" class="form-select form-select-sm" onchange="applyFilters()">
-              <option value="">All Sales Reps</option>
-              <option value="Sir Sharjeel">Sir Sharjeel</option>
-              <option value="Root4Tech Admin">Root4Tech Admin</option>
+            <select id="leadFilterStage" class="form-select form-select-sm" onchange="applyFilters()">
+              <option value="">All Stages</option>
+              <option value="New">New</option>
+              <option value="Contacted">Contacted</option>
+              <option value="Qualified">Qualified</option>
+              <option value="Proposal Sent">Proposal Sent</option>
+              <option value="Won">Won</option>
+              <option value="Lost">Lost</option>
             </select>
           </div>
           <div class="col-md-2 text-md-end">
@@ -162,8 +166,6 @@
                 <th>Contact</th>
                 <th>Service Required</th>
                 <th>Lead Source</th>
-                <th>Assigned Rep</th>
-                <th>Deal Value</th>
                 <th>Next Follow-up</th>
                 <th>Stage</th>
                 <th>Actions</th>
@@ -214,17 +216,6 @@
                 <option value="Branding">Branding</option>
                 <option value="Graphic Design">Graphic Design</option>
                 <option value="Digital Marketing">Digital Marketing</option>
-              </select>
-            </div>
-            <div class="col-md-6">
-              <label class="form-label small fw-semibold">Estimated Value ($) *</label>
-              <input type="number" name="estimatedDealValue" class="form-control" required placeholder="8000">
-            </div>
-            <div class="col-md-6">
-              <label class="form-label small fw-semibold">Assigned Rep</label>
-              <select name="assignedSalesperson" class="form-select">
-                <option value="Sir Sharjeel">Sir Sharjeel</option>
-                <option value="Root4Tech Admin">Root4Tech Admin</option>
               </select>
             </div>
             <div class="col-md-6">
@@ -303,7 +294,7 @@
 
     const searchQuery = (document.getElementById('leadFilterSearch').value || '').toLowerCase().trim();
     const serviceFilter = document.getElementById('leadFilterService').value;
-    const repFilter = document.getElementById('leadFilterSalesperson').value;
+    const stageFilter = document.getElementById('leadFilterStage') ? document.getElementById('leadFilterStage').value : '';
 
     if (searchQuery) {
       leads = leads.filter(l => 
@@ -315,8 +306,8 @@
     if (serviceFilter) {
       leads = leads.filter(l => l.serviceRequired === serviceFilter);
     }
-    if (repFilter) {
-      leads = leads.filter(l => l.assignedSalesperson === repFilter);
+    if (stageFilter) {
+      leads = leads.filter(l => l.status === stageFilter);
     }
 
     renderKanban(leads);
@@ -368,12 +359,12 @@
                 </a>
 
                 <div class="d-flex align-items-center justify-content-between mb-2">
-                  <span class="fw-bold text-primary">${formatCurrency(lead.estimatedDealValue)}</span>
+                  <span class="badge bg-light text-dark border">${lead.serviceRequired}</span>
                   <span class="small text-muted"><i class="bi bi-clock me-1"></i>${formatDate(lead.nextFollowUp)}</span>
                 </div>
 
                 <div class="d-flex align-items-center justify-content-between pt-2 border-top">
-                  <span class="small text-muted text-truncate"><i class="bi bi-person me-1"></i>${lead.assignedSalesperson.split(' ')[0]}</span>
+                  <span class="small text-muted text-truncate"><i class="bi bi-telephone me-1"></i>${lead.phone || lead.email}</span>
                   <div class="d-flex gap-1">
                     <button class="btn btn-sm btn-outline-success py-0 px-2" style="font-size: 0.72rem;" title="Convert to Client" onclick="convertLeadFromList('${lead.id}')">
                       <i class="bi bi-person-check"></i> Convert
@@ -417,8 +408,6 @@
         </td>
         <td><span class="badge bg-light text-dark border">${lead.serviceRequired}</span></td>
         <td><span class="small text-muted">${lead.leadSource}</span></td>
-        <td>${lead.assignedSalesperson}</td>
-        <td class="fw-bold text-primary">${formatCurrency(lead.estimatedDealValue)}</td>
         <td class="small">${formatDate(lead.nextFollowUp)}</td>
         <td><span class="badge-stage" data-stage="${lead.status}">${lead.status}</span></td>
         <td>
@@ -461,7 +450,9 @@
       const res = handleConvertLeadToClient(leadId, false);
       if (res.success) {
         renderLeads();
-        if (confirm(`🎉 Converted to Client account (${res.client.id})! Would you like to view the new Client Profile now?`)) {
+        if (confirm(`🎉 Lead successfully converted to Client "${res.client.company}"!\n\nWould you like to automatically create an Invoice or Quotation for this client right now?`)) {
+          window.location.href = `invoices.html?client=${encodeURIComponent(res.client.company)}&type=Invoice`;
+        } else {
           window.location.href = `client-details.html?id=${res.client.id}`;
         }
       }
@@ -515,7 +506,8 @@
   function resetFilters() {
     document.getElementById('leadFilterSearch').value = '';
     document.getElementById('leadFilterService').value = '';
-    document.getElementById('leadFilterSalesperson').value = '';
+    const stEl = document.getElementById('leadFilterStage');
+    if (stEl) stEl.value = '';
     renderLeads();
   }
 
@@ -528,8 +520,8 @@
       email: form.email.value,
       phone: form.phone.value,
       serviceRequired: form.serviceRequired.value,
-      estimatedDealValue: form.estimatedDealValue.value,
-      assignedSalesperson: form.assignedSalesperson.value,
+      estimatedDealValue: (form.estimatedDealValue ? form.estimatedDealValue.value : 0) || 0,
+      assignedSalesperson: (form.assignedSalesperson ? form.assignedSalesperson.value : 'Sir Sharjeel') || 'Sir Sharjeel',
       status: form.status.value,
       nextFollowUp: form.nextFollowUp.value,
       leadSource: form.leadSource.value,

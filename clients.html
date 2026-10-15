@@ -259,9 +259,17 @@
                 <span class="fw-bold text-primary">${c.projectsCount} Active</span>
               </div>
             </div>
-            <a href="client-details.html?id=${c.id}" class="btn btn-outline-primary btn-sm w-100">
+            <a href="client-details.html?id=${c.id}" class="btn btn-primary btn-sm w-100">
               View Profile & Projects &rarr;
             </a>
+            <div class="d-flex gap-2 mt-2">
+              <a href="invoices.html?client=${encodeURIComponent(c.company)}&type=Quotation" class="btn btn-outline-secondary btn-sm flex-fill">
+                <i class="bi bi-file-earmark-text me-1"></i> Quote
+              </a>
+              <a href="invoices.html?client=${encodeURIComponent(c.company)}&type=Invoice" class="btn btn-outline-primary btn-sm flex-fill">
+                <i class="bi bi-receipt me-1"></i> Invoice
+              </a>
+            </div>
           </div>
         </div>
       </div>

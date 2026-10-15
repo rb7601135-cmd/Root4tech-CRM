@@ -291,16 +291,6 @@
                 <option value="Digital Marketing">Digital Marketing</option>
               </select>
             </div>
-            <div class="col-md-6">
-              <label class="form-label small fw-semibold">Estimated Deal Value ($) *</label>
-              <input type="number" name="estimatedDealValue" class="form-control" placeholder="8500" required>
-            </div>
-            <div class="col-md-6">
-              <label class="form-label small fw-semibold">Assigned Salesperson</label>
-              <select name="assignedSalesperson" class="form-select">
-                <option value="Sir Sharjeel">Sir Sharjeel (Sales Manager)</option>
-                <option value="Root4Tech Admin">Root4Tech Admin (Administrator)</option>
-              </select>
             </div>
             <div class="col-md-6">
               <label class="form-label small fw-semibold">Lead Source</label>
@@ -652,11 +642,11 @@
                   <div class="list-group-item d-flex align-items-center justify-content-between p-3">
                     <div>
                       <div class="fw-semibold">${lead.name} <span class="text-muted small">(${lead.company})</span></div>
-                      <div class="text-muted small"><i class="bi bi-calendar-event me-1"></i> Due: ${formatDate(lead.nextFollowUp)} &bull; ${lead.assignedSalesperson}</div>
+                      <div class="text-muted small"><i class="bi bi-calendar-event me-1"></i> Due: ${formatDate(lead.nextFollowUp)}</div>
                     </div>
                     <div class="text-end">
                       <span class="badge-stage mb-1" data-stage="${lead.status}">${lead.status}</span>
-                      <div class="fw-bold small text-primary">${formatCurrency(lead.estimatedDealValue)}</div>
+                      <div class="small text-muted">${lead.serviceRequired}</div>
                     </div>
                   </div>
                 `).join('')}
@@ -1082,7 +1072,7 @@
         <div class="col-lg-8">
           <div class="crm-card h-100">
             <div class="crm-card-header">
-              <h5 class="crm-card-title"><i class="bi bi-funnel-fill text-warning"></i> Sarah's Assigned Inquiries</h5>
+              <h5 class="crm-card-title"><i class="bi bi-funnel-fill text-warning"></i> Recent Sales Leads & Inquiries</h5>
               <a href="leads.html" class="small text-decoration-none">Pipeline View &rarr;</a>
             </div>
             <div class="crm-card-body p-0">
@@ -1092,7 +1082,6 @@
                     <tr>
                       <th>Lead</th>
                       <th>Service</th>
-                      <th>Deal Value</th>
                       <th>Next Follow-up</th>
                       <th>Stage</th>
                       <th>Action</th>
@@ -1105,8 +1094,7 @@
                           <div class="fw-bold">${l.name}</div>
                           <div class="text-muted small">${l.company}</div>
                         </td>
-                        <td>${l.serviceRequired}</td>
-                        <td class="fw-bold text-primary">${formatCurrency(l.estimatedDealValue)}</td>
+                        <td><span class="badge bg-light text-dark border">${l.serviceRequired}</span></td>
                         <td class="small">${formatDate(l.nextFollowUp)}</td>
                         <td><span class="badge-stage" data-stage="${l.status}">${l.status}</span></td>
                         <td>
@@ -1217,8 +1205,8 @@
       email: form.email.value,
       phone: form.phone.value,
       serviceRequired: form.serviceRequired.value,
-      estimatedDealValue: form.estimatedDealValue.value,
-      assignedSalesperson: form.assignedSalesperson.value,
+      estimatedDealValue: (form.estimatedDealValue ? form.estimatedDealValue.value : 0) || 0,
+      assignedSalesperson: (form.assignedSalesperson ? form.assignedSalesperson.value : 'Sir Sharjeel') || 'Sir Sharjeel',
       leadSource: form.leadSource.value,
       notes: form.notes.value
     };

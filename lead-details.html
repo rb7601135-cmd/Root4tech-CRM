@@ -122,7 +122,8 @@
                 <li><a class="dropdown-item text-danger" href="#" onclick="updateCurrentLeadStage('Lost')">Lost</a></li>
               </ul>
             </div>
-            <a href="invoices.html" class="btn btn-primary"><i class="bi bi-receipt me-1"></i> Create Quotation</a>
+            <button class="btn btn-outline-primary" onclick="createQuoteForActiveLead()"><i class="bi bi-file-earmark-text me-1"></i> Create Quotation</button>
+            <button class="btn btn-primary" onclick="createInvoiceForActiveLead()"><i class="bi bi-receipt me-1"></i> Create Invoice</button>
           </div>
         </div>
       </div>
@@ -152,26 +153,6 @@
               <div class="mb-3">
                 <span class="text-muted small d-block">Date Created</span>
                 <span class="fw-semibold" id="leadCreated">Oct 02, 2026</span>
-              </div>
-              <div>
-                <span class="text-muted small d-block">Assigned Rep</span>
-                <div class="d-flex align-items-center gap-2 mt-1">
-                  <div class="user-avatar" style="width: 28px; height: 28px; font-size: 0.75rem; background: #059669;">SS</div>
-                  <span class="fw-semibold" id="leadSalesperson">Sir Sharjeel</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Deal Parameters -->
-          <div class="crm-card">
-            <div class="crm-card-header">
-              <h5 class="crm-card-title"><i class="bi bi-cash-stack text-success"></i> Deal Valuation</h5>
-            </div>
-            <div class="crm-card-body">
-              <div class="mb-3">
-                <span class="text-muted small d-block">Estimated Deal Value</span>
-                <h3 class="fw-bold text-success mb-0" id="leadDealValue">$12,500</h3>
               </div>
               <div class="mb-3">
                 <span class="text-muted small d-block">Service Required</span>
@@ -326,12 +307,24 @@
         `;
         timeline.insertBefore(li, timeline.firstChild);
 
-        // Prompt to view client
-        if (confirm(`Client account created (${result.client.id})! Would you like to view the new Client Profile now?`)) {
+        // Prompt to view client or create invoice/quote
+        if (confirm(`🎉 Successfully converted to Client "${result.client.company}"!\n\nWould you like to directly create an Invoice or Quotation for this client right now?`)) {
+          window.location.href = `invoices.html?client=${encodeURIComponent(result.client.company)}&type=Invoice`;
+        } else {
           window.location.href = `client-details.html?id=${result.client.id}`;
         }
       }
     }
+  }
+
+  function createQuoteForActiveLead() {
+    if (!activeLead) return;
+    window.location.href = `invoices.html?client=${encodeURIComponent(activeLead.company)}&type=Quotation`;
+  }
+
+  function createInvoiceForActiveLead() {
+    if (!activeLead) return;
+    window.location.href = `invoices.html?client=${encodeURIComponent(activeLead.company)}&type=Invoice`;
   }
 
   function updateCurrentLeadStage(newStage) {
