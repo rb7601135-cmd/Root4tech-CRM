@@ -51,9 +51,9 @@
 
     <div class="sidebar-footer">
       <div class="user-quick-card">
-        <div class="user-avatar current-user-avatar status-online" style="background-color: #059669;">DV</div>
+        <div class="user-avatar current-user-avatar status-online" style="background-color: #059669;">SS</div>
         <div class="user-info">
-          <div class="user-name current-user-name">David Vance</div>
+          <div class="user-name current-user-name">Sir Sharjeel</div>
           <div class="user-role current-user-role">Sales Manager</div>
         </div>
       </div>
@@ -73,17 +73,10 @@
       </div>
 
       <div class="topbar-right">
-        <div class="dropdown">
-          <button class="role-badge-selector dropdown-toggle" type="button" data-bs-toggle="dropdown">
-            <i class="bi bi-person-badge-fill"></i>
-            <span id="current-role-badge-text">Sales Manager</span>
-          </button>
-          <ul class="dropdown-menu dropdown-menu-end shadow border-0 p-2">
-            <li><a class="dropdown-item role-select-item" href="#" data-role="sales_mgr">David Vance (Sales Manager)</a></li>
-            <li><a class="dropdown-item role-select-item" href="#" data-role="sales">Sarah Jenkins (Salesperson)</a></li>
-            <li><a class="dropdown-item role-select-item" href="#" data-role="dev">Alex Turner (Full-Stack Dev)</a></li>
-            <li><a class="dropdown-item role-select-item" href="#" data-role="editor">Maya Lin (Video Editor)</a></li>
-          </ul>
+        <div class="role-badge-selector static-badge me-3" title="Active Role">
+          <i class="bi bi-person-badge-fill text-primary"></i>
+          <span class="text-secondary small">Role:</span>
+          <span id="current-role-badge-text" class="fw-bold">Sales Manager</span>
         </div>
 
         <a href="notifications.html" class="btn btn-icon position-relative">
@@ -287,7 +280,7 @@
           <td class="fw-semibold">${inv.id}</td>
           <td>
             <div class="fw-semibold">${inv.project}</div>
-            <div class="small text-muted"><i class="bi bi-person text-primary"></i> Created by: ${inv.createdBy || 'David Vance'}</div>
+            <div class="small text-muted"><i class="bi bi-person text-primary"></i> Created by: ${inv.createdBy || 'Sir Sharjeel'}</div>
           </td>
           <td class="small">${formatDate(inv.issueDate)}</td>
           <td class="fw-bold">${formatCurrency(inv.amount)}</td>

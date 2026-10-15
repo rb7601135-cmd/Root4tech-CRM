@@ -51,9 +51,9 @@
 
     <div class="sidebar-footer">
       <div class="user-quick-card">
-        <div class="user-avatar current-user-avatar status-online" style="background-color: #059669;">DV</div>
+        <div class="user-avatar current-user-avatar status-online" style="background-color: #059669;">SS</div>
         <div class="user-info">
-          <div class="user-name current-user-name">David Vance</div>
+          <div class="user-name current-user-name">Sir Sharjeel</div>
           <div class="user-role current-user-role">Sales Manager</div>
         </div>
       </div>
@@ -73,17 +73,11 @@
       </div>
 
       <div class="topbar-right">
-        <div class="dropdown">
-          <button class="role-badge-selector dropdown-toggle" type="button" data-bs-toggle="dropdown">
-            <i class="bi bi-person-badge-fill"></i>
-            <span id="current-role-badge-text">Sales Manager</span>
-          </button>
-          <ul class="dropdown-menu dropdown-menu-end shadow border-0 p-2">
-            <li><a class="dropdown-item role-select-item" href="#" data-role="sales_mgr">David Vance (Sales Manager)</a></li>
-            <li><a class="dropdown-item role-select-item" href="#" data-role="sales">Sarah Jenkins (Salesperson)</a></li>
-            <li><a class="dropdown-item role-select-item" href="#" data-role="dev">Alex Turner (Full-Stack Dev)</a></li>
-            <li><a class="dropdown-item role-select-item" href="#" data-role="editor">Maya Lin (Video Editor)</a></li>
-          </ul>
+        <!-- Active Staff Role Badge -->
+        <div class="role-badge-selector static-badge" title="Active Role">
+          <i class="bi bi-person-badge-fill text-primary"></i>
+          <span class="text-secondary small">Role:</span>
+          <span id="current-role-badge-text" class="fw-bold">Sales Manager</span>
         </div>
 
         <a href="notifications.html" class="btn btn-icon position-relative">
@@ -316,11 +310,8 @@
               </div>
 
               <div class="d-flex gap-2">
-                <button class="btn btn-outline-secondary btn-sm" onclick="openEditMemberModal('${member.id}')" title="Edit Member">
-                  <i class="bi bi-pencil me-1"></i> Edit
-                </button>
-                <button class="btn ${isCurrent ? 'btn-primary' : 'btn-outline-primary'} btn-sm flex-grow-1" onclick="switchPersona('${member.roleKey || member.id}')">
-                  <i class="bi bi-person-badge me-1"></i> ${isCurrent ? 'Active Persona' : 'Switch Role'}
+                <button class="btn btn-outline-secondary btn-sm flex-grow-1" onclick="openEditMemberModal('${member.id}')" title="Edit Member">
+                  <i class="bi bi-pencil me-1"></i> Edit Member Details
                 </button>
               </div>
             </div>
@@ -485,15 +476,6 @@
         showToast('Cannot remove the only remaining team member.', 'danger');
       }
     }
-  }
-
-  function switchPersona(roleKey) {
-    CRM_STORE.setCurrentRole(roleKey);
-    updateTopNavUserData();
-    showToast(`Switched active view to ${CRM_STORE.getCurrentUser().name}`);
-    renderTeam();
-  }
-
   document.addEventListener('DOMContentLoaded', () => {
     // Sync color picker hex label
     const colorInput = document.getElementById('tmColor');

@@ -52,9 +52,9 @@
 
     <div class="sidebar-footer">
       <div class="user-quick-card">
-        <div class="user-avatar current-user-avatar status-online" style="background-color: #059669;">DV</div>
+        <div class="user-avatar current-user-avatar status-online" style="background-color: #059669;">SS</div>
         <div class="user-info">
-          <div class="user-name current-user-name">David Vance</div>
+          <div class="user-name current-user-name">Sir Sharjeel</div>
           <div class="user-role current-user-role">Sales Manager</div>
         </div>
       </div>
@@ -74,17 +74,10 @@
       </div>
 
       <div class="topbar-right">
-        <div class="dropdown">
-          <button class="role-badge-selector dropdown-toggle" type="button" data-bs-toggle="dropdown">
-            <i class="bi bi-person-badge-fill"></i>
-            <span id="current-role-badge-text">Sales Manager</span>
-          </button>
-          <ul class="dropdown-menu dropdown-menu-end shadow border-0 p-2">
-            <li><a class="dropdown-item role-select-item" href="#" data-role="sales_mgr">David Vance (Sales Manager)</a></li>
-            <li><a class="dropdown-item role-select-item" href="#" data-role="sales">Sarah Jenkins (Salesperson)</a></li>
-            <li><a class="dropdown-item role-select-item" href="#" data-role="dev">Alex Turner (Full-Stack Dev)</a></li>
-            <li><a class="dropdown-item role-select-item" href="#" data-role="editor">Maya Lin (Video Editor)</a></li>
-          </ul>
+        <div class="role-badge-selector static-badge" title="Active Role">
+          <i class="bi bi-person-badge-fill text-primary"></i>
+          <span class="text-secondary small">Role:</span>
+          <span id="current-role-badge-text" class="fw-bold">Sales Manager</span>
         </div>
 
         <button class="btn btn-outline-secondary btn-sm rounded-pill px-3" onclick="exportReport()">
@@ -219,33 +212,33 @@
                   <tbody id="workloadTableBody">
                     <tr>
                       <td>
-                        <div class="fw-bold">Alex Turner</div>
-                        <div class="text-muted small">alex@root4tech.com</div>
+                        <div class="fw-bold">Sir Ali</div>
+                        <div class="text-muted small">ali@root4tech.com</div>
                       </td>
                       <td><span class="badge-role dev">Full-Stack Dev</span></td>
-                      <td>4 Projects</td>
+                      <td>0 Projects</td>
                       <td>
                         <div class="d-flex align-items-center gap-2">
-                          <span class="small fw-bold">2 Tasks</span>
-                          <div class="progress progress-thin flex-grow-1"><div class="progress-bar bg-primary" style="width: 75%;"></div></div>
+                          <span class="small fw-bold">0 Tasks</span>
+                          <div class="progress progress-thin flex-grow-1"><div class="progress-bar bg-primary" style="width: 0%;"></div></div>
                         </div>
                       </td>
                       <td><span class="badge bg-success-subtle text-success">Optimal</span></td>
                     </tr>
                     <tr>
                       <td>
-                        <div class="fw-bold">Maya Lin</div>
-                        <div class="text-muted small">maya@root4tech.com</div>
+                        <div class="fw-bold">Sir Murad</div>
+                        <div class="text-muted small">murad@root4tech.com</div>
                       </td>
                       <td><span class="badge-role editor">Video Editor</span></td>
-                      <td>3 Projects</td>
+                      <td>0 Projects</td>
                       <td>
                         <div class="d-flex align-items-center gap-2">
-                          <span class="small fw-bold">1 Task</span>
-                          <div class="progress progress-thin flex-grow-1"><div class="progress-bar bg-purple" style="background:#7e22ce; width: 60%;"></div></div>
+                          <span class="small fw-bold">0 Tasks</span>
+                          <div class="progress progress-thin flex-grow-1"><div class="progress-bar bg-purple" style="background:#7e22ce; width: 0%;"></div></div>
                         </div>
                       </td>
-                      <td><span class="badge bg-warning-subtle text-warning">Heavy Render Load</span></td>
+                      <td><span class="badge bg-success-subtle text-success">Optimal</span></td>
                     </tr>
                   </tbody>
                 </table>

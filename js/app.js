@@ -124,51 +124,20 @@ function highlightActiveNavLink() {
   });
 }
 
-// Setup Role Switcher
+// Setup Role Indicator Badge (Role switching disabled for security)
 function setupRoleSwitcher() {
+  // Remove any legacy role switcher dropdown menus from DOM
   const roleMenus = document.querySelectorAll('.role-badge-selector + .dropdown-menu, .dropdown:has(.role-badge-selector) .dropdown-menu');
-  const members = (typeof CRM_STORE !== 'undefined' && CRM_STORE.getTeamMembers)
-    ? CRM_STORE.getTeamMembers()
-    : [];
+  roleMenus.forEach(menu => menu.remove());
 
-  if (roleMenus.length > 0 && members.length > 0) {
-    roleMenus.forEach(menu => {
-      menu.innerHTML = members.map(m => `
-        <li><a class="dropdown-item role-select-item" href="#" data-role="${m.roleKey || m.id}">
-          <span class="d-inline-block rounded-circle me-1" style="width: 8px; height: 8px; background-color: ${m.color || '#2563eb'};"></span>
-          ${m.name} (${m.role})
-        </a></li>
-      `).join('');
+  // Ensure role badges reflect the authenticated logged-in user
+  const user = (typeof CRM_STORE !== 'undefined') ? CRM_STORE.getCurrentUser() : null;
+  const roleBadgeTexts = document.querySelectorAll('#current-role-badge-text');
+  if (user && roleBadgeTexts.length > 0) {
+    roleBadgeTexts.forEach(el => {
+      el.textContent = user.role || 'Sales Manager';
     });
   }
-
-  const roleDropdownItems = document.querySelectorAll('.role-select-item');
-  roleDropdownItems.forEach(item => {
-    item.addEventListener('click', (e) => {
-      e.preventDefault();
-      const selectedRole = item.getAttribute('data-role');
-      if (selectedRole) {
-        CRM_STORE.setCurrentRole(selectedRole);
-        if (window.CRM_API && typeof CRM_API.switchPersona === 'function') {
-          CRM_API.switchPersona(selectedRole).catch(e => console.warn('[CRM_API] Switch notice:', e));
-        }
-        updateTopNavUserData();
-        showToast(`Switched active view to ${CRM_STORE.getCurrentUser().name} (${CRM_STORE.getCurrentUser().role})`, 'info');
-        
-        // If on index.html / dashboard, re-render role-specific widgets
-        if (typeof renderRoleDashboard === 'function') {
-          renderRoleDashboard(selectedRole);
-        } else if (typeof renderTeam === 'function') {
-          renderTeam();
-        } else {
-          // If on another page, optionally refresh role-dependent elements
-          if (typeof onRoleChanged === 'function') {
-            onRoleChanged(selectedRole);
-          }
-        }
-      }
-    });
-  });
 }
 
 // Update Topbar and User profile elements
@@ -382,7 +351,7 @@ function handleAddNewLead(formData) {
     phone: formData.phone || '+1 (555) 000-0000',
     serviceRequired: formData.serviceRequired,
     leadSource: formData.leadSource || 'Website Form',
-    assignedSalesperson: formData.assignedSalesperson || 'Sarah Jenkins',
+    assignedSalesperson: formData.assignedSalesperson || 'Sir Sharjeel',
     estimatedDealValue: parseFloat(formData.estimatedDealValue) || 5000,
     nextFollowUp: formData.nextFollowUp || new Date(Date.now() + 86400000 * 3).toISOString().split('T')[0],
     status: formData.status || 'New',

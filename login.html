@@ -22,25 +22,6 @@
       margin: auto;
       padding: 2.5rem;
     }
-    .role-quick-btn {
-      background: #111a2e;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: var(--radius-md);
-      padding: 0.85rem 1rem;
-      color: #f8fafc;
-      text-decoration: none;
-      display: flex;
-      align-items: center;
-      gap: 0.85rem;
-      transition: all 0.2s ease;
-      cursor: pointer;
-    }
-    .role-quick-btn:hover {
-      background: #1e293b;
-      border-color: #38bdf8;
-      transform: translateY(-2px);
-      color: #38bdf8;
-    }
   </style>
 </head>
 <body>
@@ -56,21 +37,12 @@
 
     <!-- Login Form -->
     <div class="card bg-dark border border-secondary border-opacity-25 shadow-lg p-4 mb-4 text-white rounded-4">
-      <!-- Credentials Helper Badge -->
-      <div class="alert alert-info py-2 px-3 small border-0 bg-info bg-opacity-10 text-info mb-3" style="font-size: 0.8rem;">
-        <i class="bi bi-shield-lock-fill me-1"></i> <strong>Team Login Credentials:</strong><br>
-        &bull; <strong>Sir Sharjeel</strong> (Sales Mgr): <code>sharjeel@root4tech.com</code> / <code>Sharjeel@Root4Tech2026!</code><br>
-        &bull; <strong>Sir Ali</strong> (Full-Stack Dev): <code>ali@root4tech.com</code> / <code>Ali@Root4Tech2026!</code><br>
-        &bull; <strong>Sir Murad</strong> (Video Editor): <code>murad@root4tech.com</code> / <code>Murad@Root4Tech2026!</code><br>
-        &bull; <strong>Admin</strong>: <code>admin@root4tech.com</code> / <code>Admin@Root4Tech2026!</code>
-      </div>
-
       <form id="loginForm" onsubmit="handleFormLogin(event)">
         <div class="mb-3">
           <label class="form-label small text-secondary fw-semibold">Work Email or Username</label>
           <div class="input-group">
             <span class="input-group-text bg-secondary bg-opacity-10 border-secondary border-opacity-25 text-secondary"><i class="bi bi-envelope"></i></span>
-            <input type="text" id="loginEmail" class="form-control bg-dark text-white border-secondary border-opacity-25" placeholder="sharjeel@root4tech.com or admin" value="sharjeel@root4tech.com" required>
+            <input type="text" id="loginEmail" class="form-control bg-dark text-white border-secondary border-opacity-25" placeholder="e.g. yourname@root4tech.com or username" required autocomplete="username">
           </div>
         </div>
         <div class="mb-3">
@@ -80,7 +52,7 @@
           </div>
           <div class="input-group">
             <span class="input-group-text bg-secondary bg-opacity-10 border-secondary border-opacity-25 text-secondary"><i class="bi bi-lock"></i></span>
-            <input type="password" id="loginPassword" class="form-control bg-dark text-white border-secondary border-opacity-25" placeholder="••••••••" value="Sharjeel@Root4Tech2026!" required>
+            <input type="password" id="loginPassword" class="form-control bg-dark text-white border-secondary border-opacity-25" placeholder="••••••••" required autocomplete="current-password">
           </div>
         </div>
         <div class="form-check mb-3">
@@ -91,51 +63,6 @@
           Sign In to Dashboard <i class="bi bi-arrow-right ms-1"></i>
         </button>
       </form>
-    </div>
-
-    <!-- Quick Role Login Section -->
-    <div class="text-center mb-3">
-      <span class="badge bg-secondary bg-opacity-25 text-secondary px-3 py-1 text-uppercase fw-semibold" style="letter-spacing: 0.05em; font-size: 0.68rem;">
-        ⚡ Instant Staff Role Quick-Login
-      </span>
-    </div>
-
-    <div class="d-flex flex-column gap-2 mb-4">
-      <div class="role-quick-btn" onclick="quickLogin('sales_mgr')">
-        <div class="user-avatar" style="background-color: #059669;">SS</div>
-        <div class="flex-grow-1 text-start">
-          <div class="fw-semibold text-white">Sir Sharjeel</div>
-          <div class="text-secondary small">Sales Manager (sales_mgr)</div>
-        </div>
-        <i class="bi bi-chevron-right text-secondary"></i>
-      </div>
-
-      <div class="role-quick-btn" onclick="quickLogin('dev')">
-        <div class="user-avatar" style="background-color: #2563eb;">SA</div>
-        <div class="flex-grow-1 text-start">
-          <div class="fw-semibold text-white">Sir Ali</div>
-          <div class="text-secondary small">Full-Stack Developer (dev)</div>
-        </div>
-        <i class="bi bi-chevron-right text-secondary"></i>
-      </div>
-
-      <div class="role-quick-btn" onclick="quickLogin('editor')">
-        <div class="user-avatar" style="background-color: #7e22ce;">SM</div>
-        <div class="flex-grow-1 text-start">
-          <div class="fw-semibold text-white">Sir Murad</div>
-          <div class="text-secondary small">Video Editor (editor)</div>
-        </div>
-        <i class="bi bi-chevron-right text-secondary"></i>
-      </div>
-
-      <div class="role-quick-btn" onclick="quickLogin('admin')">
-        <div class="user-avatar" style="background-color: #0f172a;">RA</div>
-        <div class="flex-grow-1 text-start">
-          <div class="fw-semibold text-white">Root4Tech Admin</div>
-          <div class="text-secondary small">Agency Administrator (admin)</div>
-        </div>
-        <i class="bi bi-chevron-right text-secondary"></i>
-      </div>
     </div>
 
     <div class="text-center text-secondary small">
@@ -150,99 +77,52 @@
 <script src="js/api.js"></script>
 <script src="js/app.js"></script>
 <script>
-  async function quickLogin(roleKey) {
-    if (window.CRM_API) {
-      try {
-        const res = await CRM_API.switchPersona(roleKey);
-        if (res && res.success) {
-          showToast(`Logged in as ${res.user.name}`, 'success');
-          setTimeout(() => { window.location.href = 'index.html'; }, 350);
-          return;
-        }
-      } catch (err) {
-        console.warn('[Login] API switchPersona fallback:', err.message);
-      }
-    }
-    if (typeof CRM_STORE !== 'undefined') {
-      CRM_STORE.setCurrentRole(roleKey);
-      const user = CRM_STORE.getCurrentUser();
-      showToast(`Logged in as ${user ? user.name : roleKey}`, 'success');
-    }
-    setTimeout(() => {
-      window.location.href = 'index.html';
-    }, 350);
-  }
-
   async function handleFormLogin(e) {
     e.preventDefault();
     const email = document.getElementById('loginEmail').value.trim();
     const password = document.getElementById('loginPassword').value;
+
+    if (!email || !password) {
+      showToast('Please enter both your email/username and password.', 'warning');
+      return;
+    }
 
     if (window.CRM_API) {
       try {
         const res = await CRM_API.login(email, password);
         if (res && res.success) {
           showToast(`Login successful! Welcome back, ${res.user.name}.`, 'success');
-          setTimeout(() => { window.location.href = 'index.html'; }, 400);
+          setTimeout(() => { window.location.href = 'index.html'; }, 350);
           return;
         }
       } catch (err) {
-        console.warn('[Login] Backend login response:', err.message);
-        // If the backend specifically rejected credentials with 401 Invalid credentials, report it
-        if (err.message && err.message.toLowerCase().includes('invalid credentials')) {
-          showToast('Invalid credentials. Please verify your email and password.', 'danger');
-          return;
-        }
-        // If a server error (500) or network disconnection occurred, fall through to client store fallback
+        console.warn('[Login] Authentication notice:', err.message);
+        showToast(err.message || 'Invalid credentials. Please verify your email and password.', 'danger');
+        return;
       }
     }
 
-    // Client-side fallback authentication
-    const cleanInput = email.toLowerCase();
-    const teamPasswords = {
-      'sharjeel@root4tech.com': 'Sharjeel@Root4Tech2026!',
-      'ali@root4tech.com': 'Ali@Root4Tech2026!',
-      'murad@root4tech.com': 'Murad@Root4Tech2026!',
-      'admin@root4tech.com': 'Admin@Root4Tech2026!',
-      'admin': 'Admin@Root4Tech2026!',
-      'sharjeel': 'Sharjeel@Root4Tech2026!',
-      'ali': 'Ali@Root4Tech2026!',
-      'murad': 'Murad@Root4Tech2026!',
-    };
-
-    const expectedPwd = teamPasswords[cleanInput] || teamPasswords[cleanInput.split('@')[0]];
-    if (expectedPwd && password !== expectedPwd && password !== 'Admin@Root4Tech2026!' && password !== 'password123') {
-      showToast('Invalid credentials. Please verify your email and password.', 'danger');
-      return;
-    }
-
+    // Fallback for purely static environments
     if (typeof CRM_STORE !== 'undefined') {
       const data = CRM_STORE.get() || {};
       const team = data.teamMembers || [];
+      const cleanInput = email.toLowerCase();
       const matchedUser = team.find(m => 
         (m.email && m.email.toLowerCase() === cleanInput) ||
-        (m.roleKey && m.roleKey.toLowerCase() === cleanInput) ||
-        (m.name && m.name.toLowerCase().includes(cleanInput))
+        (m.roleKey && m.roleKey.toLowerCase() === cleanInput)
       );
 
       if (matchedUser) {
         CRM_STORE.setCurrentRole(matchedUser.roleKey);
         showToast(`Login successful! Welcome back, ${matchedUser.name}.`, 'success');
-      } else if (cleanInput.includes('admin')) {
-        CRM_STORE.setCurrentRole('admin');
-        showToast('Login successful! Welcome back, Administrator.', 'success');
-      } else {
-        CRM_STORE.setCurrentRole('sales_mgr');
-        showToast('Login successful! Redirecting to dashboard...', 'success');
+        setTimeout(() => { window.location.href = 'index.html'; }, 350);
+        return;
       }
-    } else {
-      showToast('Login successful! Redirecting...', 'success');
     }
 
-    setTimeout(() => {
-      window.location.href = 'index.html';
-    }, 400);
+    showToast('Invalid credentials. Please verify your email and password.', 'danger');
   }
+</script>
 </script>
 </body>
 </html>

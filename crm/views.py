@@ -129,8 +129,8 @@ def api_logout(request):
 def api_current_user(request):
     """Get current session staff details, permissions, and unread notification counts."""
     if not request.user.is_authenticated:
-        # If demo fallback or unauthenticated, return default sales manager
-        default_user = User.objects.filter(username='david').first() or User.objects.first()
+        # If unauthenticated, return default sales manager profile
+        default_user = User.objects.filter(username='sharjeel').first() or User.objects.first()
         if default_user:
             profile = getattr(default_user, 'staff_profile', None)
             return Response({
@@ -142,7 +142,7 @@ def api_current_user(request):
                     'email': default_user.email,
                     'role': profile.role_title if profile else 'Sales Manager',
                     'role_key': profile.role_key if profile else 'sales_mgr',
-                    'avatar': profile.avatar if profile else 'DV',
+                    'avatar': profile.avatar if profile else 'SS',
                     'color': profile.color if profile else '#059669',
                 }
             })
@@ -169,36 +169,16 @@ def api_current_user(request):
 
 
 @api_view(['POST'])
-@permission_classes([permissions.AllowAny])
+@permission_classes([permissions.IsAuthenticated])
 def api_switch_persona(request):
     """
-    Switch active session persona between staff roles.
+    Persona switching is strictly disabled for security.
+    Staff members can only operate under their own authenticated account.
     """
-    try:
-        target_role = request.data.get('role_key') or request.data.get('role')
-        if not target_role:
-            return Response({'success': False, 'message': 'Target role required.'}, status=400)
-
-        matched_profile = StaffProfile.objects.filter(Q(role_key=target_role) | Q(user__username=target_role)).first()
-        if matched_profile:
-            user = matched_profile.user
-            user.backend = 'django.contrib.auth.backends.ModelBackend'
-            login(request, user)
-            return Response({
-                'success': True,
-                'message': f'Switched active view to {user.get_full_name()} ({matched_profile.role_title})',
-                'user': {
-                    'id': user.id,
-                    'name': user.get_full_name(),
-                    'role': matched_profile.role_title,
-                    'role_key': matched_profile.role_key,
-                    'avatar': matched_profile.avatar,
-                    'color': matched_profile.color,
-                }
-            })
-        return Response({'success': False, 'message': 'Staff role profile not found.'}, status=404)
-    except Exception as exc:
-        return Response({'success': False, 'message': f'Switch persona error: {str(exc)}'}, status=500)
+    return Response({
+        'success': False,
+        'message': 'Profile switching is disabled for security. Each staff member must log in with their own account.'
+    }, status=status.HTTP_403_FORBIDDEN)
 
 
 # =============================================================================
@@ -883,7 +863,7 @@ def api_crm_bundle(request):
             'type': 'Invoice',
             'client': inv.client_display,
             'project': inv.project_scope_title,
-            'createdBy': inv.created_by.get_full_name() if inv.created_by else 'David Vance',
+            'createdBy': inv.created_by.get_full_name() if inv.created_by else 'Sir Sharjeel',
             'createdRole': getattr(getattr(inv.created_by, 'staff_profile', None), 'role_title', 'Sales Manager'),
             'issueDate': str(inv.issue_date),
             'dueDate': str(inv.due_date),
@@ -898,7 +878,7 @@ def api_crm_bundle(request):
             'type': 'Quotation',
             'client': qtn.client_display,
             'project': qtn.project_scope_title,
-            'createdBy': qtn.created_by.get_full_name() if qtn.created_by else 'David Vance',
+            'createdBy': qtn.created_by.get_full_name() if qtn.created_by else 'Sir Sharjeel',
             'createdRole': getattr(getattr(qtn.created_by, 'staff_profile', None), 'role_title', 'Sales Manager'),
             'issueDate': str(qtn.issue_date),
             'dueDate': str(qtn.valid_until) if qtn.valid_until else '',
@@ -924,7 +904,7 @@ def api_crm_bundle(request):
     return Response({
         'currentRole': role,
         'currentUser': {
-            'name': user.get_full_name() if user else 'David Vance',
+            'name': user.get_full_name() if user else 'Sir Sharjeel',
             'role': getattr(getattr(user, 'staff_profile', None), 'role_title', 'Sales Manager'),
             'roleKey': role,
         },

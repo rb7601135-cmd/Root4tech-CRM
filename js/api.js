@@ -115,14 +115,8 @@ const CRM_API = {
   },
 
   async switchPersona(roleKey) {
-    const res = await this.request('/api/auth/switch-persona/', {
-      method: 'POST',
-      body: JSON.stringify({ role_key: roleKey }),
-    });
-    if (res.success) {
-      await this.syncStateWithBackend();
-    }
-    return res;
+    console.warn('Persona switching is disabled for security.');
+    return { success: false, error: 'Persona switching is disabled.' };
   },
 
   // Leads

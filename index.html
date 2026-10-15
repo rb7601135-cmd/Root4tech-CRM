@@ -115,9 +115,9 @@
 
     <div class="sidebar-footer">
       <div class="user-quick-card">
-        <div class="user-avatar current-user-avatar status-online" style="background-color: #059669;">DV</div>
+        <div class="user-avatar current-user-avatar status-online" style="background-color: #059669;">SS</div>
         <div class="user-info">
-          <div class="user-name current-user-name">David Vance</div>
+          <div class="user-name current-user-name">Sir Sharjeel</div>
           <div class="user-role current-user-role">Sales Manager</div>
         </div>
       </div>
@@ -140,52 +140,11 @@
       </div>
 
       <div class="topbar-right">
-        <!-- Staff Role Switcher in Topbar -->
-        <div class="dropdown">
-          <button class="role-badge-selector dropdown-toggle" type="button" data-bs-override="dropdown" data-bs-toggle="dropdown" aria-expanded="false">
-            <i class="bi bi-person-badge-fill"></i>
-            <span>Role:</span>
-            <span id="current-role-badge-text" class="fw-bold">Sales Manager</span>
-          </button>
-          <ul class="dropdown-menu dropdown-menu-end shadow border-0 p-2" style="min-width: 250px;">
-            <li class="px-3 py-1 text-muted small text-uppercase fw-bold" style="font-size: 0.68rem;">Switch Staff Persona</li>
-            <li>
-              <a class="dropdown-item rounded d-flex align-items-center gap-2 py-2 role-select-item" href="#" data-role="dev">
-                <span class="badge rounded-circle p-2" style="background-color: #2563eb;">AT</span>
-                <div>
-                  <div class="fw-semibold">Alex Turner</div>
-                  <div class="small text-muted">Full-Stack Developer</div>
-                </div>
-              </a>
-            </li>
-            <li>
-              <a class="dropdown-item rounded d-flex align-items-center gap-2 py-2 role-select-item" href="#" data-role="editor">
-                <span class="badge rounded-circle p-2" style="background-color: #7e22ce;">ML</span>
-                <div>
-                  <div class="fw-semibold">Maya Lin</div>
-                  <div class="small text-muted">Video Editor</div>
-                </div>
-              </a>
-            </li>
-            <li>
-              <a class="dropdown-item rounded d-flex align-items-center gap-2 py-2 role-select-item" href="#" data-role="sales_mgr">
-                <span class="badge rounded-circle p-2" style="background-color: #059669;">DV</span>
-                <div>
-                  <div class="fw-semibold">David Vance</div>
-                  <div class="small text-muted">Sales Manager</div>
-                </div>
-              </a>
-            </li>
-            <li>
-              <a class="dropdown-item rounded d-flex align-items-center gap-2 py-2 role-select-item" href="#" data-role="sales">
-                <span class="badge rounded-circle p-2" style="background-color: #d97706;">SJ</span>
-                <div>
-                  <div class="fw-semibold">Sarah Jenkins</div>
-                  <div class="small text-muted">Salesperson</div>
-                </div>
-              </a>
-            </li>
-          </ul>
+        <!-- Active Staff Role Badge -->
+        <div class="role-badge-selector static-badge" title="Active Role">
+          <i class="bi bi-person-badge-fill text-primary"></i>
+          <span class="text-secondary small">Role:</span>
+          <span id="current-role-badge-text" class="fw-bold">Sales Manager</span>
         </div>
 
         <!-- Quick Add Menu -->
@@ -216,7 +175,7 @@
           </button>
           <ul class="dropdown-menu dropdown-menu-end shadow border-0 p-2" style="min-width: 200px;">
             <li class="px-3 py-2 border-bottom mb-1">
-              <div class="fw-bold current-user-name">David Vance</div>
+              <div class="fw-bold current-user-name">Sir Sharjeel</div>
               <div class="text-muted small current-user-role">Sales Manager</div>
             </li>
             <li><a class="dropdown-item rounded" href="team.html"><i class="bi bi-person me-2"></i> Team Profiles</a></li>
@@ -240,7 +199,7 @@
               </span>
               <span class="text-white-50 small">&bull; Root4Tech Agency Dashboard</span>
             </div>
-            <h2 class="fw-bold mb-1 text-white" id="banner-greeting">Welcome back, David!</h2>
+            <h2 class="fw-bold mb-1 text-white" id="banner-greeting">Welcome back!</h2>
             <p class="text-light text-opacity-75 mb-0" id="banner-subtitle">
               You are viewing the agency-wide sales pipeline, deal velocity, and team performance overview.
             </p>
@@ -339,8 +298,8 @@
             <div class="col-md-6">
               <label class="form-label small fw-semibold">Assigned Salesperson</label>
               <select name="assignedSalesperson" class="form-select">
-                <option value="Sarah Jenkins">Sarah Jenkins (Salesperson)</option>
-                <option value="David Vance">David Vance (Sales Manager)</option>
+                <option value="Sir Sharjeel">Sir Sharjeel (Sales Manager)</option>
+                <option value="Root4Tech Admin">Root4Tech Admin (Administrator)</option>
               </select>
             </div>
             <div class="col-md-6">
@@ -400,10 +359,10 @@
             <div class="col-md-6">
               <label class="form-label small fw-semibold">Assigned Team Member</label>
               <select name="assignedTeamMember" class="form-select">
-                <option value="Alex Turner">Alex Turner (Full-Stack Dev)</option>
-                <option value="Maya Lin">Maya Lin (Video Editor)</option>
-                <option value="David Vance">David Vance (Sales Manager)</option>
-                <option value="Sarah Jenkins">Sarah Jenkins (Salesperson)</option>
+                <option value="Sir Ali">Sir Ali (Full-Stack Developer)</option>
+                <option value="Sir Murad">Sir Murad (Video Editor)</option>
+                <option value="Sir Sharjeel">Sir Sharjeel (Sales Manager)</option>
+                <option value="Root4Tech Admin">Root4Tech Admin (Administrator)</option>
               </select>
             </div>
             <div class="col-md-6">
@@ -460,10 +419,10 @@
             <div class="col-md-6">
               <label class="form-label small fw-semibold">Assignee *</label>
               <select name="assignedTo" class="form-select" required>
-                <option value="Alex Turner">Alex Turner (Dev)</option>
-                <option value="Maya Lin">Maya Lin (Video Editor)</option>
-                <option value="David Vance">David Vance (Sales Mgr)</option>
-                <option value="Sarah Jenkins">Sarah Jenkins (Sales)</option>
+                <option value="Sir Ali">Sir Ali (Full-Stack Developer)</option>
+                <option value="Sir Murad">Sir Murad (Video Editor)</option>
+                <option value="Sir Sharjeel">Sir Sharjeel (Sales Manager)</option>
+                <option value="Root4Tech Admin">Root4Tech Admin (Administrator)</option>
               </select>
             </div>
             <div class="col-md-6">
@@ -646,32 +605,32 @@
                     <tr>
                       <td>
                         <div class="d-flex align-items-center gap-2">
-                          <div class="user-avatar" style="background-color: #059669; width: 32px; height: 32px; font-size: 0.75rem;">DV</div>
+                          <div class="user-avatar" style="background-color: #059669; width: 32px; height: 32px; font-size: 0.75rem;">SS</div>
                           <div>
-                            <div class="fw-semibold">David Vance</div>
+                            <div class="fw-semibold">Sir Sharjeel</div>
                             <div class="text-muted small">Sales Manager</div>
                           </div>
                         </div>
                       </td>
-                      <td>12</td>
-                      <td>5</td>
-                      <td class="fw-bold text-success">$33,000</td>
-                      <td><span class="badge bg-success-subtle text-success">Target Exceeded</span></td>
+                      <td>${data.leads.length}</td>
+                      <td>${data.leads.filter(l => l.status === 'Won').length}</td>
+                      <td class="fw-bold text-success">${formatCurrency(wonValue)}</td>
+                      <td><span class="badge bg-success-subtle text-success">Active Lead</span></td>
                     </tr>
                     <tr>
                       <td>
                         <div class="d-flex align-items-center gap-2">
-                          <div class="user-avatar" style="background-color: #d97706; width: 32px; height: 32px; font-size: 0.75rem;">SJ</div>
+                          <div class="user-avatar" style="background-color: #0f172a; width: 32px; height: 32px; font-size: 0.75rem;">RA</div>
                           <div>
-                            <div class="fw-semibold">Sarah Jenkins</div>
-                            <div class="text-muted small">Salesperson</div>
+                            <div class="fw-semibold">Root4Tech Admin</div>
+                            <div class="text-muted small">Administrator</div>
                           </div>
                         </div>
                       </td>
-                      <td>14</td>
-                      <td>8</td>
-                      <td class="fw-bold text-primary">$18,500</td>
-                      <td><span class="badge bg-primary-subtle text-primary">On Track</span></td>
+                      <td>0</td>
+                      <td>0</td>
+                      <td class="fw-bold text-primary">$0</td>
+                      <td><span class="badge bg-primary-subtle text-primary">Superuser</span></td>
                     </tr>
                   </tbody>
                 </table>
@@ -722,8 +681,8 @@
     document.getElementById('banner-subtitle').textContent = 
       'Tracking development architecture, sprint progress, bug fixes, API endpoints, and production deadlines.';
 
-    const devProjects = data.projects.filter(p => p.assignedTeamMember === 'Alex Turner' || p.serviceType === 'Website Development');
-    const devTasks = data.tasks.filter(t => t.assignedTo === 'Alex Turner' || t.role === 'dev');
+    const devProjects = data.projects.filter(p => p.assignedTeamMember === 'Sir Ali' || p.serviceType === 'Website Development');
+    const devTasks = data.tasks.filter(t => t.assignedTo === 'Sir Ali' || t.role === 'dev');
     const bugs = data.bugs || [];
     const openBugs = bugs.filter(b => b.status !== 'Resolved');
 
@@ -901,7 +860,7 @@
     document.getElementById('banner-subtitle').textContent = 
       'Tracking video timelines, 4K rendering queues, client revision notes, and delivery schedules.';
 
-    const editorProjects = data.projects.filter(p => p.assignedTeamMember === 'Maya Lin' || p.serviceType === 'Video Editing');
+    const editorProjects = data.projects.filter(p => p.assignedTeamMember === 'Sir Murad' || p.serviceType === 'Video Editing');
     const revisions = data.revisions || [];
     const pendingRevs = revisions.filter(r => r.status !== 'Approved');
 
@@ -1065,9 +1024,10 @@
     document.getElementById('banner-subtitle').textContent = 
       'Managing assigned client inquiries, daily follow-up calls, proposal deliveries, and direct closing activities.';
 
-    const sarahLeads = data.leads.filter(l => l.assignedSalesperson === 'Sarah Jenkins');
-    const newInquiries = sarahLeads.filter(l => l.status === 'New');
-    const proposalsSent = sarahLeads.filter(l => l.status === 'Proposal Sent');
+    const user = CRM_STORE.getCurrentUser();
+    const myLeads = data.leads.filter(l => l.assignedSalesperson === user.name || l.assignedSalesperson === 'Sir Sharjeel');
+    const newInquiries = myLeads.filter(l => l.status === 'New');
+    const proposalsSent = myLeads.filter(l => l.status === 'Proposal Sent');
 
     // KPI Cards
     const kpiRow = document.getElementById('kpi-cards-row');

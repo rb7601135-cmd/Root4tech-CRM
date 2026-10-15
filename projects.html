@@ -51,9 +51,9 @@
 
     <div class="sidebar-footer">
       <div class="user-quick-card">
-        <div class="user-avatar current-user-avatar status-online" style="background-color: #059669;">DV</div>
+        <div class="user-avatar current-user-avatar status-online" style="background-color: #059669;">SS</div>
         <div class="user-info">
-          <div class="user-name current-user-name">David Vance</div>
+          <div class="user-name current-user-name">Sir Sharjeel</div>
           <div class="user-role current-user-role">Sales Manager</div>
         </div>
       </div>
@@ -73,17 +73,11 @@
       </div>
 
       <div class="topbar-right">
-        <div class="dropdown">
-          <button class="role-badge-selector dropdown-toggle" type="button" data-bs-toggle="dropdown">
-            <i class="bi bi-person-badge-fill"></i>
-            <span id="current-role-badge-text">Sales Manager</span>
-          </button>
-          <ul class="dropdown-menu dropdown-menu-end shadow border-0 p-2">
-            <li><a class="dropdown-item role-select-item" href="#" data-role="sales_mgr">David Vance (Sales Manager)</a></li>
-            <li><a class="dropdown-item role-select-item" href="#" data-role="sales">Sarah Jenkins (Salesperson)</a></li>
-            <li><a class="dropdown-item role-select-item" href="#" data-role="dev">Alex Turner (Full-Stack Dev)</a></li>
-            <li><a class="dropdown-item role-select-item" href="#" data-role="editor">Maya Lin (Video Editor)</a></li>
-          </ul>
+        <!-- Active Staff Role Badge -->
+        <div class="role-badge-selector static-badge" title="Active Role">
+          <i class="bi bi-person-badge-fill text-primary"></i>
+          <span class="text-secondary small">Role:</span>
+          <span id="current-role-badge-text" class="fw-bold">Sales Manager</span>
         </div>
 
         <button class="btn btn-primary btn-sm rounded-pill px-3 shadow-sm" data-bs-toggle="modal" data-bs-target="#newProjectModal">
@@ -149,10 +143,10 @@
           <div class="col-md-2">
             <select id="filterAssignee" class="form-select form-select-sm" onchange="renderProjects()">
               <option value="">All Team Members</option>
-              <option value="Alex Turner">Alex Turner (Dev)</option>
-              <option value="Maya Lin">Maya Lin (Editor)</option>
-              <option value="David Vance">David Vance</option>
-              <option value="Sarah Jenkins">Sarah Jenkins</option>
+              <option value="Sir Ali">Sir Ali (Dev)</option>
+              <option value="Sir Murad">Sir Murad (Editor)</option>
+              <option value="Sir Sharjeel">Sir Sharjeel (Sales Mgr)</option>
+              <option value="Root4Tech Admin">Root4Tech Admin</option>
             </select>
           </div>
           <div class="col-md-2 text-md-end">
@@ -227,10 +221,10 @@
             <div class="col-md-6">
               <label class="form-label small fw-semibold">Assigned Team Member</label>
               <select name="assignedTeamMember" class="form-select">
-                <option value="Alex Turner">Alex Turner (Dev)</option>
-                <option value="Maya Lin">Maya Lin (Video Editor)</option>
-                <option value="David Vance">David Vance (Sales Mgr)</option>
-                <option value="Sarah Jenkins">Sarah Jenkins (Sales)</option>
+                <option value="Sir Ali">Sir Ali (Full-Stack Developer)</option>
+                <option value="Sir Murad">Sir Murad (Video Editor)</option>
+                <option value="Sir Sharjeel">Sir Sharjeel (Sales Manager)</option>
+                <option value="Root4Tech Admin">Root4Tech Admin (Administrator)</option>
               </select>
             </div>
             <div class="col-md-6">

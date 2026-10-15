@@ -139,8 +139,13 @@ const CRM_STORE = {
     } else {
       try {
         data = JSON.parse(raw);
-        // Auto-purge legacy demo staff if detected
-        if (data.teamMembers && data.teamMembers.some(m => m.name === 'Alex Turner' || m.name === 'David Vance')) {
+        // Auto-purge legacy demo staff and demo items if detected
+        const hasLegacyDemo = (
+          (data.teamMembers && data.teamMembers.some(m => ['Alex Turner', 'David Vance', 'Sarah Jenkins', 'Maya Lin'].includes(m.name))) ||
+          (data.leads && data.leads.some(l => ['David Vance', 'Sarah Jenkins'].includes(l.assignedSalesperson))) ||
+          (data.projects && data.projects.some(p => ['Alex Turner', 'Maya Lin'].includes(p.assignedTeamMember)))
+        );
+        if (hasLegacyDemo) {
           this.save(DEFAULT_DATA);
           data = JSON.parse(JSON.stringify(DEFAULT_DATA));
         }
@@ -172,10 +177,10 @@ const CRM_STORE = {
     // Ensure all invoices have createdBy populated
     if (data.invoices && data.invoices.length > 0) {
       let updated = false;
-      data.invoices.forEach((inv, i) => {
-        if (!inv.createdBy) {
-          inv.createdBy = i % 2 === 0 ? 'David Vance' : 'Sarah Jenkins';
-          inv.createdRole = i % 2 === 0 ? 'Sales Manager' : 'Salesperson';
+      data.invoices.forEach((inv) => {
+        if (!inv.createdBy || inv.createdBy === 'David Vance' || inv.createdBy === 'Sarah Jenkins') {
+          inv.createdBy = 'Sir Sharjeel';
+          inv.createdRole = 'Sales Manager';
           updated = true;
         }
       });

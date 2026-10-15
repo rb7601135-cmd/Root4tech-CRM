@@ -231,7 +231,7 @@ def generate_invoice_pdf(invoice):
     project_ref_cells = [
         Paragraph("PROJECT & ACCOUNT DETAILS", styles['SectionHeader']),
         Paragraph(invoice.project_scope_title or (invoice.project.title if invoice.project else 'Agency Services Contract'), styles['TableCellBold']),
-        Paragraph(f"<b>Account Manager:</b> {invoice.created_by.get_full_name() if invoice.created_by else 'David Vance (Sales Manager)'}", styles['BodyMuted']),
+        Paragraph(f"<b>Account Manager:</b> {invoice.created_by.get_full_name() if invoice.created_by else 'Sir Sharjeel (Sales Manager)'}", styles['BodyMuted']),
         Paragraph(f"<b>Payment Terms:</b> Net 30 / Direct Wire Transfer", styles['BodyMuted']),
     ]
 
@@ -442,7 +442,7 @@ def generate_quotation_pdf(quotation):
     project_ref_cells = [
         Paragraph("SCOPE SUMMARY", styles['SectionHeader']),
         Paragraph(quotation.project_scope_title or 'Digital Agency Deliverables Scope', styles['TableCellBold']),
-        Paragraph(f"<b>Author:</b> {quotation.created_by.get_full_name() if quotation.created_by else 'David Vance (Sales Manager)'}", styles['BodyMuted']),
+        Paragraph(f"<b>Author:</b> {quotation.created_by.get_full_name() if quotation.created_by else 'Sir Sharjeel (Sales Manager)'}", styles['BodyMuted']),
         Paragraph("<b>Standard Delivery:</b> 4-6 Weeks upon signing", styles['BodyMuted']),
     ]
 
