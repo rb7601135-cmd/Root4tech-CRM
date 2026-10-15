@@ -96,9 +96,12 @@
           return;
         }
       } catch (err) {
-        console.warn('[Login] Authentication notice:', err.message);
-        showToast(err.message || 'Invalid credentials. Please verify your email and password.', 'danger');
-        return;
+        console.warn('[Login] Backend notice:', err.message);
+        if (err.message && err.message.toLowerCase().includes('invalid credentials')) {
+          showToast('Invalid credentials. Please verify your email and password.', 'danger');
+          return;
+        }
+        // For temporary server/database errors, proceed to localized store authentication below
       }
     }
 

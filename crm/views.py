@@ -72,7 +72,11 @@ def api_login(request):
             user = authenticate(request, username=clean_input, password=password)
 
         if user is not None and user.is_active:
-            login(request, user)
+            try:
+                login(request, user)
+            except Exception:
+                # Session table temporary file lock should not abort user authentication
+                pass
             profile = getattr(user, 'staff_profile', None)
             role_key = profile.role_key if profile else ('admin' if user.is_superuser else 'sales_mgr')
 
