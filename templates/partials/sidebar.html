@@ -1,0 +1,103 @@
+<aside id="sidebar">
+  <div class="sidebar-header">
+    <a href="/index.html" class="brand-link">
+      <img src="/assets/images/logo.svg" alt="Root4Tech Logo" class="brand-logo-img">
+    </a>
+    <button class="btn btn-sm btn-icon d-none d-lg-flex" id="sidebar-toggle-btn" title="Toggle Sidebar">
+      <i class="bi bi-layout-sidebar-inset text-secondary"></i>
+    </button>
+  </div>
+
+  <div class="sidebar-nav">
+    <div class="nav-section-title">Core Management</div>
+    <ul class="sidebar-menu">
+      <li>
+        <a href="/index.html" data-page="dashboard" class="sidebar-link {% if active_page == 'dashboard' or not request.resolver_match and not active_page or request.resolver_match.url_name == 'dashboard' or request.resolver_match.url_name == 'dashboard_html' or request.path == '/' or request.path == '/index.html' %}active{% endif %}">
+          <i class="bi bi-grid-1x2-fill"></i>
+          <span>Dashboard</span>
+        </a>
+      </li>
+      <li>
+        <a href="/leads.html" data-page="leads" class="sidebar-link {% if active_page == 'leads' or request.resolver_match and 'lead' in request.resolver_match.url_name or 'leads' in request.path %}active{% endif %}">
+          <i class="bi bi-funnel-fill"></i>
+          <span>Leads</span>
+          <span class="badge bg-primary" id="sidebar-leads-count">8</span>
+        </a>
+      </li>
+      <li>
+        <a href="/clients.html" data-page="clients" class="sidebar-link {% if active_page == 'clients' or request.resolver_match and 'client' in request.resolver_match.url_name or 'clients' in request.path %}active{% endif %}">
+          <i class="bi bi-buildings-fill"></i>
+          <span>Clients</span>
+        </a>
+      </li>
+      <li>
+        <a href="/projects.html" data-page="projects" class="sidebar-link {% if active_page == 'projects' or request.resolver_match and 'project' in request.resolver_match.url_name or 'projects' in request.path %}active{% endif %}">
+          <i class="bi bi-briefcase-fill"></i>
+          <span>Projects</span>
+          <span class="badge bg-info text-dark" id="sidebar-projects-count">5</span>
+        </a>
+      </li>
+      <li>
+        <a href="/tasks.html" data-page="tasks" class="sidebar-link {% if active_page == 'tasks' or request.resolver_match and 'task' in request.resolver_match.url_name or 'tasks' in request.path %}active{% endif %}">
+          <i class="bi bi-check2-square"></i>
+          <span>Tasks</span>
+        </a>
+      </li>
+    </ul>
+
+    <div class="nav-section-title">Operations & Sales</div>
+    <ul class="sidebar-menu">
+      <li>
+        <a href="/calendar.html" data-page="calendar" class="sidebar-link {% if active_page == 'calendar' or request.resolver_match and 'calendar' in request.resolver_match.url_name or 'calendar' in request.path %}active{% endif %}">
+          <i class="bi bi-calendar3"></i>
+          <span>Calendar & Follow-ups</span>
+        </a>
+      </li>
+      <li>
+        <a href="/invoices.html" data-page="invoices" class="sidebar-link {% if active_page == 'invoices' or request.resolver_match and 'invoice' in request.resolver_match.url_name or 'invoice' in request.path %}active{% endif %}">
+          <i class="bi bi-receipt"></i>
+          <span>Quotations & Invoices</span>
+        </a>
+      </li>
+      <li>
+        <a href="/reports.html" data-page="reports" class="sidebar-link {% if active_page == 'reports' or request.resolver_match and 'report' in request.resolver_match.url_name or 'report' in request.path %}active{% endif %}">
+          <i class="bi bi-graph-up-arrow"></i>
+          <span>Reports & Analytics</span>
+        </a>
+      </li>
+    </ul>
+
+    <div class="nav-section-title">Agency Admin</div>
+    <ul class="sidebar-menu">
+      <li>
+        <a href="/team.html" data-page="team" class="sidebar-link {% if active_page == 'team' or request.resolver_match and 'team' in request.resolver_match.url_name or 'team' in request.path %}active{% endif %}">
+          <i class="bi bi-people-fill"></i>
+          <span>Team Members</span>
+        </a>
+      </li>
+      <li>
+        <a href="/notifications.html" data-page="notifications" class="sidebar-link {% if active_page == 'notifications' or request.resolver_match and 'notification' in request.resolver_match.url_name or 'notification' in request.path %}active{% endif %}">
+          <i class="bi bi-bell-fill"></i>
+          <span>Notifications</span>
+          <span class="badge bg-danger" id="sidebar-notif-badge">3</span>
+        </a>
+      </li>
+      <li>
+        <a href="/settings.html" data-page="settings" class="sidebar-link {% if active_page == 'settings' or request.resolver_match and 'setting' in request.resolver_match.url_name or 'setting' in request.path %}active{% endif %}">
+          <i class="bi bi-gear-fill"></i>
+          <span>Settings</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+
+  <div class="sidebar-footer">
+    <div class="user-quick-card">
+      <div class="user-avatar current-user-avatar status-online" style="background-color: #059669;">SS</div>
+      <div class="user-info">
+        <div class="user-name current-user-name">Sir Sharjeel</div>
+        <div class="user-role current-user-role">Sales Manager</div>
+      </div>
+    </div>
+  </div>
+</aside>

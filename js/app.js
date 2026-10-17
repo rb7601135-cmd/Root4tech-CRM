@@ -110,13 +110,17 @@ function setupSidebar() {
 
 // Highlight current page link in sidebar
 function highlightActiveNavLink() {
-  const currentPath = window.location.pathname;
+  const currentPath = window.location.pathname.replace(/\/$/, '');
   const pageName = currentPath.substring(currentPath.lastIndexOf('/') + 1) || 'index.html';
 
   const links = document.querySelectorAll('.sidebar-link');
   links.forEach(link => {
-    const href = link.getAttribute('href');
-    if (href === pageName || (pageName === '' && href === 'index.html')) {
+    const rawHref = link.getAttribute('href') || '';
+    const href = rawHref.substring(rawHref.lastIndexOf('/') + 1) || 'index.html';
+    const isMatch = (href === pageName) ||
+                    (pageName === 'index.html' && (href === '' || href === 'index.html')) ||
+                    (href.replace('.html', '') === pageName.replace('.html', ''));
+    if (isMatch) {
       link.classList.add('active');
     } else {
       link.classList.remove('active');

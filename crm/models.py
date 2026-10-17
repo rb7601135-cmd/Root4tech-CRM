@@ -448,7 +448,10 @@ class Project(models.Model):
 class Task(models.Model):
     STATUS_CHOICES = [
         ('Pending', 'Pending'),
+        ('Todo', 'Todo'),
         ('In Progress', 'In Progress'),
+        ('Review', 'Review'),
+        ('Done', 'Done'),
         ('Completed', 'Completed'),
         ('Blocked', 'Blocked'),
     ]

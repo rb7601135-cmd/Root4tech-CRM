@@ -835,6 +835,39 @@ body.dark-mode .kanban-card {
   cursor: grabbing;
 }
 
+/* SortableJS Drag & Drop Visuals */
+.kanban-cards-container {
+  min-height: 120px;
+}
+
+.sortable-ghost {
+  opacity: 0.4 !important;
+  background: #f1f5f9 !important;
+  border: 2px dashed #94a3b8 !important;
+  box-shadow: none !important;
+}
+
+body.dark-mode .sortable-ghost {
+  background: #1e293b !important;
+  border-color: #475569 !important;
+}
+
+.sortable-chosen {
+  cursor: grabbing !important;
+}
+
+.sortable-drag {
+  opacity: 0.98 !important;
+  transform: rotate(1.5deg) scale(1.02);
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.18), 0 10px 10px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Kanban column accents for tasks */
+.kanban-column[data-status="Todo"] .kanban-column-header { border-color: #94a3b8; }
+.kanban-column[data-status="In Progress"] .kanban-column-header { border-color: #3b82f6; }
+.kanban-column[data-status="Review"] .kanban-column-header { border-color: #f59e0b; }
+.kanban-column[data-status="Done"] .kanban-column-header { border-color: #10b981; }
+
 /* ==========================================================================
    Timeline & Activity Logs
    ========================================================================== */

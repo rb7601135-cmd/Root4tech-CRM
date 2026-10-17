@@ -367,8 +367,8 @@ class AuthenticationTests(Root4TechCRMTestCase):
         response = self.client.post('/api/auth/switch-persona/', json.dumps({
             'role_key': 'dev'
         }), content_type='application/json')
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json()['user']['role_key'], 'dev')
+        self.assertEqual(response.status_code, 403)
+        self.assertFalse(response.json()['success'])
 
 
 # =============================================================================

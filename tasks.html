@@ -1,96 +1,16 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tasks Board - Root4Tech CRM</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css">
-</head>
-<body>
+{% extends "base.html" %}
 
-<div id="app-wrapper">
-  <div class="sidebar-backdrop"></div>
+{% block title %}Tasks Board - Root4Tech CRM{% endblock %}
+{% block active_page %}tasks{% endblock %}
+{% block nav_tasks %}active{% endblock %}
 
-  <!-- Sidebar -->
-  <aside id="sidebar">
-    <div class="sidebar-header">
-      <a href="index.html" class="brand-link">
-        <img src="assets/images/logo.svg" alt="Root4Tech Logo" class="brand-logo-img">
-      </a>
-      <button class="btn btn-sm btn-icon d-none d-lg-flex" id="sidebar-toggle-btn" title="Toggle Sidebar">
-        <i class="bi bi-layout-sidebar-inset text-secondary"></i>
-      </button>
-    </div>
+{% block topbar_actions %}
+<button class="btn btn-primary btn-sm rounded-pill px-3 shadow-sm" data-bs-toggle="modal" data-bs-target="#newTaskModal">
+  <i class="bi bi-plus-lg me-1"></i> Add Task
+</button>
+{% endblock %}
 
-    <div class="sidebar-nav">
-      <div class="nav-section-title">Core Management</div>
-      <ul class="sidebar-menu">
-        <li><a href="index.html" class="sidebar-link"><i class="bi bi-grid-1x2-fill"></i><span>Dashboard</span></a></li>
-        <li><a href="leads.html" class="sidebar-link"><i class="bi bi-funnel-fill"></i><span>Leads</span></a></li>
-        <li><a href="clients.html" class="sidebar-link"><i class="bi bi-buildings-fill"></i><span>Clients</span></a></li>
-        <li><a href="projects.html" class="sidebar-link"><i class="bi bi-briefcase-fill"></i><span>Projects</span></a></li>
-        <li><a href="tasks.html" class="sidebar-link active"><i class="bi bi-check2-square"></i><span>Tasks</span></a></li>
-      </ul>
-
-      <div class="nav-section-title">Operations & Sales</div>
-      <ul class="sidebar-menu">
-        <li><a href="calendar.html" class="sidebar-link"><i class="bi bi-calendar3"></i><span>Calendar & Follow-ups</span></a></li>
-        <li><a href="invoices.html" class="sidebar-link"><i class="bi bi-receipt"></i><span>Quotations & Invoices</span></a></li>
-        <li><a href="reports.html" class="sidebar-link"><i class="bi bi-graph-up-arrow"></i><span>Reports & Analytics</span></a></li>
-      </ul>
-
-      <div class="nav-section-title">Agency Admin</div>
-      <ul class="sidebar-menu">
-        <li><a href="team.html" class="sidebar-link"><i class="bi bi-people-fill"></i><span>Team Members</span></a></li>
-        <li><a href="notifications.html" class="sidebar-link"><i class="bi bi-bell-fill"></i><span>Notifications</span></a></li>
-        <li><a href="settings.html" class="sidebar-link"><i class="bi bi-gear-fill"></i><span>Settings</span></a></li>
-      </ul>
-    </div>
-
-    <div class="sidebar-footer">
-      <div class="user-quick-card">
-        <div class="user-avatar current-user-avatar status-online" style="background-color: #059669;">SS</div>
-        <div class="user-info">
-          <div class="user-name current-user-name">Sir Sharjeel</div>
-          <div class="user-role current-user-role">Sales Manager</div>
-        </div>
-      </div>
-    </div>
-  </aside>
-
-  <!-- Main Content Wrap -->
-  <div id="main-content">
-    <header id="topbar">
-      <div class="topbar-left">
-        <button class="btn btn-icon d-lg-none" id="mobile-sidebar-toggle-btn"><i class="bi bi-list fs-5"></i></button>
-        <button class="search-trigger-btn" data-bs-toggle="modal" data-bs-target="#globalSearchModal">
-          <i class="bi bi-search"></i>
-          <span>Search CRM...</span>
-          <span class="kbd-shortcut">Ctrl K</span>
-        </button>
-      </div>
-
-      <div class="topbar-right">
-        <div class="role-badge-selector static-badge" title="Active Role">
-          <i class="bi bi-person-badge-fill text-primary"></i>
-          <span class="text-secondary small">Role:</span>
-          <span id="current-role-badge-text" class="fw-bold">Sales Manager</span>
-        </div>
-
-        <button class="btn btn-primary btn-sm rounded-pill px-3 shadow-sm" data-bs-toggle="modal" data-bs-target="#newTaskModal">
-          <i class="bi bi-plus-lg me-1"></i> Add Task
-        </button>
-
-        <a href="notifications.html" class="btn btn-icon position-relative">
-          <i class="bi bi-bell"></i>
-          <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="topbar-notif-badge">3</span>
-        </a>
-      </div>
-    </header>
-
-    <main class="page-container">
+{% block content %}
       <div class="page-header">
         <div>
           <h1 class="page-title">Tasks & Work Orders</h1>
@@ -175,9 +95,9 @@
           </table>
         </div>
       </div>
-    </main>
-  </div>
-</div>
+{% endblock %}
+
+{% block modals %}
 
 <!-- Modal: New Task -->
 <div class="modal fade" id="newTaskModal" tabindex="-1" aria-hidden="true">
@@ -229,25 +149,9 @@
       </form>
     </div>
   </div>
-</div>
+{% endblock %}
 
-<!-- Global Quick Search Modal -->
-<div class="modal fade" id="globalSearchModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered search-modal-dialog">
-    <div class="modal-content search-modal-content">
-      <div class="search-input-header">
-        <i class="bi bi-search text-secondary fs-5"></i>
-        <input type="text" id="global-search-input" class="search-input-box" placeholder="Search leads, projects, clients, or tasks..." autocomplete="off">
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-      </div>
-      <div id="global-search-results" class="search-results-list"></div>
-    </div>
-  </div>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script src="js/data.js"></script>
-<script src="js/app.js"></script>
+{% block extra_js %}
 
 <script>
   const TASK_STATUSES = ['Todo', 'In Progress', 'Review', 'Done'];
@@ -282,6 +186,139 @@
     renderList(tasks);
   }
 
+  let taskSortables = [];
+
+  function initTaskKanbanDragDrop() {
+    taskSortables.forEach(s => {
+      try { s.destroy(); } catch (_) {}
+    });
+    taskSortables = [];
+
+    if (typeof Sortable === 'undefined') {
+      console.warn('SortableJS not loaded yet');
+      return;
+    }
+
+    const containers = document.querySelectorAll('#taskKanbanBoard .kanban-cards-container');
+    containers.forEach(col => {
+      const sortable = new Sortable(col, {
+        group: 'tasks-board',
+        animation: 180,
+        ghostClass: 'sortable-ghost',
+        chosenClass: 'sortable-chosen',
+        dragClass: 'sortable-drag',
+        filter: '.empty-placeholder, .dropdown, button, a',
+        preventOnFilter: false,
+        onEnd: async function(evt) {
+          const itemEl = evt.item;
+          const toCol = evt.to;
+          const fromCol = evt.from;
+          const newStatus = toCol.getAttribute('data-status');
+          const oldStatus = fromCol.getAttribute('data-status');
+
+          if (!newStatus || (newStatus === oldStatus && evt.newIndex === evt.oldIndex)) {
+            return;
+          }
+
+          const taskId = itemEl.getAttribute('data-task-id');
+          if (!taskId) return;
+
+          // 1. Immediately update visual state & column badges
+          updateTaskColumnsVisual(fromCol, toCol, itemEl, newStatus);
+
+          // 2. Immediately update local CRM_STORE
+          const data = CRM_STORE.get();
+          const task = (data.tasks || []).find(t => String(t.id) === String(taskId));
+          if (task) {
+            task.status = newStatus;
+            CRM_STORE.save(data);
+          }
+
+          // 3. Show a toast notification confirming the move
+          showToast(`Task moved to ${newStatus}`, 'success');
+
+          // 4. Trigger an async PATCH /api/tasks/<id>/ with the new status
+          await syncTaskStatusBackend(taskId, newStatus);
+        }
+      });
+      taskSortables.push(sortable);
+    });
+  }
+
+  function updateTaskColumnsVisual(fromCol, toCol, itemEl, newStatus) {
+    const toEmpty = toCol.querySelector('.empty-placeholder');
+    if (toEmpty) toEmpty.remove();
+
+    const fromCards = fromCol.querySelectorAll('.kanban-card');
+    if (fromCards.length === 0 && !fromCol.querySelector('.empty-placeholder')) {
+      const emptyDiv = document.createElement('div');
+      emptyDiv.className = 'text-center py-4 text-muted small empty-placeholder';
+      emptyDiv.innerHTML = `
+        <i class="bi bi-check2-circle fs-3 d-block opacity-50 mb-1"></i>
+        No tasks
+      `;
+      fromCol.appendChild(emptyDiv);
+    }
+
+    const fromBadge = fromCol.closest('.kanban-column')?.querySelector('.badge');
+    if (fromBadge) fromBadge.textContent = fromCol.querySelectorAll('.kanban-card').length;
+
+    const toBadge = toCol.closest('.kanban-column')?.querySelector('.badge');
+    if (toBadge) toBadge.textContent = toCol.querySelectorAll('.kanban-card').length;
+
+    itemEl.querySelectorAll('.dropdown-item').forEach(item => {
+      const txt = item.textContent.trim();
+      if (txt === newStatus) {
+        item.classList.add('active');
+      } else {
+        item.classList.remove('active');
+      }
+    });
+  }
+
+  async function syncTaskStatusBackend(taskId, newStatus) {
+    try {
+      let pk = taskId;
+      if (typeof taskId === 'string' && taskId.startsWith('TSK-')) {
+        pk = parseInt(taskId.replace('TSK-', ''), 10);
+      }
+
+      const getCsrfToken = () => {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+          const cookies = document.cookie.split(';');
+          for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, 10) === 'csrftoken=') {
+              cookieValue = decodeURIComponent(cookie.substring(10));
+              break;
+            }
+          }
+        }
+        return cookieValue;
+      };
+
+      const headers = {
+        'Content-Type': 'application/json',
+        'X-Requested-With': 'XMLHttpRequest'
+      };
+      const csrf = getCsrfToken();
+      if (csrf) headers['X-CSRFToken'] = csrf;
+
+      const res = await fetch(`/api/tasks/${pk}/`, {
+        method: 'PATCH',
+        headers,
+        credentials: 'same-origin',
+        body: JSON.stringify({ status: newStatus })
+      });
+      if (!res.ok) {
+        console.warn(`[Tasks API] PATCH /api/tasks/${pk}/ returned status ${res.status}`);
+      }
+    } catch (err) {
+      console.warn('[Tasks API] Network/sync warning:', err.message);
+    }
+  }
+
   function renderKanban(tasks) {
     const board = document.getElementById('taskKanbanBoard');
     let html = '';
@@ -289,16 +326,16 @@
     TASK_STATUSES.forEach(status => {
       const colTasks = tasks.filter(t => t.status === status);
       html += `
-        <div class="kanban-column">
+        <div class="kanban-column" data-status="${status}">
           <div class="kanban-column-header">
             <span class="kanban-column-title">
               <span>${status}</span>
               <span class="badge bg-secondary bg-opacity-25 text-dark rounded-pill">${colTasks.length}</span>
             </span>
           </div>
-          <div class="kanban-cards-container">
+          <div class="kanban-cards-container" data-status="${status}">
             ${colTasks.map(t => `
-              <div class="kanban-card">
+              <div class="kanban-card" data-task-id="${t.id}">
                 <div class="d-flex justify-content-between align-items-start mb-2">
                   <span class="badge-priority ${t.priority.toLowerCase()}">${t.priority}</span>
                   <div class="dropdown">
@@ -323,7 +360,7 @@
             `).join('')}
 
             ${colTasks.length === 0 ? `
-              <div class="text-center py-4 text-muted small">
+              <div class="text-center py-4 text-muted small empty-placeholder">
                 <i class="bi bi-check2-circle fs-3 d-block opacity-50 mb-1"></i>
                 No tasks
               </div>
@@ -334,6 +371,7 @@
     });
 
     board.innerHTML = html;
+    initTaskKanbanDragDrop();
   }
 
   function renderList(tasks) {
@@ -372,14 +410,15 @@
     `).join('');
   }
 
-  function updateTaskStatus(taskId, newStatus) {
+  async function updateTaskStatus(taskId, newStatus) {
     const data = CRM_STORE.get();
-    const task = data.tasks.find(t => t.id === taskId);
+    const task = (data.tasks || []).find(t => String(t.id) === String(taskId));
     if (task) {
       task.status = newStatus;
       CRM_STORE.save(data);
-      showToast(`Task moved to ${newStatus}`);
+      showToast(`Task moved to ${newStatus}`, 'success');
       renderTasks();
+      await syncTaskStatusBackend(taskId, newStatus);
     }
   }
 
@@ -418,5 +457,4 @@
     renderTasks();
   });
 </script>
-</body>
-</html>
+{% endblock %}

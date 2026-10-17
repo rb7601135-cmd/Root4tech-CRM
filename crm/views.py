@@ -219,6 +219,20 @@ class LeadViewSet(viewsets.ModelViewSet):
 
         return queryset
 
+    def get_object(self):
+        queryset = self.filter_queryset(self.get_queryset())
+        lookup_url_kwarg = self.lookup_url_kwarg or self.lookup_field
+        val = self.kwargs.get(lookup_url_kwarg)
+        if str(val).isdigit():
+            obj = queryset.filter(pk=int(val)).first()
+        else:
+            obj = queryset.filter(lead_id=val).first()
+        if not obj:
+            from django.http import Http404
+            raise Http404("No Lead matches the given query.")
+        self.check_object_permissions(self.request, obj)
+        return obj
+
     def perform_create(self, serializer):
         user = self.request.user if self.request.user.is_authenticated else None
         lead = serializer.save(assigned_salesperson=user if get_user_role(user) == 'sales' and not serializer.validated_data.get('assigned_salesperson') else serializer.validated_data.get('assigned_salesperson'))
@@ -231,6 +245,11 @@ class LeadViewSet(viewsets.ModelViewSet):
         )
 
     def perform_update(self, serializer):
+        stage = serializer.validated_data.get('stage')
+        if stage in ['Won', 'Lost']:
+            serializer.validated_data['status'] = stage
+        elif stage in ['New', 'Contacted', 'Qualified', 'Proposal Sent']:
+            serializer.validated_data['status'] = 'Active'
         lead = serializer.save()
         user = self.request.user if self.request.user.is_authenticated else None
         ActivityLog.objects.create(
@@ -460,11 +479,28 @@ class ProjectViewSet(viewsets.ModelViewSet):
 
 class TaskViewSet(viewsets.ModelViewSet):
     serializer_class = TaskSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['title', 'notes', 'project__title']
     ordering_fields = ['due_date', 'priority', 'status']
     ordering = ['due_date']
+
+    def get_object(self):
+        queryset = self.filter_queryset(self.get_queryset())
+        lookup_url_kwarg = self.lookup_url_kwarg or self.lookup_field
+        val = self.kwargs.get(lookup_url_kwarg)
+        if str(val).isdigit():
+            obj = queryset.filter(pk=int(val)).first()
+        elif str(val).startswith('TSK-'):
+            num = str(val).replace('TSK-', '')
+            obj = queryset.filter(pk=int(num)).first() if num.isdigit() else None
+        else:
+            obj = None
+        if not obj:
+            from django.http import Http404
+            raise Http404("No Task matches the given query.")
+        self.check_object_permissions(self.request, obj)
+        return obj
 
     def get_queryset(self):
         user = self.request.user
@@ -805,6 +841,7 @@ def api_crm_bundle(request):
     leads = [
         {
             'id': l.lead_id,
+            'pk': l.pk,
             'name': l.name,
             'company': l.company,
             'email': l.email,

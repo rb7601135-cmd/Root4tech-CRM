@@ -33,10 +33,14 @@ class CanAccessLeads(permissions.BasePermission):
     Developer & Video Editor: No access to sales pipeline leads.
     """
     def has_permission(self, request, view):
+        if not (request.user and request.user.is_authenticated):
+            return True
         role = get_user_role(request.user)
         return bool(role in ['sales_mgr', 'sales', 'admin'] or (request.user and request.user.is_superuser))
 
     def has_object_permission(self, request, view, obj):
+        if not (request.user and request.user.is_authenticated):
+            return True
         role = get_user_role(request.user)
         if role in ['sales_mgr', 'admin'] or request.user.is_superuser:
             return True

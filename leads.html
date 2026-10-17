@@ -1,97 +1,16 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Leads Pipeline - Root4Tech CRM</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css">
-</head>
-<body>
+{% extends "base.html" %}
 
-<div id="app-wrapper">
-  <div class="sidebar-backdrop"></div>
+{% block title %}Leads Pipeline - Root4Tech CRM{% endblock %}
+{% block active_page %}leads{% endblock %}
+{% block nav_leads %}active{% endblock %}
 
-  <!-- Sidebar -->
-  <aside id="sidebar">
-    <div class="sidebar-header">
-      <a href="index.html" class="brand-link">
-        <img src="assets/images/logo.svg" alt="Root4Tech Logo" class="brand-logo-img">
-      </a>
-      <button class="btn btn-sm btn-icon d-none d-lg-flex" id="sidebar-toggle-btn" title="Toggle Sidebar">
-        <i class="bi bi-layout-sidebar-inset text-secondary"></i>
-      </button>
-    </div>
+{% block topbar_actions %}
+<button class="btn btn-primary btn-sm rounded-pill px-3 shadow-sm" data-bs-toggle="modal" data-bs-target="#newLeadModal">
+  <i class="bi bi-plus-lg me-1"></i> Add Lead
+</button>
+{% endblock %}
 
-    <div class="sidebar-nav">
-      <div class="nav-section-title">Core Management</div>
-      <ul class="sidebar-menu">
-        <li><a href="index.html" class="sidebar-link"><i class="bi bi-grid-1x2-fill"></i><span>Dashboard</span></a></li>
-        <li><a href="leads.html" class="sidebar-link active"><i class="bi bi-funnel-fill"></i><span>Leads</span></a></li>
-        <li><a href="clients.html" class="sidebar-link"><i class="bi bi-buildings-fill"></i><span>Clients</span></a></li>
-        <li><a href="projects.html" class="sidebar-link"><i class="bi bi-briefcase-fill"></i><span>Projects</span></a></li>
-        <li><a href="tasks.html" class="sidebar-link"><i class="bi bi-check2-square"></i><span>Tasks</span></a></li>
-      </ul>
-
-      <div class="nav-section-title">Operations & Sales</div>
-      <ul class="sidebar-menu">
-        <li><a href="calendar.html" class="sidebar-link"><i class="bi bi-calendar3"></i><span>Calendar & Follow-ups</span></a></li>
-        <li><a href="invoices.html" class="sidebar-link"><i class="bi bi-receipt"></i><span>Quotations & Invoices</span></a></li>
-        <li><a href="reports.html" class="sidebar-link"><i class="bi bi-graph-up-arrow"></i><span>Reports & Analytics</span></a></li>
-      </ul>
-
-      <div class="nav-section-title">Agency Admin</div>
-      <ul class="sidebar-menu">
-        <li><a href="team.html" class="sidebar-link"><i class="bi bi-people-fill"></i><span>Team Members</span></a></li>
-        <li><a href="notifications.html" class="sidebar-link"><i class="bi bi-bell-fill"></i><span>Notifications</span></a></li>
-        <li><a href="settings.html" class="sidebar-link"><i class="bi bi-gear-fill"></i><span>Settings</span></a></li>
-      </ul>
-    </div>
-
-    <div class="sidebar-footer">
-      <div class="user-quick-card">
-        <div class="user-avatar current-user-avatar status-online" style="background-color: #059669;">SS</div>
-        <div class="user-info">
-          <div class="user-name current-user-name">Sir Sharjeel</div>
-          <div class="user-role current-user-role">Sales Manager</div>
-        </div>
-      </div>
-    </div>
-  </aside>
-
-  <!-- Main Content Wrap -->
-  <div id="main-content">
-    <header id="topbar">
-      <div class="topbar-left">
-        <button class="btn btn-icon d-lg-none" id="mobile-sidebar-toggle-btn"><i class="bi bi-list fs-5"></i></button>
-        <button class="search-trigger-btn" data-bs-toggle="modal" data-bs-target="#globalSearchModal">
-          <i class="bi bi-search"></i>
-          <span>Search CRM...</span>
-          <span class="kbd-shortcut">Ctrl K</span>
-        </button>
-      </div>
-
-      <div class="topbar-right">
-        <!-- Active Staff Role Badge -->
-        <div class="role-badge-selector static-badge" title="Active Role">
-          <i class="bi bi-person-badge-fill text-primary"></i>
-          <span class="text-secondary small">Role:</span>
-          <span id="current-role-badge-text" class="fw-bold">Sales Manager</span>
-        </div>
-
-        <button class="btn btn-primary btn-sm rounded-pill px-3 shadow-sm" data-bs-toggle="modal" data-bs-target="#newLeadModal">
-          <i class="bi bi-plus-lg me-1"></i> Add Lead
-        </button>
-
-        <a href="notifications.html" class="btn btn-icon position-relative">
-          <i class="bi bi-bell"></i>
-          <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="topbar-notif-badge">3</span>
-        </a>
-      </div>
-    </header>
-
-    <main class="page-container">
+{% block content %}
       <!-- Page Header -->
       <div class="page-header">
         <div>
@@ -177,9 +96,9 @@
           </table>
         </div>
       </div>
-    </main>
-  </div>
-</div>
+{% endblock %}
+
+{% block modals %}
 
 <!-- Modal: Add Lead -->
 <div class="modal fade" id="newLeadModal" tabindex="-1" aria-hidden="true">
@@ -256,25 +175,9 @@
       </form>
     </div>
   </div>
-</div>
+{% endblock %}
 
-<!-- Global Quick Search Modal -->
-<div class="modal fade" id="globalSearchModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered search-modal-dialog">
-    <div class="modal-content search-modal-content">
-      <div class="search-input-header">
-        <i class="bi bi-search text-secondary fs-5"></i>
-        <input type="text" id="global-search-input" class="search-input-box" placeholder="Search leads, projects, clients, or tasks..." autocomplete="off">
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-      </div>
-      <div id="global-search-results" class="search-results-list"></div>
-    </div>
-  </div>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script src="js/data.js"></script>
-<script src="js/app.js"></script>
+{% block extra_js %}
 
 <script>
   let currentView = 'kanban';
@@ -314,13 +217,173 @@
     renderTable(leads);
   }
 
+  let leadSortables = [];
+
+  function initLeadsKanbanDragDrop() {
+    leadSortables.forEach(s => {
+      try { s.destroy(); } catch (_) {}
+    });
+    leadSortables = [];
+
+    if (typeof Sortable === 'undefined') {
+      console.warn('SortableJS not loaded yet');
+      return;
+    }
+
+    const containers = document.querySelectorAll('#kanbanBoardRow .kanban-cards-container');
+    containers.forEach(col => {
+      const sortable = new Sortable(col, {
+        group: 'leads-board',
+        animation: 180,
+        ghostClass: 'sortable-ghost',
+        chosenClass: 'sortable-chosen',
+        dragClass: 'sortable-drag',
+        filter: '.empty-placeholder, .dropdown, button, a',
+        preventOnFilter: false,
+        onEnd: async function(evt) {
+          const itemEl = evt.item;
+          const toCol = evt.to;
+          const fromCol = evt.from;
+          const newStage = toCol.getAttribute('data-stage');
+          const oldStage = fromCol.getAttribute('data-stage');
+
+          if (!newStage || (newStage === oldStage && evt.newIndex === evt.oldIndex)) {
+            return;
+          }
+
+          const leadId = itemEl.getAttribute('data-lead-id');
+          if (!leadId) return;
+
+          // 1. Immediately update visual state: placeholders, counts, deal totals, dropdowns
+          updateLeadColumnsVisual(fromCol, toCol, itemEl, newStage, oldStage);
+
+          // 2. Immediately update local CRM_STORE
+          const data = CRM_STORE.get();
+          const targetLead = (data.leads || []).find(l => String(l.id) === String(leadId));
+          if (targetLead) {
+            targetLead.status = newStage;
+            targetLead.stage = newStage;
+            CRM_STORE.save(data);
+          }
+
+          // 3. Show toast notification confirming the move
+          showToast(`Lead "${targetLead ? targetLead.name : leadId}" moved to "${newStage}"`, 'success');
+
+          // 4. Trigger async PATCH /api/leads/<id>/ with the new stage
+          await syncLeadStageBackend(leadId, newStage, targetLead);
+        }
+      });
+      leadSortables.push(sortable);
+    });
+  }
+
+  function updateLeadColumnsVisual(fromCol, toCol, itemEl, newStage, oldStage) {
+    // Target column: remove empty placeholder if any
+    const toEmpty = toCol.querySelector('.empty-placeholder');
+    if (toEmpty) toEmpty.remove();
+
+    // Origin column: if now empty, add empty placeholder
+    const fromCards = fromCol.querySelectorAll('.kanban-card');
+    if (fromCards.length === 0 && !fromCol.querySelector('.empty-placeholder')) {
+      const emptyDiv = document.createElement('div');
+      emptyDiv.className = 'text-center py-4 text-muted small empty-placeholder';
+      emptyDiv.innerHTML = `
+        <i class="bi bi-inbox fs-4 d-block opacity-50 mb-1"></i>
+        No leads in ${oldStage || ''}
+      `;
+      fromCol.appendChild(emptyDiv);
+    }
+
+    // Update count badges
+    const fromBadge = fromCol.closest('.kanban-column')?.querySelector('.kanban-column-title .badge');
+    if (fromBadge) fromBadge.textContent = fromCol.querySelectorAll('.kanban-card').length;
+
+    const toBadge = toCol.closest('.kanban-column')?.querySelector('.kanban-column-title .badge');
+    if (toBadge) toBadge.textContent = toCol.querySelectorAll('.kanban-card').length;
+
+    // Recalculate totals for both columns
+    const calcColTotal = (container) => {
+      let total = 0;
+      container.querySelectorAll('.kanban-card').forEach(card => {
+        const val = parseFloat(card.getAttribute('data-deal-value') || '0');
+        if (!isNaN(val)) total += val;
+      });
+      return total;
+    };
+
+    const fromTotalEl = fromCol.closest('.kanban-column')?.querySelector('.stage-total');
+    if (fromTotalEl) fromTotalEl.textContent = formatCurrency(calcColTotal(fromCol));
+
+    const toTotalEl = toCol.closest('.kanban-column')?.querySelector('.stage-total');
+    if (toTotalEl) toTotalEl.textContent = formatCurrency(calcColTotal(toCol));
+
+    // Update active dropdown item
+    itemEl.querySelectorAll('.dropdown-item').forEach(item => {
+      const txt = item.textContent.trim();
+      if (txt === newStage) {
+        item.classList.add('active');
+      } else if (STAGES.includes(txt)) {
+        item.classList.remove('active');
+      }
+    });
+  }
+
+  async function syncLeadStageBackend(leadId, newStage, leadObj) {
+    try {
+      let pk = leadId;
+      if (leadObj && leadObj.pk) {
+        pk = leadObj.pk;
+      } else if (typeof leadId === 'string' && leadId.startsWith('LD-')) {
+        pk = parseInt(leadId.replace('LD-', ''), 10) - 100;
+        if (isNaN(pk) || pk <= 0) pk = leadId;
+      }
+
+      const getCsrfToken = () => {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+          const cookies = document.cookie.split(';');
+          for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, 10) === 'csrftoken=') {
+              cookieValue = decodeURIComponent(cookie.substring(10));
+              break;
+            }
+          }
+        }
+        return cookieValue;
+      };
+
+      const headers = {
+        'Content-Type': 'application/json',
+        'X-Requested-With': 'XMLHttpRequest'
+      };
+      const csrf = getCsrfToken();
+      if (csrf) headers['X-CSRFToken'] = csrf;
+
+      const res = await fetch(`/api/leads/${pk}/`, {
+        method: 'PATCH',
+        headers,
+        credentials: 'same-origin',
+        body: JSON.stringify({
+          stage: newStage,
+          status: (newStage === 'Won' || newStage === 'Lost') ? newStage : 'Active'
+        })
+      });
+      if (!res.ok) {
+        console.warn(`[Leads API] PATCH /api/leads/${pk}/ returned status ${res.status}`);
+      }
+    } catch (err) {
+      console.warn('[Leads API] Network/sync warning:', err.message);
+    }
+  }
+
   function renderKanban(leads) {
     const board = document.getElementById('kanbanBoardRow');
     let html = '';
 
     STAGES.forEach(stage => {
-      const stageLeads = leads.filter(l => l.status === stage);
-      const stageTotal = stageLeads.reduce((s, l) => s + l.estimatedDealValue, 0);
+      const stageLeads = leads.filter(l => l.status === stage || l.stage === stage);
+      const stageTotal = stageLeads.reduce((s, l) => s + (l.estimatedDealValue || 0), 0);
 
       html += `
         <div class="kanban-column" data-stage="${stage}">
@@ -329,11 +392,11 @@
               <span>${stage}</span>
               <span class="badge bg-secondary bg-opacity-25 text-dark rounded-pill">${stageLeads.length}</span>
             </span>
-            <span class="small fw-semibold text-muted">${formatCurrency(stageTotal)}</span>
+            <span class="small fw-semibold text-muted stage-total">${formatCurrency(stageTotal)}</span>
           </div>
-          <div class="kanban-cards-container">
+          <div class="kanban-cards-container" data-stage="${stage}">
             ${stageLeads.map(lead => `
-              <div class="kanban-card">
+              <div class="kanban-card" data-lead-id="${lead.id}" data-deal-value="${lead.estimatedDealValue || 0}">
                 <div class="d-flex justify-content-between align-items-start mb-2">
                   <span class="badge bg-light text-dark border small">${lead.serviceRequired}</span>
                   <div class="dropdown">
@@ -341,7 +404,7 @@
                     <ul class="dropdown-menu dropdown-menu-end shadow border-0 py-1" style="font-size: 0.8rem;">
                       <li class="px-3 py-1 text-muted text-uppercase fw-bold" style="font-size: 0.65rem;">Move Stage</li>
                       ${STAGES.map(s => `
-                        <li><a class="dropdown-item py-1 ${s === lead.status ? 'active' : ''}" href="#" onclick="changeLeadStage('${lead.id}', '${s}')">${s}</a></li>
+                        <li><a class="dropdown-item py-1 ${s === (lead.stage || lead.status) ? 'active' : ''}" href="#" onclick="changeLeadStage('${lead.id}', '${s}')">${s}</a></li>
                       `).join('')}
                       <li class="border-top my-1"></li>
                       <li>
@@ -376,7 +439,7 @@
             `).join('')}
 
             ${stageLeads.length === 0 ? `
-              <div class="text-center py-4 text-muted small">
+              <div class="text-center py-4 text-muted small empty-placeholder">
                 <i class="bi bi-inbox fs-4 d-block opacity-50 mb-1"></i>
                 No leads in ${stage}
               </div>
@@ -387,6 +450,7 @@
     });
 
     board.innerHTML = html;
+    initLeadsKanbanDragDrop();
   }
 
   function renderTable(leads) {
@@ -459,14 +523,16 @@
     }
   }
 
-  function changeLeadStage(leadId, newStage) {
+  async function changeLeadStage(leadId, newStage) {
     const data = CRM_STORE.get();
-    const targetLead = data.leads.find(l => l.id === leadId);
+    const targetLead = (data.leads || []).find(l => String(l.id) === String(leadId));
     if (targetLead) {
       targetLead.status = newStage;
+      targetLead.stage = newStage;
       CRM_STORE.save(data);
-      showToast(`Lead "${targetLead.name}" moved to "${newStage}"`);
+      showToast(`Lead "${targetLead.name}" moved to "${newStage}"`, 'success');
       renderLeads();
+      await syncLeadStageBackend(leadId, newStage, targetLead);
     }
   }
 
@@ -543,5 +609,4 @@
     renderLeads();
   });
 </script>
-</body>
-</html>
+{% endblock %}
