@@ -1,0 +1,37 @@
+# Python / Django
+__pycache__/
+*.py[cod]
+*$py.class
+*.sqlite3
+db.sqlite3
+db.sqlite3-journal
+media/
+staticfiles/
+*.log
+venv/
+.env
+.env.*
+.env*.local
+.env.local
+**/.env*
+*.env
+!**/.env.example
+!.env.example
+
+# Database backups & exports
+backups/
+*.dump
+*.sql
+*.tar.gz
+
+# Node / Next.js
+node_modules/
+.next/
+out/
+build/
+dist/
+.DS_Store
+*.pem
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
