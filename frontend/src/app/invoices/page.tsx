@@ -26,7 +26,9 @@ import {
   DollarSign,
   AlertTriangle,
   Briefcase,
+  Boxes,
 } from 'lucide-react';
+import MultiServiceModal from '@/components/ui/MultiServiceModal';
 
 export default function InvoicesPage() {
   const [invoices, setInvoices] = useState<Invoice[]>([]);
@@ -55,9 +57,30 @@ export default function InvoicesPage() {
     '1. Payment is strictly due by the specified due date.\n2. Please mention the invoice number in your wire/bank reference.\n3. Bank Account: Roo4Tech (Pvt) Ltd, Meezan Bank, IBAN: PK99MEZN0001234567890101'
   );
   const [notes, setNotes] = useState('');
-  const [lineItems, setLineItems] = useState<Array<{ description: string; quantity: string; unit_price: string }>>([
-    { description: 'Cloud Architecture & Web App Development', quantity: '1', unit_price: '300000' },
+  const [isMultiServiceModalOpen, setIsMultiServiceModalOpen] = useState(false);
+  const [lineItems, setLineItems] = useState<Array<{ service_id?: number | ''; description: string; quantity: string; unit_price: string }>>([
+    { service_id: '', description: 'Cloud Architecture & Web App Development', quantity: '1', unit_price: '300000' },
   ]);
+
+  const handleAddMultipleServices = (selected: CompanyService[]) => {
+    const newItems = selected.map((svc) => ({
+      service_id: svc.id,
+      description: svc.name + (svc.description ? ` - ${svc.description}` : ''),
+      quantity: '1',
+      unit_price: String(svc.default_unit_price),
+    }));
+
+    const isFirstRowEmptyOrDefault =
+      lineItems.length === 1 &&
+      (!lineItems[0].description.trim() ||
+        (lineItems[0].description === 'Cloud Architecture & Web App Development' && lineItems[0].unit_price === '300000' && !lineItems[0].service_id));
+
+    if (isFirstRowEmptyOrDefault) {
+      setLineItems(newItems);
+    } else {
+      setLineItems([...lineItems, ...newItems]);
+    }
+  };
 
   const loadInvoices = async () => {
     setIsLoading(true);
@@ -95,7 +118,7 @@ export default function InvoicesPage() {
     setLineItems(lineItems.filter((_, i) => i !== index));
   };
 
-  const handleLineItemChange = (index: number, field: string, value: string) => {
+  const handleLineItemChange = (index: number, field: string, value: any) => {
     const updated = [...lineItems];
     updated[index] = { ...updated[index], [field]: value };
     setLineItems(updated);
@@ -189,7 +212,7 @@ export default function InvoicesPage() {
               Invoices & Payment Management
             </h1>
             <p className="text-sm text-zinc-400 mt-1">
-              Issue branded tax invoices, record partial/full payments, and track overdue receivables with immutable snapshots.
+              Issue branded invoices, record partial/full payments, and track overdue receivables with immutable snapshots.
             </p>
           </div>
           <Button
@@ -403,7 +426,7 @@ export default function InvoicesPage() {
             <div className="flex items-center justify-between pb-4 border-b border-zinc-800">
               <h2 className="text-lg font-bold text-white flex items-center gap-2">
                 <Receipt className="w-5 h-5 text-sky-400" />
-                New Tax Invoice
+                New Invoice
               </h2>
               <button
                 onClick={() => setIsModalOpen(false)}
@@ -488,47 +511,28 @@ export default function InvoicesPage() {
                     className="w-full px-3 py-2 bg-zinc-900 border border-zinc-800 rounded-xl text-zinc-100 text-sm focus:outline-none focus:border-sky-500"
                   />
                 </div>
-              </div>
-
-              {/* Line Items */}
+              </div>              {/* Line Items */}
               <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-semibold text-zinc-300 uppercase tracking-wider">
-                    Invoice Line Items *
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 pb-1 border-b border-zinc-800/80">
+                  <span className="text-xs font-semibold text-zinc-300 uppercase tracking-wider flex items-center gap-1.5">
+                    Service Line Items *
+                    <span className="text-zinc-500 text-[11px] font-normal normal-case">({lineItems.length} items)</span>
                   </span>
                   <div className="flex items-center gap-2">
                     {availableServices.length > 0 && (
-                      <select
-                        onChange={(e) => {
-                          const svcId = Number(e.target.value);
-                          const svc = availableServices.find((s) => s.id === svcId);
-                          if (svc) {
-                            setLineItems([
-                              ...lineItems,
-                              {
-                                description: svc.name + (svc.description ? ` - ${svc.description}` : ''),
-                                quantity: '1',
-                                unit_price: String(svc.default_unit_price),
-                              },
-                            ]);
-                          }
-                          e.target.value = '';
-                        }}
-                        defaultValue=""
-                        className="px-2 py-1 bg-sky-950/40 border border-sky-800/60 rounded-lg text-xs text-sky-300 focus:outline-none focus:border-sky-500 font-medium"
+                      <button
+                        type="button"
+                        onClick={() => setIsMultiServiceModalOpen(true)}
+                        className="px-2.5 py-1.5 bg-sky-950/60 hover:bg-sky-900/60 text-sky-300 hover:text-sky-200 border border-sky-800/60 rounded-lg text-xs font-medium flex items-center gap-1.5 transition shadow-sm"
                       >
-                        <option value="" disabled>+ Add from Services Catalog...</option>
-                        {availableServices.map((s) => (
-                          <option key={s.id} value={s.id}>
-                            {s.name} ({s.currency} {Number(s.default_unit_price).toLocaleString()})
-                          </option>
-                        ))}
-                      </select>
+                        <Boxes className="w-3.5 h-3.5" />
+                        + Add Multiple Services
+                      </button>
                     )}
                     <button
                       type="button"
                       onClick={handleAddLineItem}
-                      className="text-xs text-sky-400 hover:text-sky-300 font-medium flex items-center gap-1"
+                      className="px-2.5 py-1.5 bg-zinc-900 hover:bg-zinc-800 text-zinc-300 hover:text-white border border-zinc-800 rounded-lg text-xs font-medium flex items-center gap-1 transition"
                     >
                       <Plus className="w-3.5 h-3.5" /> Add Blank Item
                     </button>
@@ -543,33 +547,41 @@ export default function InvoicesPage() {
                         key={idx}
                         className="grid grid-cols-12 gap-2 items-center p-2.5 bg-zinc-900/60 border border-zinc-800 rounded-xl"
                       >
-                        <div className="col-span-6 space-y-1">
+                        <div className="col-span-6 space-y-1.5">
                           {availableServices.length > 0 && (
                             <select
+                              value={item.service_id || ''}
                               onChange={(e) => {
-                                const svcId = Number(e.target.value);
+                                const val = e.target.value;
+                                if (val === '__custom__') {
+                                  handleLineItemChange(idx, 'service_id', '');
+                                  return;
+                                }
+                                const svcId = Number(val);
                                 const svc = availableServices.find((s) => s.id === svcId);
                                 if (svc) {
+                                  handleLineItemChange(idx, 'service_id', svc.id);
                                   handleLineItemChange(idx, 'description', svc.name + (svc.description ? ` - ${svc.description}` : ''));
                                   handleLineItemChange(idx, 'unit_price', String(svc.default_unit_price));
+                                } else {
+                                  handleLineItemChange(idx, 'service_id', '');
                                 }
-                                e.target.value = '';
                               }}
-                              defaultValue=""
-                              className="w-full px-2 py-0.5 bg-zinc-950 border border-sky-900/40 rounded text-[11px] text-sky-300 focus:outline-none focus:border-sky-500 font-medium"
+                              className="w-full px-2.5 py-1.5 bg-zinc-950 border border-zinc-700/80 rounded-lg text-xs text-zinc-100 focus:outline-none focus:border-sky-500 font-medium"
                             >
-                              <option value="" disabled>✨ Auto-fill from Service Catalog...</option>
+                              <option value="">-- Choose a Service from Catalog --</option>
                               {availableServices.map((s) => (
                                 <option key={s.id} value={s.id}>
                                   {s.name} ({s.currency} {Number(s.default_unit_price).toLocaleString()})
                                 </option>
                               ))}
+                              <option value="__custom__">✏️ Custom / Non-Catalog Item</option>
                             </select>
                           )}
                           <input
                             type="text"
                             required
-                            placeholder="Description"
+                            placeholder="Service scope / item description"
                             value={item.description}
                             onChange={(e) => handleLineItemChange(idx, 'description', e.target.value)}
                             className="w-full px-3 py-1.5 bg-zinc-900 border border-zinc-800 rounded-lg text-xs text-zinc-100 focus:outline-none focus:border-sky-500"
@@ -692,6 +704,16 @@ export default function InvoicesPage() {
           </div>
         </div>
       )}
+
+      {/* Multi-Service Selection Modal */}
+      <MultiServiceModal
+        isOpen={isMultiServiceModalOpen}
+        onClose={() => setIsMultiServiceModalOpen(false)}
+        services={availableServices}
+        currency={currency}
+        themeColor="sky"
+        onSelectServices={handleAddMultipleServices}
+      />
     </AppLayout>
   );
 }

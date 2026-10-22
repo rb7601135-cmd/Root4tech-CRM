@@ -96,6 +96,18 @@ def generate_quotation_pdf(quotation):
         leading=12
     )
 
+    # Table Header Styles (High-contrast pure white text on brand blue)
+    th_center = ParagraphStyle('THCenter', parent=styles['Normal'], fontName='Helvetica-Bold', fontSize=9, leading=12, alignment=1, textColor=colors.white)
+    th_left = ParagraphStyle('THLeft', parent=styles['Normal'], fontName='Helvetica-Bold', fontSize=9, leading=12, alignment=0, textColor=colors.white)
+    th_right = ParagraphStyle('THRight', parent=styles['Normal'], fontName='Helvetica-Bold', fontSize=9, leading=12, alignment=2, textColor=colors.white)
+
+    # Table Cell Data Styles
+    td_idx = ParagraphStyle('TDIdx', parent=styles['Normal'], fontName='Helvetica', fontSize=9, leading=13, alignment=1, textColor=colors.HexColor("#64748b"))
+    td_desc = ParagraphStyle('TDDesc', parent=styles['Normal'], fontName='Helvetica', fontSize=9, leading=13, alignment=0, textColor=colors.HexColor("#0f172a"))
+    td_qty = ParagraphStyle('TDQty', parent=styles['Normal'], fontName='Helvetica', fontSize=9, leading=13, alignment=2, textColor=colors.HexColor("#334155"))
+    td_price = ParagraphStyle('TDPrice', parent=styles['Normal'], fontName='Helvetica', fontSize=9, leading=13, alignment=2, textColor=colors.HexColor("#334155"))
+    td_total = ParagraphStyle('TDTotal', parent=styles['Normal'], fontName='Helvetica-Bold', fontSize=9, leading=13, alignment=2, textColor=colors.HexColor("#0f172a"))
+
     # Top Header Grid: Company Info (Left) | Quotation Details (Right)
     left_header = [
         Paragraph(f"<b>{company_name}</b>", ParagraphStyle('BName', parent=styles['Normal'], fontName='Helvetica-Bold', fontSize=15, leading=18, textColor=brand_primary)),
@@ -167,50 +179,50 @@ def generate_quotation_pdf(quotation):
     # Line Items Table
     table_data = [
         [
-            Paragraph("<b>#</b>", cell_bold),
-            Paragraph("<b>Description / Scope of Work</b>", cell_bold),
-            Paragraph("<b>Qty</b>", cell_bold),
-            Paragraph(f"<b>Unit Price ({quotation.currency})</b>", cell_bold),
-            Paragraph(f"<b>Total ({quotation.currency})</b>", cell_bold),
+            Paragraph("<b>#</b>", th_center),
+            Paragraph("<b>Description / Scope of Work</b>", th_left),
+            Paragraph("<b>Qty</b>", th_right),
+            Paragraph(f"<b>Unit Price ({quotation.currency})</b>", th_right),
+            Paragraph(f"<b>Total ({quotation.currency})</b>", th_right),
         ]
     ]
 
     idx = 1
     for item in quotation.items.all():
         table_data.append([
-            Paragraph(str(idx), cell_style),
-            Paragraph(item.description, cell_style),
-            Paragraph(f"{item.quantity:g}", cell_style),
-            Paragraph(f"{item.unit_price:,.2f}", cell_style),
-            Paragraph(f"{item.line_total:,.2f}", cell_style),
+            Paragraph(str(idx), td_idx),
+            Paragraph(item.description, td_desc),
+            Paragraph(f"{item.quantity:g}", td_qty),
+            Paragraph(f"{item.unit_price:,.2f}", td_price),
+            Paragraph(f"{item.line_total:,.2f}", td_total),
         ])
         idx += 1
 
     if idx == 1:
         table_data.append([
-            Paragraph("1", cell_style),
-            Paragraph("Software development and professional consultation services", cell_style),
-            Paragraph("1", cell_style),
-            Paragraph(f"{quotation.total_amount:,.2f}", cell_style),
-            Paragraph(f"{quotation.total_amount:,.2f}", cell_style),
+            Paragraph("1", td_idx),
+            Paragraph("Software development and professional consultation services", td_desc),
+            Paragraph("1", td_qty),
+            Paragraph(f"{quotation.total_amount:,.2f}", td_price),
+            Paragraph(f"{quotation.total_amount:,.2f}", td_total),
         ])
 
     items_table = Table(
         table_data,
-        colWidths=[0.5 * inch, 3.7 * inch, 0.7 * inch, 1.1 * inch, 1.2 * inch]
+        colWidths=[0.45 * inch, 3.85 * inch, 0.7 * inch, 1.2 * inch, 1.3 * inch]
     )
     items_table.setStyle(TableStyle([
-        ('BACKGROUND', (0,0), (-1,0), colors.HexColor("#0f172a")),
-        ('TEXTCOLOR', (0,0), (-1,0), colors.whitesmoke),
+        ('BACKGROUND', (0,0), (-1,0), colors.HexColor("#0284c7")),
         ('ALIGN', (0,0), (0,-1), 'CENTER'),
+        ('ALIGN', (1,0), (1,-1), 'LEFT'),
         ('ALIGN', (2,0), (-1,-1), 'RIGHT'),
         ('VALIGN', (0,0), (-1,-1), 'MIDDLE'),
         ('GRID', (0,0), (-1,-1), 0.5, colors.HexColor("#cbd5e1")),
         ('ROWBACKGROUNDS', (0,1), (-1,-1), [colors.white, colors.HexColor("#f8fafc")]),
-        ('TOPPADDING', (0,0), (-1,-1), 6),
-        ('BOTTOMPADDING', (0,0), (-1,-1), 6),
-        ('LEFTPADDING', (0,0), (-1,-1), 6),
-        ('RIGHTPADDING', (0,0), (-1,-1), 6),
+        ('TOPPADDING', (0,0), (-1,-1), 7),
+        ('BOTTOMPADDING', (0,0), (-1,-1), 7),
+        ('LEFTPADDING', (0,0), (-1,-1), 8),
+        ('RIGHTPADDING', (0,0), (-1,-1), 8),
     ]))
     story.append(items_table)
     story.append(Spacer(1, 10))

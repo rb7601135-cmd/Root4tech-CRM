@@ -114,6 +114,15 @@ export function Header({ isCollapsed, setIsCollapsed, onOpenNewLead }: HeaderPro
 
               <div className="space-y-0.5">
                 <Link
+                  href="/profile"
+                  onClick={() => setShowProfileMenu(false)}
+                  className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs text-zinc-300 hover:text-white hover:bg-zinc-800 transition"
+                >
+                  <UserIcon className="w-4 h-4 text-blue-400" />
+                  <span>My Profile & Password</span>
+                </Link>
+
+                <Link
                   href="/settings"
                   onClick={() => setShowProfileMenu(false)}
                   className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs text-zinc-300 hover:text-white hover:bg-zinc-800 transition"

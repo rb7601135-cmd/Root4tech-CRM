@@ -23,7 +23,9 @@ import {
   Trash2,
   ArrowRight,
   Briefcase,
+  Boxes,
 } from 'lucide-react';
+import MultiServiceModal from '@/components/ui/MultiServiceModal';
 
 export default function QuotationsPage() {
   const [quotations, setQuotations] = useState<Quotation[]>([]);
@@ -54,9 +56,30 @@ export default function QuotationsPage() {
     '1. Quotation valid for 30 days from issue.\n2. 50% advance required prior to development kickoff.\n3. Roo4Tech warrants high quality deliverables as per milestone scope.'
   );
   const [notes, setNotes] = useState('');
-  const [lineItems, setLineItems] = useState<Array<{ description: string; quantity: string; unit_price: string }>>([
-    { description: 'Web Application Architecture & Development', quantity: '1', unit_price: '250000' },
+  const [isMultiServiceModalOpen, setIsMultiServiceModalOpen] = useState(false);
+  const [lineItems, setLineItems] = useState<Array<{ service_id?: number | ''; description: string; quantity: string; unit_price: string }>>([
+    { service_id: '', description: 'Web Application Architecture & Development', quantity: '1', unit_price: '250000' },
   ]);
+
+  const handleAddMultipleServices = (selected: CompanyService[]) => {
+    const newItems = selected.map((svc) => ({
+      service_id: svc.id,
+      description: svc.name + (svc.description ? ` - ${svc.description}` : ''),
+      quantity: '1',
+      unit_price: String(svc.default_unit_price),
+    }));
+
+    const isFirstRowEmptyOrDefault =
+      lineItems.length === 1 &&
+      (!lineItems[0].description.trim() ||
+        (lineItems[0].description === 'Web Application Architecture & Development' && lineItems[0].unit_price === '250000' && !lineItems[0].service_id));
+
+    if (isFirstRowEmptyOrDefault) {
+      setLineItems(newItems);
+    } else {
+      setLineItems([...lineItems, ...newItems]);
+    }
+  };
 
   const loadQuotations = async () => {
     setIsLoading(true);
@@ -98,7 +121,7 @@ export default function QuotationsPage() {
     setLineItems(lineItems.filter((_, i) => i !== index));
   };
 
-  const handleLineItemChange = (index: number, field: string, value: string) => {
+  const handleLineItemChange = (index: number, field: string, value: any) => {
     const updated = [...lineItems];
     updated[index] = { ...updated[index], [field]: value };
     setLineItems(updated);
@@ -480,43 +503,26 @@ export default function QuotationsPage() {
 
               {/* Line Items */}
               <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-semibold text-zinc-300 uppercase tracking-wider">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 pb-1 border-b border-zinc-800/80">
+                  <span className="text-xs font-semibold text-zinc-300 uppercase tracking-wider flex items-center gap-1.5">
                     Service Line Items *
+                    <span className="text-zinc-500 text-[11px] font-normal normal-case">({lineItems.length} items)</span>
                   </span>
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-2">
                     {availableServices.length > 0 && (
-                      <select
-                        onChange={(e) => {
-                          const svcId = Number(e.target.value);
-                          const svc = availableServices.find((s) => s.id === svcId);
-                          if (svc) {
-                            setLineItems([
-                              ...lineItems.filter((it) => it.description || it.unit_price !== '0'),
-                              {
-                                description: svc.name + (svc.description ? ` - ${svc.description}` : ''),
-                                quantity: '1',
-                                unit_price: String(svc.default_unit_price),
-                              },
-                            ]);
-                          }
-                          e.target.value = '';
-                        }}
-                        defaultValue=""
-                        className="px-2.5 py-1 bg-zinc-900 border border-indigo-800/60 rounded-lg text-xs text-indigo-300 focus:outline-none focus:border-indigo-500 font-medium"
+                      <button
+                        type="button"
+                        onClick={() => setIsMultiServiceModalOpen(true)}
+                        className="px-2.5 py-1.5 bg-indigo-950/60 hover:bg-indigo-900/60 text-indigo-300 hover:text-indigo-200 border border-indigo-800/60 rounded-lg text-xs font-medium flex items-center gap-1.5 transition shadow-sm"
                       >
-                        <option value="" disabled>+ Pick from Services Catalog</option>
-                        {availableServices.map((s) => (
-                          <option key={s.id} value={s.id}>
-                            {s.name} ({s.currency} {Number(s.default_unit_price).toLocaleString()})
-                          </option>
-                        ))}
-                      </select>
+                        <Boxes className="w-3.5 h-3.5" />
+                        + Add Multiple Services
+                      </button>
                     )}
                     <button
                       type="button"
                       onClick={handleAddLineItem}
-                      className="text-xs text-indigo-400 hover:text-indigo-300 font-medium flex items-center gap-1"
+                      className="px-2.5 py-1.5 bg-zinc-900 hover:bg-zinc-800 text-zinc-300 hover:text-white border border-zinc-800 rounded-lg text-xs font-medium flex items-center gap-1 transition"
                     >
                       <Plus className="w-3.5 h-3.5" /> Add Blank Item
                     </button>
@@ -531,27 +537,35 @@ export default function QuotationsPage() {
                         key={idx}
                         className="grid grid-cols-12 gap-2 items-center p-2.5 bg-zinc-900/60 border border-zinc-800 rounded-xl"
                       >
-                        <div className="col-span-6 space-y-1">
+                        <div className="col-span-6 space-y-1.5">
                           {availableServices.length > 0 && (
                             <select
+                              value={item.service_id || ''}
                               onChange={(e) => {
-                                const svcId = Number(e.target.value);
+                                const val = e.target.value;
+                                if (val === '__custom__') {
+                                  handleLineItemChange(idx, 'service_id', '');
+                                  return;
+                                }
+                                const svcId = Number(val);
                                 const svc = availableServices.find((s) => s.id === svcId);
                                 if (svc) {
+                                  handleLineItemChange(idx, 'service_id', svc.id);
                                   handleLineItemChange(idx, 'description', svc.name + (svc.description ? ` - ${svc.description}` : ''));
                                   handleLineItemChange(idx, 'unit_price', String(svc.default_unit_price));
+                                } else {
+                                  handleLineItemChange(idx, 'service_id', '');
                                 }
-                                e.target.value = '';
                               }}
-                              defaultValue=""
-                              className="w-full px-2 py-0.5 bg-zinc-950 border border-indigo-900/40 rounded text-[11px] text-indigo-300 focus:outline-none focus:border-indigo-500 font-medium"
+                              className="w-full px-2.5 py-1.5 bg-zinc-950 border border-zinc-700/80 rounded-lg text-xs text-zinc-100 focus:outline-none focus:border-indigo-500 font-medium"
                             >
-                              <option value="" disabled>✨ Auto-fill from Service Catalog...</option>
+                              <option value="">-- Choose a Service from Catalog --</option>
                               {availableServices.map((s) => (
                                 <option key={s.id} value={s.id}>
                                   {s.name} ({s.currency} {Number(s.default_unit_price).toLocaleString()})
                                 </option>
                               ))}
+                              <option value="__custom__">✏️ Custom / Non-Catalog Item</option>
                             </select>
                           )}
                           <input
@@ -695,6 +709,16 @@ export default function QuotationsPage() {
           </div>
         </div>
       )}
+
+      {/* Multi-Service Selection Modal */}
+      <MultiServiceModal
+        isOpen={isMultiServiceModalOpen}
+        onClose={() => setIsMultiServiceModalOpen(false)}
+        services={availableServices}
+        currency={currency}
+        themeColor="indigo"
+        onSelectServices={handleAddMultipleServices}
+      />
     </AppLayout>
   );
 }

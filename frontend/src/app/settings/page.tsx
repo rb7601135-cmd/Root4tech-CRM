@@ -1,13 +1,13 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import Link from 'next/link';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { Button } from '@/components/ui/Button';
-import { Modal } from '@/components/ui/Modal';
 import { useAuth } from '@/context/AuthContext';
 import { useCompany } from '@/context/CompanyContext';
 import { api } from '@/lib/api';
-import { AuditLog, ExchangeRate, AutomationRule, AutomationLog, CompanyService } from '@/types/crm';
+import { AuditLog, ExchangeRate, AutomationRule, AutomationLog } from '@/types/crm';
 import {
   Building2,
   Upload,
@@ -25,11 +25,9 @@ import {
   Play,
   RefreshCw,
   Check,
-  Briefcase,
   Plus,
-  Trash2,
-  Edit2,
   Layers,
+  ArrowRight,
 } from 'lucide-react';
 
 export default function SettingsPage() {
@@ -49,49 +47,6 @@ export default function SettingsPage() {
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  // Services Catalog State
-  const [services, setServices] = useState<CompanyService[]>([]);
-  const [servicesLoading, setServicesLoading] = useState(true);
-  const [isServiceModalOpen, setIsServiceModalOpen] = useState(false);
-  const [editingService, setEditingService] = useState<CompanyService | null>(null);
-  const [serviceFormData, setServiceFormData] = useState({
-    name: '',
-    category: 'Development',
-    description: '',
-    default_unit_price: '0.00',
-    currency: 'PKR',
-    billing_type: 'Fixed',
-    is_active: true,
-  });
-  const [isSavingService, setIsSavingService] = useState(false);
-  const [serviceError, setServiceError] = useState<string | null>(null);
-
-  // Multi-Currency Exchange Rates State
-  const [exchangeRates, setExchangeRates] = useState<ExchangeRate[]>([]);
-  const [ratesLoading, setRatesLoading] = useState(true);
-  const [editingRateId, setEditingRateId] = useState<number | null>(null);
-  const [editingRateVal, setEditingRateVal] = useState<string>('');
-  const [rateSaving, setRateSaving] = useState(false);
-
-  // Automation Rules & Engine State
-  const [automationRules, setAutomationRules] = useState<AutomationRule[]>([]);
-  const [automationLogs, setAutomationLogs] = useState<AutomationLog[]>([]);
-  const [automationsLoading, setAutomationsLoading] = useState(true);
-  const [isRunningAutomation, setIsRunningAutomation] = useState(false);
-  const [automationResultMsg, setAutomationResultMsg] = useState<string | null>(null);
-
-  // Audit Logs State
-  const [auditLogs, setAuditLogs] = useState<AuditLog[]>([]);
-  const [logsLoading, setLogsLoading] = useState(true);
-  const [logSearch, setLogSearch] = useState('');
-  const [logModule, setLogModule] = useState('');
-
-  // Password Change State
-  const [oldPassword, setOldPassword] = useState('');
-  const [newPassword, setNewPassword] = useState('');
-  const [passwordSuccess, setPasswordSuccess] = useState(false);
-  const [passwordError, setPasswordError] = useState<string | null>(null);
-  const [isChangingPass, setIsChangingPass] = useState(false);
 
   useEffect(() => {
     if (settings) {
@@ -149,112 +104,31 @@ export default function SettingsPage() {
     }
   };
 
-  const loadServices = async () => {
-    setServicesLoading(true);
-    try {
-      const res = await api.getServices();
-      setServices(Array.isArray(res) ? res : (res as { results?: CompanyService[] }).results || []);
-    } catch (err) {
-      console.error('Failed to load services', err);
-    } finally {
-      setServicesLoading(false);
-    }
-  };
+  // Multi-Currency Exchange Rates State
+  const [exchangeRates, setExchangeRates] = useState<ExchangeRate[]>([]);
+  const [ratesLoading, setRatesLoading] = useState(true);
+  const [editingRateId, setEditingRateId] = useState<number | null>(null);
+  const [editingRateVal, setEditingRateVal] = useState<string>('');
+  const [rateSaving, setRateSaving] = useState(false);
+
+  // Automation Rules & Engine State
+  const [automationRules, setAutomationRules] = useState<AutomationRule[]>([]);
+  const [automationLogs, setAutomationLogs] = useState<AutomationLog[]>([]);
+  const [automationsLoading, setAutomationsLoading] = useState(true);
+  const [isRunningAutomation, setIsRunningAutomation] = useState(false);
+  const [automationResultMsg, setAutomationResultMsg] = useState<string | null>(null);
+
+  // Audit Logs State
+  const [auditLogs, setAuditLogs] = useState<AuditLog[]>([]);
+  const [logsLoading, setLogsLoading] = useState(true);
+  const [logSearch, setLogSearch] = useState('');
+  const [logModule, setLogModule] = useState('');
 
   useEffect(() => {
     loadExchangeRates();
     loadAutomations();
-    loadServices();
   }, []);
 
-  const handleOpenAddService = () => {
-    setEditingService(null);
-    setServiceFormData({
-      name: '',
-      category: 'Development',
-      description: '',
-      default_unit_price: '0.00',
-      currency: defaultCurrency || 'PKR',
-      billing_type: 'Fixed',
-      is_active: true,
-    });
-    setServiceError(null);
-    setIsServiceModalOpen(true);
-  };
-
-  const handleOpenEditService = (svc: CompanyService) => {
-    setEditingService(svc);
-    setServiceFormData({
-      name: svc.name,
-      category: svc.category,
-      description: svc.description,
-      default_unit_price: String(svc.default_unit_price),
-      currency: svc.currency,
-      billing_type: svc.billing_type,
-      is_active: svc.is_active,
-    });
-    setServiceError(null);
-    setIsServiceModalOpen(true);
-  };
-
-  const handleSaveService = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!serviceFormData.name.trim()) {
-      setServiceError('Service name is required.');
-      return;
-    }
-    setIsSavingService(true);
-    setServiceError(null);
-    try {
-      if (editingService) {
-        await api.updateService(editingService.id, {
-          name: serviceFormData.name.trim(),
-          category: serviceFormData.category,
-          description: serviceFormData.description.trim(),
-          default_unit_price: serviceFormData.default_unit_price,
-          currency: serviceFormData.currency,
-          billing_type: serviceFormData.billing_type,
-          is_active: serviceFormData.is_active,
-        });
-      } else {
-        await api.createService({
-          name: serviceFormData.name.trim(),
-          category: serviceFormData.category,
-          description: serviceFormData.description.trim(),
-          default_unit_price: serviceFormData.default_unit_price,
-          currency: serviceFormData.currency,
-          billing_type: serviceFormData.billing_type,
-          is_active: serviceFormData.is_active,
-        });
-      }
-      setIsServiceModalOpen(false);
-      loadServices();
-    } catch (err: unknown) {
-      const e = err as { message?: string };
-      setServiceError(e.message || 'Failed to save service.');
-    } finally {
-      setIsSavingService(false);
-    }
-  };
-
-  const handleDeleteService = async (id: number) => {
-    if (!confirm('Are you sure you want to delete this service from your catalog?')) return;
-    try {
-      await api.deleteService(id);
-      loadServices();
-    } catch (err) {
-      console.error('Failed to delete service', err);
-    }
-  };
-
-  const handleToggleServiceActive = async (svc: CompanyService) => {
-    try {
-      await api.updateService(svc.id, { is_active: !svc.is_active });
-      loadServices();
-    } catch (err) {
-      console.error('Failed to toggle service status', err);
-    }
-  };
 
   const handleSaveRate = async (id: number) => {
     if (!editingRateVal || isNaN(Number(editingRateVal))) return;
@@ -352,30 +226,6 @@ export default function SettingsPage() {
     }
   };
 
-  const handleChangePassword = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsChangingPass(true);
-    setPasswordSuccess(false);
-    setPasswordError(null);
-
-    try {
-      await api.changePassword({ old_password: oldPassword, new_password: newPassword });
-      setPasswordSuccess(true);
-      setOldPassword('');
-      setNewPassword('');
-    } catch (err: unknown) {
-      const apiErr = err as { data?: { old_password?: string[]; new_password?: string[]; detail?: string }; message?: string };
-      setPasswordError(
-        apiErr.data?.old_password?.[0] ||
-        apiErr.data?.new_password?.[0] ||
-        apiErr.data?.detail ||
-        apiErr.message ||
-        'Password change failed.'
-      );
-    } finally {
-      setIsChangingPass(false);
-    }
-  };
 
   return (
     <AppLayout>
@@ -536,50 +386,26 @@ export default function SettingsPage() {
           </form>
         </div>
 
-        {/* Security & Password Change */}
-        <div className="p-6 rounded-2xl bg-zinc-900/80 border border-zinc-800 space-y-4">
-          <div className="flex items-center gap-2 pb-3 border-b border-zinc-800">
-            <Lock className="w-5 h-5 text-indigo-400" />
-            <h2 className="text-sm font-semibold text-zinc-100">Account Password & Security</h2>
+        {/* Account Password & Security Link */}
+        <div className="p-6 rounded-2xl bg-zinc-900/80 border border-zinc-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <div className="p-2.5 rounded-xl bg-indigo-950/60 border border-indigo-800/60 text-indigo-400">
+              <Lock className="w-5 h-5" />
+            </div>
+            <div>
+              <h2 className="text-sm font-semibold text-zinc-100">Personal Password & Account Credentials</h2>
+              <p className="text-xs text-zinc-400">
+                Password management has been centralized in your personal User Profile page.
+              </p>
+            </div>
           </div>
-
-          {passwordSuccess && (
-            <div className="p-3 rounded-lg bg-emerald-950/50 border border-emerald-800/60 text-xs text-emerald-300">
-              Password updated successfully!
-            </div>
-          )}
-
-          {passwordError && (
-            <div className="p-3 rounded-lg bg-rose-950/50 border border-rose-800/60 text-xs text-rose-300">
-              {passwordError}
-            </div>
-          )}
-
-          <form onSubmit={handleChangePassword} className="space-y-3 max-w-md">
-            <div>
-              <label className="block text-xs font-medium text-zinc-300 mb-1">Current Password</label>
-              <input
-                type="password"
-                required
-                value={oldPassword}
-                onChange={(e) => setOldPassword(e.target.value)}
-                className="w-full px-3 py-1.5 text-xs bg-zinc-950 border border-zinc-800 rounded-lg text-zinc-100"
-              />
-            </div>
-            <div>
-              <label className="block text-xs font-medium text-zinc-300 mb-1">New Password (Min. 8 chars)</label>
-              <input
-                type="password"
-                required
-                value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
-                className="w-full px-3 py-1.5 text-xs bg-zinc-950 border border-zinc-800 rounded-lg text-zinc-100"
-              />
-            </div>
-            <Button type="submit" size="sm" isLoading={isChangingPass}>
-              Update Password
-            </Button>
-          </form>
+          <Link
+            href="/profile"
+            className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-semibold shadow-md transition flex items-center gap-1.5 shrink-0 self-start sm:self-auto"
+          >
+            <span>Go to My Profile</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </Link>
         </div>
 
         {/* Multi-Currency & Exchange Rates */}
@@ -688,117 +514,6 @@ export default function SettingsPage() {
           </div>
         </div>
 
-        {/* Company Services & Catalog */}
-        <div className="p-6 rounded-2xl bg-zinc-900/80 border border-zinc-800 space-y-4">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pb-3 border-b border-zinc-800">
-            <div className="flex items-center gap-2">
-              <Briefcase className="w-5 h-5 text-blue-400" />
-              <div>
-                <h2 className="text-sm font-semibold text-zinc-100">Services & Deliverables Catalog</h2>
-                <p className="text-xs text-zinc-400">
-                  Define standard software development, design, and marketing services. These automatically appear in Quotation & Invoice line items.
-                </p>
-              </div>
-            </div>
-            {isAdmin && (
-              <Button
-                size="sm"
-                onClick={handleOpenAddService}
-                icon={<Plus className="w-3.5 h-3.5" />}
-              >
-                Add New Service
-              </Button>
-            )}
-          </div>
-
-          <div className="rounded-xl border border-zinc-800 overflow-hidden">
-            {servicesLoading ? (
-              <div className="p-6 text-center text-xs text-zinc-400">Loading services catalog...</div>
-            ) : services.length === 0 ? (
-              <div className="p-8 text-center text-xs text-zinc-400 space-y-2">
-                <Briefcase className="w-8 h-8 text-zinc-600 mx-auto" />
-                <p>No services defined yet in your catalog.</p>
-                {isAdmin && (
-                  <Button size="sm" variant="outline" onClick={handleOpenAddService} icon={<Plus className="w-3.5 h-3.5" />}>
-                    Add First Service
-                  </Button>
-                )}
-              </div>
-            ) : (
-              <table className="w-full text-left text-xs text-zinc-300">
-                <thead className="bg-zinc-900 text-zinc-400 border-b border-zinc-800 uppercase font-semibold text-[10px]">
-                  <tr>
-                    <th className="px-4 py-2.5">Service Name</th>
-                    <th className="px-4 py-2.5">Category</th>
-                    <th className="px-4 py-2.5">Default Price</th>
-                    <th className="px-4 py-2.5">Billing Model</th>
-                    <th className="px-4 py-2.5">Status</th>
-                    {isAdmin && <th className="px-4 py-2.5 text-right">Actions</th>}
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-zinc-800/60 font-sans text-xs">
-                  {services.map((svc) => (
-                    <tr key={svc.id} className="hover:bg-zinc-800/30">
-                      <td className="px-4 py-3">
-                        <span className="font-semibold text-zinc-100 block">{svc.name}</span>
-                        {svc.description && (
-                          <span className="text-[11px] text-zinc-400 block line-clamp-1 mt-0.5">{svc.description}</span>
-                        )}
-                      </td>
-                      <td className="px-4 py-3">
-                        <span className="px-2 py-0.5 rounded bg-zinc-800 text-zinc-300 border border-zinc-700 text-[10px] font-mono">
-                          {svc.category}
-                        </span>
-                      </td>
-                      <td className="px-4 py-3 font-mono font-bold text-emerald-400">
-                        {svc.currency} {Number(svc.default_unit_price).toLocaleString()}
-                      </td>
-                      <td className="px-4 py-3 text-zinc-300">
-                        {svc.billing_type}
-                      </td>
-                      <td className="px-4 py-3">
-                        <button
-                          type="button"
-                          onClick={() => isAdmin && handleToggleServiceActive(svc)}
-                          disabled={!isAdmin}
-                          className={`text-[10px] font-mono px-2 py-0.5 rounded border transition ${
-                            svc.is_active
-                              ? 'bg-emerald-950/70 text-emerald-400 border-emerald-800/60'
-                              : 'bg-zinc-800 text-zinc-500 border-zinc-700'
-                          }`}
-                        >
-                          {svc.is_active ? 'Active' : 'Disabled'}
-                        </button>
-                      </td>
-                      {isAdmin && (
-                        <td className="px-4 py-3 text-right">
-                          <div className="flex items-center justify-end gap-1.5">
-                            <button
-                              type="button"
-                              onClick={() => handleOpenEditService(svc)}
-                              className="p-1.5 text-zinc-400 hover:text-blue-400 rounded hover:bg-zinc-800 transition"
-                              title="Edit Service"
-                            >
-                              <Edit2 className="w-3.5 h-3.5" />
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => handleDeleteService(svc.id)}
-                              className="p-1.5 text-zinc-400 hover:text-rose-400 rounded hover:bg-zinc-800 transition"
-                              title="Delete Service"
-                            >
-                              <Trash2 className="w-3.5 h-3.5" />
-                            </button>
-                          </div>
-                        </td>
-                      )}
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            )}
-          </div>
-        </div>
 
         {/* CRM Automation Rules & Engine */}
         <div className="p-6 rounded-2xl bg-zinc-900/80 border border-zinc-800 space-y-4">
@@ -961,149 +676,6 @@ export default function SettingsPage() {
         </div>
       </div>
 
-      {/* Add / Edit Service Modal */}
-      <Modal
-        isOpen={isServiceModalOpen}
-        onClose={() => setIsServiceModalOpen(false)}
-        title={editingService ? 'Edit Service' : 'Add New Service to Catalog'}
-        maxWidth="lg"
-      >
-        <form onSubmit={handleSaveService} className="space-y-4">
-          {serviceError && (
-            <div className="p-3 bg-red-950/40 border border-red-800/60 rounded-xl text-red-300 text-xs">
-              {serviceError}
-            </div>
-          )}
-
-          <div>
-            <label className="block text-xs font-semibold text-zinc-300 uppercase tracking-wider mb-1">
-              Service Name *
-            </label>
-            <input
-              type="text"
-              required
-              placeholder="e.g., Full-Stack Web Development, UI/UX Design"
-              value={serviceFormData.name}
-              onChange={(e) => setServiceFormData({ ...serviceFormData, name: e.target.value })}
-              className="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 rounded-xl text-zinc-100 text-xs focus:outline-none focus:border-blue-500"
-            />
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div>
-              <label className="block text-xs font-semibold text-zinc-300 uppercase tracking-wider mb-1">
-                Category
-              </label>
-              <select
-                value={serviceFormData.category}
-                onChange={(e) => setServiceFormData({ ...serviceFormData, category: e.target.value })}
-                className="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 rounded-xl text-zinc-100 text-xs focus:outline-none focus:border-blue-500"
-              >
-                <option value="Development">Software & Web Development</option>
-                <option value="Design">UI/UX & Graphic Design</option>
-                <option value="Mobile">Mobile App Development</option>
-                <option value="Marketing">Digital Marketing & SEO</option>
-                <option value="Consulting">Tech Consulting & Architecture</option>
-                <option value="Video">Video Editing & Production</option>
-                <option value="Maintenance">Support & Maintenance</option>
-                <option value="Other">Other Services</option>
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-xs font-semibold text-zinc-300 uppercase tracking-wider mb-1">
-                Billing Model
-              </label>
-              <select
-                value={serviceFormData.billing_type}
-                onChange={(e) => setServiceFormData({ ...serviceFormData, billing_type: e.target.value })}
-                className="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 rounded-xl text-zinc-100 text-xs focus:outline-none focus:border-blue-500"
-              >
-                <option value="Fixed">Fixed Price</option>
-                <option value="Hourly">Hourly Rate</option>
-                <option value="Monthly">Monthly Retainer</option>
-                <option value="Milestone">Per Milestone</option>
-              </select>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div>
-              <label className="block text-xs font-semibold text-zinc-300 uppercase tracking-wider mb-1">
-                Default Unit Price *
-              </label>
-              <input
-                type="number"
-                min="0"
-                step="any"
-                required
-                value={serviceFormData.default_unit_price}
-                onChange={(e) => setServiceFormData({ ...serviceFormData, default_unit_price: e.target.value })}
-                className="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 rounded-xl text-zinc-100 text-xs focus:outline-none focus:border-blue-500"
-              />
-            </div>
-
-            <div>
-              <label className="block text-xs font-semibold text-zinc-300 uppercase tracking-wider mb-1">
-                Currency
-              </label>
-              <select
-                value={serviceFormData.currency}
-                onChange={(e) => setServiceFormData({ ...serviceFormData, currency: e.target.value })}
-                className="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 rounded-xl text-zinc-100 text-xs focus:outline-none focus:border-blue-500"
-              >
-                <option value="PKR">PKR (Default Base)</option>
-                <option value="USD">USD</option>
-                <option value="GBP">GBP</option>
-                <option value="EUR">EUR</option>
-                <option value="AED">AED</option>
-                <option value="SAR">SAR</option>
-                <option value="CAD">CAD</option>
-              </select>
-            </div>
-          </div>
-
-          <div>
-            <label className="block text-xs font-semibold text-zinc-300 uppercase tracking-wider mb-1">
-              Scope / Deliverables Description
-            </label>
-            <textarea
-              rows={3}
-              placeholder="Detailed description of what is included in this service..."
-              value={serviceFormData.description}
-              onChange={(e) => setServiceFormData({ ...serviceFormData, description: e.target.value })}
-              className="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 rounded-xl text-zinc-100 text-xs focus:outline-none focus:border-blue-500"
-            />
-          </div>
-
-          <div className="flex items-center gap-2 pt-1">
-            <input
-              type="checkbox"
-              id="service_is_active"
-              checked={serviceFormData.is_active}
-              onChange={(e) => setServiceFormData({ ...serviceFormData, is_active: e.target.checked })}
-              className="w-4 h-4 rounded bg-zinc-900 border-zinc-700 text-blue-500 focus:ring-0"
-            />
-            <label htmlFor="service_is_active" className="text-xs text-zinc-300">
-              Active in Quotation & Invoice Pickers
-            </label>
-          </div>
-
-          <div className="flex items-center justify-end gap-2 pt-3 border-t border-zinc-800">
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={() => setIsServiceModalOpen(false)}
-            >
-              Cancel
-            </Button>
-            <Button type="submit" size="sm" isLoading={isSavingService}>
-              {editingService ? 'Update Service' : 'Save Service'}
-            </Button>
-          </div>
-        </form>
-      </Modal>
     </AppLayout>
   );
 }

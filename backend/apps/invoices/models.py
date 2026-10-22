@@ -30,7 +30,7 @@ class Invoice(models.Model):
         db_index=True,
         help_text="Unique sequence code like INV-2026-0001"
     )
-    title = models.CharField(max_length=255, default='Tax Invoice')
+    title = models.CharField(max_length=255, default='Invoice')
 
     # Mandatory central client relationship
     client = models.ForeignKey(

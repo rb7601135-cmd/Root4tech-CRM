@@ -149,10 +149,10 @@ class InvoiceViewSet(viewsets.ModelViewSet):
             return Response({'detail': 'Invoice not found.'}, status=status.HTTP_404_NOT_FOUND)
 
         recipient_email = request.data.get('recipient_email') or invoice.client.email
-        subject = request.data.get('subject') or f"Tax Invoice {invoice.invoice_number} from Roo4Tech"
+        subject = request.data.get('subject') or f"Invoice {invoice.invoice_number} from Roo4Tech"
         message = request.data.get('message') or (
             f"Dear {invoice.client.name},\n\n"
-            f"Please find attached tax invoice {invoice.invoice_number} ({invoice.title}).\n"
+            f"Please find attached invoice {invoice.invoice_number} ({invoice.title}).\n"
             f"Total Invoice Amount: {invoice.total_amount:,.2f} {invoice.currency}\n"
             f"Balance Due: {invoice.remaining_balance:,.2f} {invoice.currency}\n"
             f"Due Date: {invoice.due_date}\n\n"

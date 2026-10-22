@@ -147,7 +147,7 @@ export default function QuotationDetailPage() {
   };
 
   const handleConvertToInvoice = async () => {
-    if (!confirm('Convert this quotation into a formal Tax Invoice?')) return;
+    if (!confirm('Convert this quotation into a formal Invoice?')) return;
     setActionLoading(true);
     setErrorMsg('');
     try {

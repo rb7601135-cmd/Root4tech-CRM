@@ -53,6 +53,18 @@ def generate_invoice_pdf(invoice):
     cell_style = ParagraphStyle('Cell', parent=styles['Normal'], fontName='Helvetica', fontSize=9, leading=12)
     cell_bold = ParagraphStyle('CellBold', parent=styles['Normal'], fontName='Helvetica-Bold', fontSize=9, leading=12)
 
+    # Table Header Styles (High-contrast pure white text on brand blue)
+    th_center = ParagraphStyle('THCenter', parent=styles['Normal'], fontName='Helvetica-Bold', fontSize=9, leading=12, alignment=1, textColor=colors.white)
+    th_left = ParagraphStyle('THLeft', parent=styles['Normal'], fontName='Helvetica-Bold', fontSize=9, leading=12, alignment=0, textColor=colors.white)
+    th_right = ParagraphStyle('THRight', parent=styles['Normal'], fontName='Helvetica-Bold', fontSize=9, leading=12, alignment=2, textColor=colors.white)
+
+    # Table Cell Data Styles (Clear, visible dark slate text with proper spacing)
+    td_idx = ParagraphStyle('TDIdx', parent=styles['Normal'], fontName='Helvetica', fontSize=9, leading=13, alignment=1, textColor=colors.HexColor("#64748b"))
+    td_desc = ParagraphStyle('TDDesc', parent=styles['Normal'], fontName='Helvetica', fontSize=9, leading=13, alignment=0, textColor=colors.HexColor("#0f172a"))
+    td_qty = ParagraphStyle('TDQty', parent=styles['Normal'], fontName='Helvetica', fontSize=9, leading=13, alignment=2, textColor=colors.HexColor("#334155"))
+    td_price = ParagraphStyle('TDPrice', parent=styles['Normal'], fontName='Helvetica', fontSize=9, leading=13, alignment=2, textColor=colors.HexColor("#334155"))
+    td_total = ParagraphStyle('TDTotal', parent=styles['Normal'], fontName='Helvetica-Bold', fontSize=9, leading=13, alignment=2, textColor=colors.HexColor("#0f172a"))
+
     # Top Header
     left_header = [
         Paragraph(f"<b>{company_name}</b>", ParagraphStyle('BName', parent=styles['Normal'], fontName='Helvetica-Bold', fontSize=16, leading=19, textColor=brand_primary)),
@@ -63,7 +75,7 @@ def generate_invoice_pdf(invoice):
 
     status_color = "#16a34a" if invoice.status == 'Paid' else ("#dc2626" if invoice.status == 'Overdue' else "#0284c7")
     right_header = [
-        Paragraph("TAX INVOICE", title_style),
+        Paragraph("INVOICE", title_style),
         Spacer(1, 4),
         Paragraph(f"<b>Invoice #:</b> {invoice.invoice_number}", header_right),
         Paragraph(f"<b>Date:</b> {invoice.issue_date.strftime('%b %d, %Y')}", header_right),
@@ -72,7 +84,7 @@ def generate_invoice_pdf(invoice):
         Paragraph(f"<b>Currency:</b> {invoice.currency}", header_right),
     ]
 
-    header_table = Table([[left_header, right_header]], colWidths=[4.0 * inch, 3.2 * inch])
+    header_table = Table([[left_header, right_header]], colWidths=[4.3 * inch, 3.2 * inch])
     header_table.setStyle(TableStyle([
         ('VALIGN', (0,0), (-1,-1), 'TOP'),
         ('LEFTPADDING', (0,0), (-1,-1), 0),
@@ -103,7 +115,7 @@ def generate_invoice_pdf(invoice):
         Paragraph(f"<b>Base Rate:</b> 1 {invoice.currency} = {invoice.exchange_rate_to_base} PKR", company_style),
     ]
 
-    info_table = Table([[client_box, meta_box]], colWidths=[4.2 * inch, 3.0 * inch])
+    info_table = Table([[client_box, meta_box]], colWidths=[4.3 * inch, 3.2 * inch])
     info_table.setStyle(TableStyle([
         ('VALIGN', (0,0), (-1,-1), 'TOP'),
         ('BACKGROUND', (0,0), (-1,-1), colors.HexColor("#f8fafc")),
@@ -120,47 +132,47 @@ def generate_invoice_pdf(invoice):
     # Line Items Table
     table_data = [
         [
-            Paragraph("<b>#</b>", cell_bold),
-            Paragraph("<b>Description / Services Rendered</b>", cell_bold),
-            Paragraph("<b>Qty</b>", cell_bold),
-            Paragraph(f"<b>Unit Price ({invoice.currency})</b>", cell_bold),
-            Paragraph(f"<b>Total ({invoice.currency})</b>", cell_bold),
+            Paragraph("<b>#</b>", th_center),
+            Paragraph("<b>Description / Services Rendered</b>", th_left),
+            Paragraph("<b>Qty</b>", th_right),
+            Paragraph(f"<b>Unit Price ({invoice.currency})</b>", th_right),
+            Paragraph(f"<b>Total ({invoice.currency})</b>", th_right),
         ]
     ]
 
     idx = 1
     for item in invoice.items.all():
         table_data.append([
-            Paragraph(str(idx), cell_style),
-            Paragraph(item.description, cell_style),
-            Paragraph(f"{item.quantity:g}", cell_style),
-            Paragraph(f"{item.unit_price:,.2f}", cell_style),
-            Paragraph(f"{item.line_total:,.2f}", cell_style),
+            Paragraph(str(idx), td_idx),
+            Paragraph(item.description, td_desc),
+            Paragraph(f"{item.quantity:g}", td_qty),
+            Paragraph(f"{item.unit_price:,.2f}", td_price),
+            Paragraph(f"{item.line_total:,.2f}", td_total),
         ])
         idx += 1
 
     if idx == 1:
         table_data.append([
-            Paragraph("1", cell_style),
-            Paragraph(invoice.title, cell_style),
-            Paragraph("1", cell_style),
-            Paragraph(f"{invoice.total_amount:,.2f}", cell_style),
-            Paragraph(f"{invoice.total_amount:,.2f}", cell_style),
+            Paragraph("1", td_idx),
+            Paragraph(invoice.title, td_desc),
+            Paragraph("1", td_qty),
+            Paragraph(f"{invoice.total_amount:,.2f}", td_price),
+            Paragraph(f"{invoice.total_amount:,.2f}", td_total),
         ])
 
-    items_table = Table(table_data, colWidths=[0.5 * inch, 3.7 * inch, 0.7 * inch, 1.1 * inch, 1.2 * inch])
+    items_table = Table(table_data, colWidths=[0.45 * inch, 3.85 * inch, 0.7 * inch, 1.2 * inch, 1.3 * inch])
     items_table.setStyle(TableStyle([
-        ('BACKGROUND', (0,0), (-1,0), colors.HexColor("#0f172a")),
-        ('TEXTCOLOR', (0,0), (-1,0), colors.whitesmoke),
+        ('BACKGROUND', (0,0), (-1,0), colors.HexColor("#0284c7")),
         ('ALIGN', (0,0), (0,-1), 'CENTER'),
+        ('ALIGN', (1,0), (1,-1), 'LEFT'),
         ('ALIGN', (2,0), (-1,-1), 'RIGHT'),
         ('VALIGN', (0,0), (-1,-1), 'MIDDLE'),
         ('GRID', (0,0), (-1,-1), 0.5, colors.HexColor("#cbd5e1")),
         ('ROWBACKGROUNDS', (0,1), (-1,-1), [colors.white, colors.HexColor("#f8fafc")]),
-        ('TOPPADDING', (0,0), (-1,-1), 6),
-        ('BOTTOMPADDING', (0,0), (-1,-1), 6),
-        ('LEFTPADDING', (0,0), (-1,-1), 6),
-        ('RIGHTPADDING', (0,0), (-1,-1), 6),
+        ('TOPPADDING', (0,0), (-1,-1), 7),
+        ('BOTTOMPADDING', (0,0), (-1,-1), 7),
+        ('LEFTPADDING', (0,0), (-1,-1), 8),
+        ('RIGHTPADDING', (0,0), (-1,-1), 8),
     ]))
     story.append(items_table)
     story.append(Spacer(1, 10))
@@ -249,19 +261,7 @@ def generate_invoice_pdf(invoice):
         story.append(p_table)
         story.append(Spacer(1, 20))
 
-    # Signature
-    sig_data = [
-        [
-            Paragraph("Prepared by:<br/><br/>_______________________<br/><b>Accounts Department</b>", company_style),
-            Paragraph("Authorized Signature:<br/><br/>_______________________<br/><b>Roo4Tech Management</b>", company_style)
-        ]
-    ]
-    sig_table = Table(sig_data, colWidths=[3.6 * inch, 3.6 * inch])
-    sig_table.setStyle(TableStyle([
-        ('ALIGN', (0,0), (-1,-1), 'CENTER'),
-        ('VALIGN', (0,0), (-1,-1), 'MIDDLE'),
-    ]))
-    story.append(sig_table)
+    # Signature section removed as requested
 
     doc.build(story)
     buffer.seek(0)

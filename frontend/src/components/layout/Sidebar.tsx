@@ -20,6 +20,8 @@ import {
   Shield,
   Layers,
   Sparkles,
+  Briefcase,
+  User as UserIcon,
 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { useCompany } from '@/context/CompanyContext';
@@ -40,6 +42,7 @@ export function Sidebar({ isCollapsed, setIsCollapsed }: SidebarProps) {
     { label: 'AI Assistant', href: '/assistant', icon: Sparkles },
     { label: 'Leads', href: '/leads', icon: Users },
     { label: 'Clients', href: '/clients', icon: Building2 },
+    { label: 'Services', href: '/services', icon: Briefcase },
     { label: 'Quotations', href: '/quotations', icon: FileSpreadsheet },
     { label: 'Invoices', href: '/invoices', icon: Receipt },
     { label: 'Projects', href: '/projects', icon: FolderKanban },
@@ -123,36 +126,29 @@ export function Sidebar({ isCollapsed, setIsCollapsed }: SidebarProps) {
           </nav>
         </div>
 
-        {!isCollapsed && (
-          <div className="p-3 mx-1 rounded-xl bg-gradient-to-br from-indigo-950/40 via-blue-950/30 to-slate-900 border border-indigo-500/20 text-xs shadow-inner">
-            <div className="flex items-center gap-1.5 text-indigo-400 font-semibold mb-1">
-              <Sparkles className="w-3.5 h-3.5 text-indigo-400 animate-pulse" />
-              <span>Phase 2 Operational</span>
-            </div>
-            <p className="text-[11px] text-slate-400 leading-relaxed">
-              Shared Client ID active across Quotes, Invoices, Projects & Calendar.
-            </p>
-          </div>
-        )}
       </div>
 
       {/* User Card & Logout */}
       <div className="p-3 border-t border-zinc-800/80 bg-zinc-950">
         {!isCollapsed ? (
           <div className="flex items-center justify-between gap-2 p-2 rounded-xl bg-zinc-900/70 border border-zinc-800/60">
-            <div className="flex items-center gap-2.5 overflow-hidden">
-              <div className="w-8 h-8 rounded-lg bg-blue-600/20 border border-blue-500/30 flex items-center justify-center text-blue-400 font-bold text-xs shrink-0">
+            <Link
+              href="/profile"
+              className="flex items-center gap-2.5 overflow-hidden hover:opacity-80 transition group"
+              title="View Profile & Security"
+            >
+              <div className="w-8 h-8 rounded-lg bg-blue-600/20 border border-blue-500/30 flex items-center justify-center text-blue-400 font-bold text-xs shrink-0 group-hover:border-blue-400">
                 {user?.first_name?.[0] || user?.email?.[0]?.toUpperCase() || 'U'}
               </div>
               <div className="overflow-hidden">
-                <p className="text-xs font-semibold text-zinc-200 truncate">
+                <p className="text-xs font-semibold text-zinc-200 truncate group-hover:text-blue-300">
                   {user?.full_name || user?.email}
                 </p>
                 <div className="mt-0.5 scale-90 origin-left">
                   <RoleBadge role={user?.role || 'Salesperson'} />
                 </div>
               </div>
-            </div>
+            </Link>
             <button
               onClick={logout}
               className="p-1.5 rounded-lg text-zinc-400 hover:text-rose-400 hover:bg-zinc-800 transition shrink-0"
@@ -162,13 +158,22 @@ export function Sidebar({ isCollapsed, setIsCollapsed }: SidebarProps) {
             </button>
           </div>
         ) : (
-          <button
-            onClick={logout}
-            className="w-full flex items-center justify-center p-2 rounded-lg text-zinc-400 hover:text-rose-400 hover:bg-zinc-900 transition"
-            title="Logout"
-          >
-            <LogOut className="w-5 h-5" />
-          </button>
+          <div className="space-y-1.5">
+            <Link
+              href="/profile"
+              className="w-full flex items-center justify-center p-2 rounded-lg text-zinc-400 hover:text-zinc-100 hover:bg-zinc-900 transition"
+              title="My Profile & Security"
+            >
+              <UserIcon className="w-5 h-5 text-blue-400" />
+            </Link>
+            <button
+              onClick={logout}
+              className="w-full flex items-center justify-center p-2 rounded-lg text-zinc-400 hover:text-rose-400 hover:bg-zinc-900 transition"
+              title="Logout"
+            >
+              <LogOut className="w-5 h-5" />
+            </button>
+          </div>
         )}
       </div>
     </aside>

@@ -78,9 +78,9 @@ export default function InvoiceDetailPage() {
     const email = snap.email || invoice.client_details?.email || '';
     const name = snap.name || invoice.client_details?.name || 'Valued Client';
     setSendRecipient(email);
-    setSendSubject(`Tax Invoice ${invoice.invoice_number} from Roo4Tech`);
+    setSendSubject(`Invoice ${invoice.invoice_number} from Roo4Tech`);
     setSendMessage(
-      `Dear ${name},\n\nPlease find attached the tax invoice ${invoice.invoice_number} (${invoice.title}).\n\nTotal Invoiced: ${Number(invoice.total_amount).toLocaleString(undefined, { minimumFractionDigits: 2 })} ${invoice.currency}\nBalance Due: ${Number(invoice.remaining_balance).toLocaleString(undefined, { minimumFractionDigits: 2 })} ${invoice.currency}\nDue Date: ${invoice.due_date || 'Due upon receipt'}\n\nPlease let us know once the transfer has been initiated.\n\nBest regards,\nRoo4Tech Finance Team\nhttps://roo4tech.com`
+      `Dear ${name},\n\nPlease find attached invoice ${invoice.invoice_number} (${invoice.title}).\n\nTotal Invoiced: ${Number(invoice.total_amount).toLocaleString(undefined, { minimumFractionDigits: 2 })} ${invoice.currency}\nBalance Due: ${Number(invoice.remaining_balance).toLocaleString(undefined, { minimumFractionDigits: 2 })} ${invoice.currency}\nDue Date: ${invoice.due_date || 'Due upon receipt'}\n\nPlease let us know once the transfer has been initiated.\n\nBest regards,\nRoo4Tech Finance Team\nhttps://roo4tech.com`
     );
     setIsSendModalOpen(true);
   };
@@ -219,7 +219,7 @@ export default function InvoiceDetailPage() {
               href={api.getInvoicePdfUrl(invoice.id, true)}
               download={`${invoice.invoice_number}.pdf`}
               className="px-3.5 py-2 bg-sky-600 hover:bg-sky-500 text-white rounded-xl text-xs font-semibold shadow-md flex items-center gap-1.5 transition"
-              title="Save branded tax invoice directly as PDF file"
+              title="Save branded invoice directly as PDF file"
             >
               <Download className="w-4 h-4" />
               Save as PDF
@@ -241,7 +241,7 @@ export default function InvoiceDetailPage() {
               type="button"
               onClick={handleOpenSendModal}
               className="px-3.5 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-semibold shadow-md flex items-center gap-1.5 transition"
-              title="Send tax invoice via email with attached PDF"
+              title="Send invoice via email with attached PDF"
             >
               <Send className="w-4 h-4" />
               Send to Client
@@ -623,7 +623,7 @@ export default function InvoiceDetailPage() {
             <div className="flex items-center justify-between p-4 border-b border-zinc-800">
               <div className="flex items-center gap-2">
                 <Mail className="w-5 h-5 text-indigo-400" />
-                <h3 className="text-base font-bold text-white">Send Tax Invoice to Client</h3>
+                <h3 className="text-base font-bold text-white">Send Invoice to Client</h3>
               </div>
               <button
                 type="button"
@@ -681,7 +681,7 @@ export default function InvoiceDetailPage() {
                     📎 Attachment: {invoice.invoice_number}.pdf
                   </span>
                   <span className="text-[11px] text-zinc-400">
-                    Officially branded tax invoice with itemized breakdown & bank details
+                    Officially branded invoice with itemized breakdown & bank details
                   </span>
                 </div>
               </div>
