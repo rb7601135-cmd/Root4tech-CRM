@@ -17,8 +17,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 COPY requirements.txt /app/
 RUN pip install --no-cache-dir -r requirements.txt gunicorn
 
-# Copy project code
+# Copy project code and make entrypoint executable
 COPY . /app/
+RUN chmod +x /app/entrypoint.sh
 
 # Create non-root user and set permissions
 RUN useradd -m -u 1000 appuser && \
@@ -30,7 +31,7 @@ USER appuser
 EXPOSE 8000
 
 # Health check using the clean /api/health/ endpoint
-HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
-    CMD curl -f http://127.0.0.1:8000/api/health/ || exit 1
+HEALTHCHECK --interval=30s --timeout=5s --start-period=15s --retries=3 \
+    CMD curl -f http://127.0.0.1:${PORT:-8000}/api/health/ || exit 1
 
-CMD ["gunicorn", "core.wsgi:application", "--bind", "0.0.0.0:8000", "--workers", "3", "--timeout", "90"]
+ENTRYPOINT ["/app/entrypoint.sh"]
