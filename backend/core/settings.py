@@ -77,30 +77,79 @@ WSGI_APPLICATION = 'core.wsgi.application'
 
 # Database
 # Support PostgreSQL when DATABASE_URL is set, otherwise default to SQLite3 for dev/testing
-DATABASE_URL = os.getenv('DATABASE_URL', '')
-if DATABASE_URL and DATABASE_URL.startswith(('postgres://', 'postgresql://')):
+DATABASE_URL = os.getenv('DATABASE_URL', '').strip().strip("'\"")
+
+def parse_database_url(raw_url: str):
+    """
+    Safely parses a PostgreSQL DATABASE_URL.
+    Handles RFC 3986 bracketed non-IP hosts (e.g. @[HOST] or @[domain]) which trigger
+    ValueError: 'HOST' does not appear to be an IPv4 or IPv6 address in Python 3.12+.
+    Detects unconfigured placeholders and falls back gracefully to SQLite.
+    """
+    if not raw_url or not raw_url.startswith(('postgres://', 'postgresql://')):
+        return None
+
     import urllib.parse as urlparse
-    url = urlparse.urlparse(DATABASE_URL)
+    import re
+    import ipaddress
+
+    # Pre-clean: strip brackets if the content inside @[...] is not a valid IPv6/IPv4 address
+    def fix_bracketed_host(match):
+        host = match.group(1)
+        try:
+            ipaddress.ip_address(host)
+            return f"@[{host}]"
+        except ValueError:
+            return f"@{host}"
+
+    cleaned_url = re.sub(r'@\[([^\]]+)\]', fix_bracketed_host, raw_url)
+
+    try:
+        url = urlparse.urlparse(cleaned_url)
+    except Exception as e:
+        print(f"[WARNING] Could not parse DATABASE_URL ({e}). Falling back to SQLite.")
+        return None
+
+    hostname = (url.hostname or '').strip()
+
+    # Detect unconfigured template placeholders like 'HOST', '[HOST]', '[YOUR-PASSWORD]', etc.
+    is_placeholder = (
+        not hostname
+        or hostname.lower() in ('host', '[host]', 'your-host')
+        or '[your-password]' in raw_url.lower()
+        or '[region]' in raw_url.lower()
+    )
+
+    if is_placeholder:
+        print("=" * 70)
+        print("[WARNING] DATABASE_URL contains unconfigured placeholders or invalid host:")
+        print(f"  Detected Host: {hostname or 'None'}")
+        print("  Please configure DATABASE_URL in your deployment platform's Environment Variables.")
+        print("  Falling back to SQLite database.")
+        print("=" * 70)
+        return None
+
     query_params = urlparse.parse_qs(url.query)
-    
-    is_supabase = 'supabase.co' in (url.hostname or '') or 'supabase.com' in (url.hostname or '')
+    is_supabase = 'supabase.co' in hostname or 'supabase.com' in hostname
     ssl_mode = query_params.get('sslmode', ['require' if is_supabase else 'prefer'])[0]
-    
+
     db_options = {}
     if ssl_mode:
         db_options['sslmode'] = ssl_mode
 
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': urlparse.unquote(url.path[1:]) if url.path else 'postgres',
-            'USER': urlparse.unquote(url.username or ''),
-            'PASSWORD': urlparse.unquote(url.password or ''),
-            'HOST': url.hostname,
-            'PORT': str(url.port or '5432'),
-            'OPTIONS': db_options,
-        }
+    return {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': urlparse.unquote(url.path[1:]) if url.path else 'postgres',
+        'USER': urlparse.unquote(url.username or ''),
+        'PASSWORD': urlparse.unquote(url.password or ''),
+        'HOST': hostname,
+        'PORT': str(url.port or '5432'),
+        'OPTIONS': db_options,
     }
+
+parsed_db = parse_database_url(DATABASE_URL)
+if parsed_db:
+    DATABASES = {'default': parsed_db}
 else:
     DATABASES = {
         'default': {

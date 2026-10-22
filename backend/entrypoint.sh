@@ -5,7 +5,7 @@ echo "=== Starting Roo4Tech CRM Backend Container ==="
 
 # Apply database migrations on Supabase/PostgreSQL
 echo "Applying database migrations..."
-python manage.py migrate --noinput
+python manage.py migrate --noinput || echo "[WARNING] Database migrations failed or database unreachable. Check DATABASE_URL configuration."
 
 # Collect static files for Django admin and REST framework
 echo "Collecting static files..."
