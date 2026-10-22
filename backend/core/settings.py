@@ -81,14 +81,24 @@ DATABASE_URL = os.getenv('DATABASE_URL', '')
 if DATABASE_URL and DATABASE_URL.startswith(('postgres://', 'postgresql://')):
     import urllib.parse as urlparse
     url = urlparse.urlparse(DATABASE_URL)
+    query_params = urlparse.parse_qs(url.query)
+    
+    is_supabase = 'supabase.co' in (url.hostname or '') or 'supabase.com' in (url.hostname or '')
+    ssl_mode = query_params.get('sslmode', ['require' if is_supabase else 'prefer'])[0]
+    
+    db_options = {}
+    if ssl_mode:
+        db_options['sslmode'] = ssl_mode
+
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
-            'NAME': url.path[1:],
-            'USER': url.username,
-            'PASSWORD': url.password,
+            'NAME': urlparse.unquote(url.path[1:]) if url.path else 'postgres',
+            'USER': urlparse.unquote(url.username or ''),
+            'PASSWORD': urlparse.unquote(url.password or ''),
             'HOST': url.hostname,
-            'PORT': url.port or '5432',
+            'PORT': str(url.port or '5432'),
+            'OPTIONS': db_options,
         }
     }
 else:
