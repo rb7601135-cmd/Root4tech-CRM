@@ -28,20 +28,35 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const token = api.getToken();
       if (!token) {
         setUser(null);
+        if (typeof window !== 'undefined') {
+          localStorage.removeItem('roo4tech_cached_user');
+        }
         setIsLoading(false);
         return;
       }
       const currentUser = await api.getCurrentUser();
       setUser(currentUser);
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('roo4tech_cached_user', JSON.stringify(currentUser));
+      }
     } catch {
       setUser(null);
       api.setToken(null);
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('roo4tech_cached_user');
+      }
     } finally {
       setIsLoading(false);
     }
   };
 
   useEffect(() => {
+    try {
+      const cached = localStorage.getItem('roo4tech_cached_user');
+      if (cached) {
+        setUser(JSON.parse(cached));
+      }
+    } catch {}
     refreshUser();
   }, []);
 
@@ -50,6 +65,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       const res = await api.login(credentials);
       setUser(res.user);
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('roo4tech_cached_user', JSON.stringify(res.user));
+      }
     } finally {
       setIsLoading(false);
     }
@@ -61,6 +79,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       await api.logout();
     } finally {
       setUser(null);
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('roo4tech_cached_user');
+      }
       setIsLoading(false);
     }
   };

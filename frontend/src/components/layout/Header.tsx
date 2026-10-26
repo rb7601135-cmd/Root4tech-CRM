@@ -168,7 +168,11 @@ function NotificationMenu() {
 
   useEffect(() => {
     fetchNotifications();
-    const interval = setInterval(fetchNotifications, 15000); // 15s poll for real-time alerts
+    const interval = setInterval(() => {
+      if (typeof document !== 'undefined' && document.visibilityState === 'visible') {
+        fetchNotifications();
+      }
+    }, 45000);
     return () => clearInterval(interval);
   }, []);
 

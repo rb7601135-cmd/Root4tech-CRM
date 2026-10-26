@@ -27,13 +27,13 @@ import {
 
 const SERVICE_CATEGORIES = [
   'Development',
-  'Mobile Apps',
-  'UI/UX Design',
-  'Cloud & DevOps',
-  'Digital Marketing',
-  'AI & Data',
-  'Maintenance & Support',
+  'Design',
+  'Mobile',
+  'Marketing',
   'Consulting',
+  'Video',
+  'Maintenance',
+  'Other',
 ];
 
 const BILLING_TYPES = ['Fixed', 'Hourly', 'Monthly', 'Milestone'];
@@ -64,11 +64,17 @@ export default function ServicesPage() {
   const [formError, setFormError] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
 
-  const loadServices = async () => {
-    setIsLoading(true);
+  const loadServices = async (silent = false) => {
+    if (!silent && services.length === 0) {
+      setIsLoading(true);
+    }
     try {
       const res = await api.getServices();
-      setServices(Array.isArray(res) ? res : (res as { results?: CompanyService[] }).results || []);
+      const list = Array.isArray(res) ? res : (res as { results?: CompanyService[] }).results || [];
+      setServices(list);
+      if (typeof window !== 'undefined') {
+        sessionStorage.setItem('roo4tech_cached_services', JSON.stringify(list));
+      }
     } catch (err) {
       console.error('Failed to load services:', err);
     } finally {
@@ -77,7 +83,16 @@ export default function ServicesPage() {
   };
 
   useEffect(() => {
-    loadServices();
+    let hasCache = false;
+    try {
+      const cached = sessionStorage.getItem('roo4tech_cached_services');
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        setServices(parsed);
+        hasCache = parsed.length > 0;
+      }
+    } catch {}
+    loadServices(hasCache);
   }, []);
 
   const handleOpenAdd = () => {

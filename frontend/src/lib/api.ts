@@ -26,6 +26,7 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000/a
 
 class ApiClient {
   private token: string | null = null;
+  private inFlightRequests: Map<string, Promise<any>> = new Map();
 
   constructor() {
     if (typeof window !== 'undefined') {
@@ -53,8 +54,28 @@ class ApiClient {
   }
 
   async request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
+    const isGet = !options.method || options.method.toUpperCase() === 'GET';
     const cleanEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
-    const primaryUrl = `${API_BASE_URL}${cleanEndpoint}`;
+    const dedupeKey = isGet ? `${cleanEndpoint}:${this.getToken() || ''}` : '';
+
+    if (isGet && dedupeKey && this.inFlightRequests.has(dedupeKey)) {
+      return this.inFlightRequests.get(dedupeKey) as Promise<T>;
+    }
+
+    const promise = this._executeRequest<T>(cleanEndpoint, options);
+
+    if (isGet && dedupeKey) {
+      this.inFlightRequests.set(dedupeKey, promise);
+      promise.finally(() => {
+        this.inFlightRequests.delete(dedupeKey);
+      });
+    }
+
+    return promise;
+  }
+
+  private async _executeRequest<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
+    const primaryUrl = `${API_BASE_URL}${endpoint}`;
     const headers: Record<string, string> = {
       ...(options.headers as Record<string, string>),
     };

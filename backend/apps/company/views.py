@@ -139,6 +139,7 @@ class CompanyServiceViewSet(viewsets.ModelViewSet):
     """
     serializer_class = CompanyServiceSerializer
     permission_classes = [permissions.IsAuthenticated]
+    pagination_class = None
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['name', 'description', 'category']
     ordering_fields = ['name', 'default_unit_price', 'created_at']

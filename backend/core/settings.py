@@ -144,6 +144,8 @@ def parse_database_url(raw_url: str):
         'PASSWORD': urlparse.unquote(url.password or ''),
         'HOST': hostname,
         'PORT': str(url.port or '5432'),
+        'CONN_MAX_AGE': 600,
+        'CONN_HEALTH_CHECKS': True,
         'OPTIONS': db_options,
     }
 

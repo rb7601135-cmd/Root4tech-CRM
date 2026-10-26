@@ -22,27 +22,39 @@ export function CompanyProvider({ children }: { children: ReactNode }) {
     try {
       const data = await api.getCompanySettings();
       setSettings(data);
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('roo4tech_cached_settings', JSON.stringify(data));
+      }
     } catch {
-      // Fallback defaults
-      setSettings({
-        id: 1,
-        company_name: 'Roo4Tech',
-        logo: null,
-        logo_url: null,
-        email: 'contact@roo4tech.com',
-        phone: '+92 300 8472910',
-        website: 'https://roo4tech.com',
-        address: 'Arfa Software Technology Park, Ferozepur Road, Lahore, Pakistan',
-        default_currency: 'PKR',
-        theme_preference: 'dark',
-        updated_at: new Date().toISOString(),
-      });
+      // Fallback defaults if no cache exists
+      if (!settings) {
+        const fallback: CompanySettings = {
+          id: 1,
+          company_name: 'Roo4Tech',
+          logo: null,
+          logo_url: null,
+          email: 'contact@roo4tech.com',
+          phone: '+92 300 8472910',
+          website: 'https://roo4tech.com',
+          address: 'Arfa Software Technology Park, Ferozepur Road, Lahore, Pakistan',
+          default_currency: 'PKR',
+          theme_preference: 'dark',
+          updated_at: new Date().toISOString(),
+        };
+        setSettings(fallback);
+      }
     } finally {
       setIsLoading(false);
     }
   };
 
   useEffect(() => {
+    try {
+      const cached = localStorage.getItem('roo4tech_cached_settings');
+      if (cached) {
+        setSettings(JSON.parse(cached));
+      }
+    } catch {}
     refreshSettings();
   }, []);
 
