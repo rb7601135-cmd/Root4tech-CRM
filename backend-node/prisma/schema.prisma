@@ -1,0 +1,469 @@
+// Root4Tech Smart CRM - Prisma Schema for Supabase PostgreSQL
+// Introspected & mapped directly from Django database tables
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id                         BigInt       @id @default(autoincrement())
+  password                   String      
+  last_login                 DateTime?   
+  is_superuser               Boolean     
+  username                   String       @unique
+  first_name                 String      
+  last_name                  String      
+  is_staff                   Boolean     
+  is_active                  Boolean     
+  date_joined                DateTime    
+  email                      String       @unique
+  role                       String      
+  phone                      String      
+  avatar                     String?     
+  two_factor_enabled         Boolean     
+  two_factor_secret          String      
+  password_reset_token       String?     
+  password_reset_expires_at  DateTime?   
+  created_at                 DateTime    
+  updated_at                 DateTime    
+  @@map("accounts_user")
+}
+
+model Client {
+  id                         BigInt       @id @default(autoincrement())
+  client_id                  String       @unique
+  name                       String      
+  company_name               String      
+  email                      String      
+  normalized_email           String      
+  phone                      String      
+  website                    String      
+  billing_address            String      
+  service_interests          String      
+  client_status              String      
+  assigned_team_member       BigInt?      @map("assigned_team_member_id")
+  notes                      String      
+  created_by                 BigInt?      @map("created_by_id")
+  updated_by                 BigInt?      @map("updated_by_id")
+  created_at                 DateTime    
+  updated_at                 DateTime    
+  @@map("clients_client")
+}
+
+model ClientNote {
+  id                         BigInt       @id @default(autoincrement())
+  client                     BigInt       @map("client_id")
+  author                     BigInt?      @map("author_id")
+  content                    String      
+  created_at                 DateTime    
+  @@map("clients_clientnote")
+}
+
+model ClientActivity {
+  id                         BigInt       @id @default(autoincrement())
+  client                     BigInt       @map("client_id")
+  user                       BigInt?      @map("user_id")
+  action_type                String      
+  description                String      
+  created_at                 DateTime    
+  @@map("clients_clientactivity")
+}
+
+model ClientDocument {
+  id                         BigInt       @id @default(autoincrement())
+  client                     BigInt       @map("client_id")
+  uploaded_by                BigInt?      @map("uploaded_by_id")
+  title                      String      
+  file                       String      
+  file_size                  Int         
+  created_at                 DateTime    
+  @@map("clients_clientdocument")
+}
+
+model Lead {
+  id                         BigInt       @id @default(autoincrement())
+  lead_name                  String      
+  company                    String      
+  email                      String      
+  normalized_email           String      
+  phone                      String      
+  website                    String      
+  interested_service         String      
+  estimated_budget           Decimal?    
+  lead_source                String      
+  assigned_salesperson       BigInt?      @map("assigned_salesperson_id")
+  status                     String      
+  priority                   String      
+  next_follow_up_date        DateTime?   
+  notes                      String      
+  converted_client           BigInt?      @map("converted_client_id")
+  converted_at               DateTime?   
+  converted_by               BigInt?      @map("converted_by_id")
+  created_by                 BigInt?      @map("created_by_id")
+  created_at                 DateTime    
+  updated_at                 DateTime    
+  @@map("leads_lead")
+}
+
+model LeadNote {
+  id                         BigInt       @id @default(autoincrement())
+  lead                       BigInt       @map("lead_id")
+  author                     BigInt?      @map("author_id")
+  content                    String      
+  created_at                 DateTime    
+  @@map("leads_leadnote")
+}
+
+model LeadActivity {
+  id                         BigInt       @id @default(autoincrement())
+  lead                       BigInt       @map("lead_id")
+  user                       BigInt?      @map("user_id")
+  action                     String      
+  description                String      
+  created_at                 DateTime    
+  @@map("leads_leadactivity")
+}
+
+model CompanySettings {
+  id                         BigInt       @id @default(autoincrement())
+  company_name               String      
+  logo                       String?     
+  email                      String      
+  phone                      String      
+  website                    String      
+  address                    String      
+  default_currency           String      
+  theme_preference           String      
+  updated_at                 DateTime    
+  updated_by                 BigInt?      @map("updated_by_id")
+  @@map("company_companysettings")
+}
+
+model ExchangeRate {
+  id                         BigInt       @id @default(autoincrement())
+  currency_code              String       @unique
+  rate_to_base               Decimal     
+  source                     String      
+  updated_at                 DateTime    
+  updated_by                 BigInt?      @map("updated_by_id")
+  @@map("company_exchangerate")
+}
+
+model AuditLog {
+  id                         BigInt       @id @default(autoincrement())
+  user                       BigInt?      @map("user_id")
+  action                     String      
+  module                     String      
+  entity_id                  String      
+  description                String      
+  ip_address                 String?     
+  created_at                 DateTime    
+  @@map("company_auditlog")
+}
+
+model CompanyService {
+  id                         BigInt       @id @default(autoincrement())
+  name                       String      
+  category                   String      
+  description                String      
+  default_unit_price         Decimal     
+  currency                   String      
+  billing_type               String      
+  is_active                  Boolean     
+  created_at                 DateTime    
+  updated_at                 DateTime    
+  @@map("company_companyservice")
+}
+
+model Quotation {
+  id                         BigInt       @id @default(autoincrement())
+  quotation_number           String       @unique
+  title                      String      
+  client                     BigInt       @map("client_id")
+  related_lead               BigInt?      @map("related_lead_id")
+  salesperson                BigInt?      @map("salesperson_id")
+  status                     String      
+  issue_date                 DateTime    
+  expiry_date                DateTime?   
+  currency                   String      
+  exchange_rate_to_base      Decimal     
+  exchange_rate_source       String      
+  exchange_rate_date         DateTime?   
+  subtotal                   Decimal     
+  discount_percentage        Decimal     
+  discount_amount            Decimal     
+  tax_percentage             Decimal     
+  tax_amount                 Decimal     
+  total_amount               Decimal     
+  terms_and_conditions       String      
+  internal_notes             String      
+  client_snapshot            Json        
+  is_converted_to_project    Boolean     
+  converted_project_id       Int?        
+  is_converted_to_invoice    Boolean     
+  converted_invoice_id       Int?        
+  created_by                 BigInt?      @map("created_by_id")
+  updated_by                 BigInt?      @map("updated_by_id")
+  created_at                 DateTime    
+  updated_at                 DateTime    
+  @@map("quotations_quotation")
+}
+
+model QuotationItem {
+  id                         BigInt       @id @default(autoincrement())
+  quotation                  BigInt       @map("quotation_id")
+  item_order                 Int         
+  description                String      
+  quantity                   Decimal     
+  unit_price                 Decimal     
+  line_total                 Decimal     
+  @@map("quotations_quotationitem")
+}
+
+model Invoice {
+  id                         BigInt       @id @default(autoincrement())
+  invoice_number             String       @unique
+  title                      String      
+  client                     BigInt       @map("client_id")
+  quotation                  BigInt?      @map("quotation_id")
+  project                    BigInt?      @map("project_id")
+  status                     String      
+  issue_date                 DateTime    
+  due_date                   DateTime?   
+  currency                   String      
+  exchange_rate_to_base      Decimal     
+  exchange_rate_source       String      
+  exchange_rate_date         DateTime?   
+  subtotal                   Decimal     
+  discount_percentage        Decimal     
+  discount_amount            Decimal     
+  tax_percentage             Decimal     
+  tax_amount                 Decimal     
+  total_amount               Decimal     
+  amount_paid                Decimal     
+  remaining_balance          Decimal     
+  terms_and_conditions       String      
+  internal_notes             String      
+  client_snapshot            Json        
+  created_by                 BigInt?      @map("created_by_id")
+  updated_by                 BigInt?      @map("updated_by_id")
+  created_at                 DateTime    
+  updated_at                 DateTime    
+  @@map("invoices_invoice")
+}
+
+model InvoiceItem {
+  id                         BigInt       @id @default(autoincrement())
+  invoice                    BigInt       @map("invoice_id")
+  item_order                 Int         
+  description                String      
+  quantity                   Decimal     
+  unit_price                 Decimal     
+  line_total                 Decimal     
+  @@map("invoices_invoiceitem")
+}
+
+model Payment {
+  id                         BigInt       @id @default(autoincrement())
+  receipt_number             String       @unique
+  invoice                    BigInt       @map("invoice_id")
+  client                     BigInt       @map("client_id")
+  amount                     Decimal     
+  currency                   String      
+  payment_date               DateTime    
+  payment_method             String      
+  transaction_reference      String      
+  notes                      String      
+  recorded_by                BigInt?      @map("recorded_by_id")
+  created_at                 DateTime    
+  @@map("invoices_payment")
+}
+
+model Project {
+  id                         BigInt       @id @default(autoincrement())
+  project_code               String       @unique
+  project_name               String      
+  description                String      
+  client                     BigInt       @map("client_id")
+  quotation                  BigInt?      @map("quotation_id")
+  status                     String      
+  project_manager            BigInt?      @map("project_manager_id")
+  start_date                 DateTime    
+  due_date                   DateTime?   
+  completed_at               DateTime?   
+  budget                     Decimal     
+  currency                   String      
+  progress_percentage        Int         
+  created_by                 BigInt?      @map("created_by_id")
+  created_at                 DateTime    
+  updated_at                 DateTime    
+  @@map("projects_project")
+}
+
+model ProjectMilestone {
+  id                         BigInt       @id @default(autoincrement())
+  project                    BigInt       @map("project_id")
+  title                      String      
+  description                String      
+  due_date                   DateTime?   
+  deliverables               String      
+  budget_allocated           Decimal     
+  is_completed               Boolean     
+  completed_at               DateTime?   
+  created_at                 DateTime    
+  @@map("projects_projectmilestone")
+}
+
+model Task {
+  id                         BigInt       @id @default(autoincrement())
+  project                    BigInt       @map("project_id")
+  milestone                  BigInt?      @map("milestone_id")
+  title                      String      
+  description                String      
+  assigned_to                BigInt?      @map("assigned_to_id")
+  priority                   String      
+  status                     String      
+  deadline                   DateTime?   
+  dependencies               String      
+  created_by                 BigInt?      @map("created_by_id")
+  created_at                 DateTime    
+  updated_at                 DateTime    
+  @@map("projects_task")
+}
+
+model TaskChecklistItem {
+  id                         BigInt       @id @default(autoincrement())
+  task                       BigInt       @map("task_id")
+  item_order                 Int         
+  description                String      
+  is_completed               Boolean     
+  @@map("projects_taskchecklistitem")
+}
+
+model TaskComment {
+  id                         BigInt       @id @default(autoincrement())
+  task                       BigInt       @map("task_id")
+  author                     BigInt       @map("author_id")
+  content                    String      
+  created_at                 DateTime    
+  @@map("projects_taskcomment")
+}
+
+model ProjectActivity {
+  id                         BigInt       @id @default(autoincrement())
+  project                    BigInt       @map("project_id")
+  user                       BigInt?      @map("user_id")
+  action_type                String      
+  description                String      
+  created_at                 DateTime    
+  @@map("projects_projectactivity")
+}
+
+model CalendarEvent {
+  id                         BigInt       @id @default(autoincrement())
+  title                      String      
+  description                String      
+  event_type                 String      
+  status                     String      
+  start_time                 DateTime    
+  end_time                   DateTime?   
+  client                     BigInt?      @map("client_id")
+  lead                       BigInt?      @map("lead_id")
+  project                    BigInt?      @map("project_id")
+  assigned_to                BigInt?      @map("assigned_to_id")
+  location_or_link           String      
+  outcome_notes              String      
+  created_by                 BigInt?      @map("created_by_id")
+  created_at                 DateTime    
+  updated_at                 DateTime    
+  @@map("calendar_events_calendarevent")
+}
+
+model AutomationRule {
+  id                         BigInt       @id @default(autoincrement())
+  rule_type                  String       @unique
+  name                       String      
+  is_active                  Boolean     
+  days_trigger               Int         
+  send_in_app                Boolean     
+  send_email                 Boolean     
+  updated_at                 DateTime    
+  @@map("automation_automationrule")
+}
+
+model AutomationLog {
+  id                         BigInt       @id @default(autoincrement())
+  rule_type                  String      
+  entity_type                String      
+  entity_id                  String      
+  dedup_key                  String       @unique
+  status                     String      
+  message                    String      
+  executed_at                DateTime    
+  @@map("automation_automationlog")
+}
+
+model Notification {
+  id                         BigInt       @id @default(autoincrement())
+  recipient                  BigInt       @map("recipient_id")
+  title                      String      
+  message                    String      
+  notification_type          String      
+  link                       String      
+  is_read                    Boolean     
+  created_at                 DateTime    
+  @@map("realtime_notification")
+}
+
+model Conversation {
+  id                         String       @id
+  user                       BigInt       @map("user_id")
+  title                      String      
+  is_archived                Boolean     
+  created_at                 DateTime    
+  updated_at                 DateTime    
+  @@map("assistant_conversation")
+}
+
+model ChatMessage {
+  id                         String       @id
+  conversation               String       @map("conversation_id")
+  role                       String      
+  content                    String      
+  metadata                   Json        
+  created_at                 DateTime    
+  @@map("assistant_chatmessage")
+}
+
+model ActionProposal {
+  id                         String       @id
+  token                      String       @unique
+  user                       BigInt       @map("user_id")
+  conversation               String?      @map("conversation_id")
+  action_type                String      
+  preview_data               Json        
+  payload                    Json        
+  status                     String      
+  execution_result           Json        
+  created_at                 DateTime    
+  expires_at                 DateTime    
+  @@map("assistant_actionproposal")
+}
+
+model AssistantSetting {
+  id                         BigInt       @id @default(autoincrement())
+  provider                   String      
+  model_name                 String      
+  temperature                Float       
+  max_tokens                 Int         
+  is_enabled                 Boolean     
+  allowed_roles              String      
+  updated_at                 DateTime    
+  updated_by                 BigInt?      @map("updated_by_id")
+  @@map("assistant_assistantsetting")
+}
